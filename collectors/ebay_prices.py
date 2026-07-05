@@ -7,7 +7,11 @@ Asking prices, not transactions — labeled as such downstream.
 Modes:
   python -m collectors.ebay_prices                 daily collection (needs EBAY_* secrets)
   python -m collectors.ebay_prices --dry-run       synthetic prices; proves the pipeline pre-credentials
-  python -m collectors.ebay_prices --fillability   phase-1 acceptance check (spec §7)
+  python -m collectors.ebay_prices --fillability   phase-1 acceptance check with per-SKU diagnostics
+
+v0.4.3: fillability now prints per-SKU diagnostics (raw hits, seller-gate rejects,
+lowest asks) plus a category probe when an MPN returns zero raw results, so dead
+part numbers are distinguishable from thin supply and from over-tight bands.
 """
 import base64, csv, random, statistics, sys
 import requests
@@ -40,11 +44,9 @@ def get_token(cid, secret):
     return r.json()["access_token"]
 
 
-def qualified_asks(sku, token):
-    """Return sorted list of qualifying new-condition asks for one MPN."""
-    lo, hi = float(sku["price_lo"]), float(sku["price_hi"])
+def search(query, lo, hi, token):
     params = {
-        "q": sku["mpn"],
+        "q": query,
         "filter": f"conditions:{{NEW}},itemLocationCountry:US,"
                   f"price:[{lo:.0f}..{hi:.0f}],priceCurrency:USD",
         "limit": str(EBAY_LIMIT),
@@ -54,8 +56,15 @@ def qualified_asks(sku, token):
                      headers={"Authorization": f"Bearer {token}",
                               "X-EBAY-C-MARKETPLACE-ID": "EBAY_US"})
     r.raise_for_status()
-    asks = []
-    for item in r.json().get("itemSummaries", []):
+    return r.json().get("itemSummaries", [])
+
+
+def qualified_asks(sku, token):
+    """(sorted qualifying asks, raw hit count, seller-gate reject count) for one MPN."""
+    lo, hi = float(sku["price_lo"]), float(sku["price_hi"])
+    items = search(sku["mpn"], lo, hi, token)
+    asks, rejected = [], 0
+    for item in items:
         seller = item.get("seller", {})
         try:
             score = int(seller.get("feedbackScore", 0))
@@ -65,11 +74,22 @@ def qualified_asks(sku, token):
             continue
         if score >= SELLER_FEEDBACK_MIN and pct >= SELLER_FEEDBACK_PCT_MIN:
             asks.append(price)
-    return sorted(asks)
+        else:
+            rejected += 1
+    return sorted(asks), len(items), rejected
+
+
+def category_probe(sku, token):
+    """Zero-raw diagnostic: does a generic brand+spec query find anything in-band?
+    Diagnostic only — never used for collection (generic queries mix products)."""
+    q = f"{sku['brand']} {sku['gen'].upper()} {sku['capacity_gb']}GB {sku['speed']}"
+    try:
+        return len(search(q, float(sku["price_lo"]), float(sku["price_hi"]), token))
+    except Exception:
+        return -1
 
 
 def synthetic_asks(sku):
-    """Dry-run: plausible asks inside the sanity band so the full pipeline exercises."""
     lo, hi = float(sku["price_lo"]), float(sku["price_hi"])
     mid = (lo + hi) / 2
     return sorted(round(random.uniform(mid * 0.9, mid * 1.15), 2) for _ in range(8))
@@ -96,19 +116,35 @@ def main():
         secret = env("EBAY_CLIENT_SECRET", required=True)
         token = get_token(cid, secret)
 
-    rows, per_segment = [], {}
-    for sku in registry:
+    rows, per_segment, diags = [], {}, []
+    for sku in sorted(registry, key=lambda s: s["segment"]):
+        raw, rejected = 0, 0
         try:
-            asks = synthetic_asks(sku) if dry else qualified_asks(sku, token)
+            if dry:
+                asks = synthetic_asks(sku); raw = len(asks)
+            else:
+                asks, raw, rejected = qualified_asks(sku, token)
         except Exception as e:
             warn(f"{sku['sku_id']}: {e}")
             asks = []
-        row = observe(sku, asks)
-        rows.append(row)
-        seg = sku["segment"]
-        per_segment.setdefault(seg, []).append(len(asks) >= K_FLOOR)
+        rows.append(observe(sku, asks))
+        per_segment.setdefault(sku["segment"], []).append(len(asks) >= K_FLOOR)
+        if fillability:
+            lows = ",".join(f"${a:.0f}" for a in asks[:3]) or "-"
+            line = (f"  {sku['segment']:13s} {sku['sku_id']:26s} {sku['mpn']:26s} "
+                    f"raw={raw:<3d} seller_rej={rejected:<3d} qual={len(asks):<3d} "
+                    f"lowest=[{lows}]")
+            if raw == 0 and not dry:
+                probe = category_probe(sku, token)
+                line += f"  <- ZERO RAW: MPN likely dead/wrong (category probe={probe} in-band)"
+            elif len(asks) < K_FLOOR:
+                line += "  <- thin: found but under threshold (band or seller gate?)"
+            diags.append(line)
 
     if fillability:
+        log("per-SKU diagnostics:")
+        for d in diags:
+            print(d)
         ok = True
         for seg, hits in per_segment.items():
             passed = sum(hits)
