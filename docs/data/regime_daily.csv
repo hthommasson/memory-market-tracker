@@ -1,0 +1,6 @@
+date,segment,m30_annualized,a30,label_raw,label_committed
+2026-07-05,ddr4_desktop,,,warming_up,warming_up
+2026-07-05,ddr5_desktop,,,warming_up,warming_up
+2026-07-05,server_ecc,,,warming_up,warming_up
+2026-07-05,sodimm,,,warming_up,warming_up
+2026-07-05,COMPOSITE,,"gated:ddr4_desktop,ddr5_desktop,server_ecc,sodimm",warming_up,warming_up
