@@ -40,6 +40,7 @@
   .card h2{font:800 17px "Big Shoulders Display",sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2px}
   .card .sub{font:400 12px "IBM Plex Mono",monospace;color:var(--muted);margin:0 0 6px}
   .plot{height:280px}
+  .plot-tall{height:360px}
   .empty{display:flex;align-items:center;justify-content:center;height:280px;color:var(--muted);font:400 13px "IBM Plex Mono",monospace;text-align:center;padding:0 20px}
   .events{list-style:none;margin:0;padding:0;max-height:280px;overflow:auto}
   .events li{padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
@@ -76,6 +77,11 @@
       <h2>Physical ask-floor — $/GB by segment</h2>
       <p class="sub">eBay qualified-seller asking prices (k-th lowest), not transactions · ◆ = published reference points</p>
       <div class="plot" id="p_price"></div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <h2>69-year context &mdash; $/GB since 1957</h2>
+      <p class="sub">log scale &middot; McCallum backbone &rarr; Keepa splice (Aug '24) &rarr; live tracker overlay &middot; Jun-'26 DDR5 &asymp; 2013 prices</p>
+      <div class="plot plot-tall" id="p_context"></div>
     </div>
     <div class="card">
       <h2>Market layer</h2><p class="sub">rebased to 100 at first common date</p>
@@ -135,13 +141,13 @@ function feedBadge(name, last, cadence){
 }
 
 (async () => {
-  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats] = await Promise.all([
+  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats, mc] = await Promise.all([
     csv("data/regime_daily.csv"), csv("data/segment_daily.csv"),
     csv("data/static/reference_points.csv"), csv("data/equity_daily.csv"),
     csv("data/monthly_series.csv"), csv("data/filings_facts.csv"),
     csv("data/events.csv"), csv("data/divergence_flags.csv"),
     csv("data/volume_regime.csv"), csv("data/composite_regime.csv"),
-    csv("data/stats_lagged_corr.csv")]);
+    csv("data/stats_lagged_corr.csv"), csv("data/static/mccallum.csv")]);
 
   // --- Regime strip + composite badge ---
   const dimm = document.getElementById("dimm");
@@ -221,6 +227,44 @@ function feedBadge(name, last, cadence){
       text:refs.map(r => r.note), hovertemplate:"%{x} $%{y:.2f}/GB<br>%{text}"});
     Plotly.newPlot("p_price", traces, {...LAYOUT, yaxis:{...LAYOUT.yaxis, title:"$/GB"}}, CFG);
   } else empty("p_price", NO_DATA + " Diamonds will mark published reference prices.");
+
+  // --- Historical context: 69-year curve + live overlay (spec §3.6) ---
+  if(mc && mc.length){
+    const ser = s => mc.filter(r => r.series === s);
+    const dram = ser("dram"), d5 = ser("ddr5"), hbm = ser("hbm");
+    const live = (seg || []).filter(r => r.segment === "ddr5_desktop" && r.series === "floor")
+                            .sort((a,b) => a.date.localeCompare(b.date));
+    const traces = [
+      {x:dram.map(r => r.date), y:dram.map(r => +r.usd_per_gb), name:"DRAM cheapest (McCallum→Keepa)",
+       mode:"lines", line:{width:2, color:C.slate}, text:dram.map(r => r.note || ""),
+       hovertemplate:"%{x} · $%{y:.3s}/GB<br>%{text}<extra></extra>"},
+      {x:d5.map(r => r.date), y:d5.map(r => +r.usd_per_gb), name:"DDR5 retail (Keepa)",
+       mode:"lines", line:{width:1.5, color:C.teal, dash:"dot"}},
+      {x:hbm.map(r => r.date), y:hbm.map(r => +r.usd_per_gb), name:"HBM (analyst est.)",
+       mode:"markers", marker:{symbol:"diamond", size:8, color:C.violet},
+       text:hbm.map(r => r.note || ""), hovertemplate:"%{x} · $%{y:.1f}/GB<br>%{text}<extra></extra>"}];
+    if(live.length) traces.push({x:live.map(r => r.date), y:live.map(r => +r.usd_per_gb),
+      name:"LIVE — DDR5 ask floor", mode:"lines", line:{width:3, color:C.teal}});
+    const mn = dram.reduce((a, r) => +r.usd_per_gb < +a.usd_per_gb ? r : a, dram[0]);
+    Plotly.newPlot("p_context", traces, {...LAYOUT,
+      margin:{l:52,r:10,t:8,b:34},
+      yaxis:{...LAYOUT.yaxis, type:"log", title:"$/GB (log)", exponentformat:"power"},
+      xaxis:{...LAYOUT.xaxis, rangeselector:{buttons:[
+        {step:"all", label:"69y"},
+        {count:30, step:"year", stepmode:"backward", label:"30y"},
+        {count:10, step:"year", stepmode:"backward", label:"10y"},
+        {count:3, step:"year", stepmode:"backward", label:"3y"},
+        {count:1, step:"year", stepmode:"backward", label:"1y"}],
+        font:{size:10}, bgcolor:"#FFFFFF", activecolor:"#D7DEE6"}},
+      shapes:[{type:"line", x0:"2026-07-05", x1:"2026-07-05", y0:0, y1:1, yref:"paper",
+               line:{color:C.muted, width:1, dash:"dot"}}],
+      annotations:[
+        {x:mn.date, y:Math.log10(+mn.usd_per_gb),
+         text:"cycle floor $" + (+mn.usd_per_gb).toFixed(2) + "/GB",
+         showarrow:true, arrowcolor:C.muted, ax:-10, ay:-32, font:{size:10, color:C.ink}},
+        {x:"2026-07-05", y:1, yref:"paper", yanchor:"bottom", text:"tracker live",
+         showarrow:false, font:{size:10, color:C.muted}}]}, CFG);
+  } else empty("p_context", "data/static/mccallum.csv missing — the 69-year context renders once it exists.");
 
   // --- Panel C: equities rebased ---
   if(eq && eq.length){
