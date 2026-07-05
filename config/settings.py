@@ -15,9 +15,12 @@ HYSTERESIS_DAYS = 5            # consecutive days required to commit a state cha
 MIN_OBS_FOR_LABEL = 10         # below this, label = "warming_up"
 
 # eBay collector (spec §3.1 v0.4)
+# Seller gate tuned 2026-07-05 from live fillability data: 500/98.0 rejected 77 of 156
+# raw listings (49%) and was the binding constraint on ddr5. Remaining protections:
+# k-th-lowest robust floor, per-SKU price bands, new-condition-only, per-run seller_rej audit.
 K_FLOOR = 3                    # robust floor = k-th lowest qualifying ask
-SELLER_FEEDBACK_MIN = 500
-SELLER_FEEDBACK_PCT_MIN = 98.0
+SELLER_FEEDBACK_MIN = 100      # was 500
+SELLER_FEEDBACK_PCT_MIN = 97.0 # was 98.0
 EBAY_LIMIT = 50
 
 # Equities (spec §3.3)
