@@ -4,3 +4,116 @@ period,source,metric,value,value_wda,meta
 2026-06,motie,kr_exports_hbm_usd,12681000000,,yoy=+171%
 2026-06-P20,kcs,kr_exports_total_usd,61990000000,49.7,headline_yoy=+60.4%|working_days=15v14|value_wda=per_wd_adj_yoy_pct
 2026-06,derived,kr_inc_p21_end_usd,40260000000.0,,compare_same_window_only|per_wd_flash=4.133bn
+2026-04,census,us_imports_memory_value:5330,7784,,INDIA
+2026-04,census,us_imports_memory_value:5420,3294,,SRI LANKA
+2026-04,census,us_imports_memory_value:5490,3653491,,THAILAND
+2026-04,census,us_imports_memory_value:5520,33341454,,VIETNAM
+2026-04,census,us_imports_memory_value:5570,9645511,,MALAYSIA
+2026-04,census,us_imports_memory_value:5590,8436785,,SINGAPORE
+2026-04,census,us_imports_memory_value:5600,25203,,INDONESIA
+2026-04,census,us_imports_memory_value:5650,6046601,,PHILIPPINES
+2026-04,census,us_imports_memory_value:5700,14308081,,CHINA
+2026-04,census,us_imports_memory_value:5800,303912692,,"KOREA, SOUTH"
+2026-04,census,us_imports_memory_value:5820,575066,,HONG KONG
+2026-04,census,us_imports_memory_value:5830,177976852,,TAIWAN
+2026-04,census,us_imports_memory_value:5880,58891036,,JAPAN
+2026-04,census,us_imports_memory_value:6021,9427,,AUSTRALIA
+2026-04,census,us_imports_memory_value:6141,0,,NEW ZEALAND
+2026-04,census,us_imports_memory_value:3370,18137,,CHILE
+2026-04,census,us_imports_memory_value:3570,2465,,ARGENTINA
+2026-04,census,us_imports_memory_value:4010,72389,,SWEDEN
+2026-04,census,us_imports_memory_value:4050,3912,,FINLAND
+2026-04,census,us_imports_memory_value:4099,142792,,DENMARK
+2026-04,census,us_imports_memory_value:4120,103129,,UNITED KINGDOM
+2026-04,census,us_imports_memory_value:4210,512900,,NETHERLANDS
+2026-04,census,us_imports_memory_value:4231,0,,BELGIUM
+2026-04,census,us_imports_memory_value:4279,3335481,,FRANCE
+2026-04,census,us_imports_memory_value:4280,1085201,,GERMANY
+2026-04,census,us_imports_memory_value:4330,64450,,AUSTRIA
+2026-04,census,us_imports_memory_value:4351,12204,,CZECH REPUBLIC
+2026-04,census,us_imports_memory_value:7140,0,,MOROCCO
+2026-04,census,us_imports_memory_value:7510,0,,NIGER
+2026-04,census,us_imports_memory_value:7690,0,,RWANDA
+2026-04,census,us_imports_memory_value:4370,0,,HUNGARY
+2026-04,census,us_imports_memory_value:4419,120383,,SWITZERLAND
+2026-04,census,us_imports_memory_value:4490,0,,LATVIA
+2026-04,census,us_imports_memory_value:4550,0,,POLAND
+2026-04,census,us_imports_memory_value:4700,0,,SPAIN
+2026-04,census,us_imports_memory_value:4710,0,,PORTUGAL
+2026-04,census,us_imports_memory_value:4759,33723,,ITALY
+2026-04,census,us_imports_memory_value:4850,9041,,ROMANIA
+2026-04,census,us_imports_memory_value:4870,0,,BULGARIA
+2026-04,census,us_imports_memory_value:4890,7035,,TURKEY
+2026-04,census,us_imports_memory_value:5081,11250,,ISRAEL
+2026-04,census,us_imports_memory_value:-,622497725,,TOTAL FOR ALL COUNTRIES
+2026-04,census,us_imports_memory_value:0003,5272093,,EUROPEAN UNION
+2026-04,census,us_imports_memory_value:1XXX,129956,,NORTH AMERICA
+2026-04,census,us_imports_memory_value:4XXX,5502640,,EUROPE
+2026-04,census,us_imports_memory_value:7XXX,0,,AFRICA
+2026-04,census,us_imports_memory_value:0014,579827254,,PACIFIC RIM COUNTRIES
+2026-04,census,us_imports_memory_value:5XXX,616835100,,ASIA
+2026-04,census,us_imports_memory_value:0017,0,,CAFTA-DR
+2026-04,census,us_imports_memory_value:6XXX,9427,,AUSTRALIA AND OCEANIA
+2026-04,census,us_imports_memory_value:0020,129956,,USMCA (NAFTA)
+2026-04,census,us_imports_memory_value:0021,94498,,TWENTY LATIN AMERICAN REPUBLICS
+2026-04,census,us_imports_memory_value:0022,368466097,,OECD
+2026-04,census,us_imports_memory_value:0023,5373867,,NATO
+2026-04,census,us_imports_memory_value:0024,94498,,LAFTA
+2026-04,census,us_imports_memory_value:0025,5035667,,EURO AREA
+2026-04,census,us_imports_memory_value:0026,616970292,,APEC
+2026-04,census,us_imports_memory_value:0027,61149045,,ASEAN
+2026-04,census,us_imports_memory_value:0028,0,,CACM
+2026-04,census,us_imports_memory_value:1220,56060,,CANADA
+2026-04,census,us_imports_memory_value:2010,73896,,MEXICO
+2026-04,census,us_imports_memory_value:2230,0,,COSTA RICA
+2026-04,census,us_imports_memory_value:7910,0,,SOUTH AFRICA
+2026-04,census,us_imports_memory_value:2XXX,0,,CENTRAL AMERICA
+2026-04,census,us_imports_memory_value:3XXX,20602,,SOUTH AMERICA
+2026-04,census,us_imports_memory_airshare:0003,0.9958,,
+2026-04,census,us_imports_memory_airshare:0014,0.9991,,
+2026-04,census,us_imports_memory_airshare:0020,1.0,,
+2026-04,census,us_imports_memory_airshare:0021,1.0,,
+2026-04,census,us_imports_memory_airshare:0022,0.9986,,
+2026-04,census,us_imports_memory_airshare:0023,0.9959,,
+2026-04,census,us_imports_memory_airshare:0024,1.0,,
+2026-04,census,us_imports_memory_airshare:0025,0.9956,,
+2026-04,census,us_imports_memory_airshare:0026,0.9991,,
+2026-04,census,us_imports_memory_airshare:0027,0.9996,,
+2026-04,census,us_imports_memory_airshare:1220,1.0,,
+2026-04,census,us_imports_memory_airshare:1XXX,1.0,,
+2026-04,census,us_imports_memory_airshare:2010,1.0,,
+2026-04,census,us_imports_memory_airshare:3370,1.0,,
+2026-04,census,us_imports_memory_airshare:3570,1.0,,
+2026-04,census,us_imports_memory_airshare:3XXX,1.0,,
+2026-04,census,us_imports_memory_airshare:4010,1.0,,
+2026-04,census,us_imports_memory_airshare:4050,1.0,,
+2026-04,census,us_imports_memory_airshare:4099,1.0,,
+2026-04,census,us_imports_memory_airshare:4120,1.0,,
+2026-04,census,us_imports_memory_airshare:4210,1.0,,
+2026-04,census,us_imports_memory_airshare:4279,1.0,,
+2026-04,census,us_imports_memory_airshare:4280,0.9797,,
+2026-04,census,us_imports_memory_airshare:4330,1.0,,
+2026-04,census,us_imports_memory_airshare:4351,1.0,,
+2026-04,census,us_imports_memory_airshare:4419,1.0,,
+2026-04,census,us_imports_memory_airshare:4759,1.0,,
+2026-04,census,us_imports_memory_airshare:4850,1.0,,
+2026-04,census,us_imports_memory_airshare:4890,1.0,,
+2026-04,census,us_imports_memory_airshare:4XXX,0.996,,
+2026-04,census,us_imports_memory_airshare:5081,1.0,,
+2026-04,census,us_imports_memory_airshare:5330,1.0,,
+2026-04,census,us_imports_memory_airshare:5420,1.0,,
+2026-04,census,us_imports_memory_airshare:5490,0.9936,,
+2026-04,census,us_imports_memory_airshare:5520,1.0,,
+2026-04,census,us_imports_memory_airshare:5570,1.0,,
+2026-04,census,us_imports_memory_airshare:5590,1.0,,
+2026-04,census,us_imports_memory_airshare:5600,1.0,,
+2026-04,census,us_imports_memory_airshare:5650,0.9994,,
+2026-04,census,us_imports_memory_airshare:5700,0.9992,,
+2026-04,census,us_imports_memory_airshare:5800,0.9999,,
+2026-04,census,us_imports_memory_airshare:5820,1.0,,
+2026-04,census,us_imports_memory_airshare:5830,0.9997,,
+2026-04,census,us_imports_memory_airshare:5880,0.9923,,
+2026-04,census,us_imports_memory_airshare:5XXX,0.9991,,
+2026-04,census,us_imports_memory_airshare:6021,1.0,,
+2026-04,census,us_imports_memory_airshare:6XXX,1.0,,
+2026-04,census,us_imports_memory_airshare:-,0.9991,,
