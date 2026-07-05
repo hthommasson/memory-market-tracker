@@ -1,0 +1,4 @@
+period,source,metric,value,value_wda,meta
+2026-07-P10,kcs,kr_exports_total_usd,,,headline_yoy=|working_days=|value_wda=per_wd_adj_yoy_pct
+2026-07-P20,kcs,kr_exports_total_usd,,,headline_yoy=|working_days=|value_wda=per_wd_adj_yoy_pct
+2026-07,motie,kr_exports_semis_usd,,,yoy=

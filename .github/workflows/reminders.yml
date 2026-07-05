@@ -1,0 +1,25 @@
+name: manual-entry-reminders
+on:
+  schedule:
+    - cron: "0 8 1,10,11,20,21 * *"   # publication days: MOTIE(1) Nanya(10) KCS-P10(11) MOEA(20) KCS-P20(21)
+  workflow_dispatch: {}
+permissions:
+  issues: write
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: open reminder
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          DAY=$(date -u +%-d); MON=$(date -u +%Y-%m)
+          case "$DAY" in
+            1)  T="Enter MOTIE monthly exports ($MON)"; B="templates/korea_entry_template.csv -> docs/data/monthly_series.csv (semis + HBM, record yoy)";;
+            10) T="Enter Nanya monthly revenue ($MON)"; B="templates/nanya_revenue_template.csv (MOPS, TWSE 2408)";;
+            11) T="Enter Korea 1-10 flash ($MON)"; B="templates/korea_entry_template.csv (record working days + per-wd adjusted yoy)";;
+            20) T="Enter Taiwan export orders ($MON)"; B="templates/taiwan_orders_template.csv (MOEA electronics)";;
+            21) T="Enter Korea 1-20 flash ($MON)"; B="templates/korea_entry_template.csv (record working days + per-wd adjusted yoy)";;
+            *)  exit 0;;
+          esac
+          gh issue list --repo "$GITHUB_REPOSITORY" --search "$T in:title" --state open --json number -q length | grep -q '^0$' \
+            && gh issue create --repo "$GITHUB_REPOSITORY" --title "$T" --body "$B" || echo "already open"

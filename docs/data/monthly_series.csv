@@ -1,0 +1,6 @@
+period,source,metric,value,value_wda,meta
+2026-06,motie,kr_exports_total_usd,102250000000,,yoy=+70.9%|record_first_100b
+2026-06,motie,kr_exports_semis_usd,44820000000,,yoy=+199.5%|record
+2026-06,motie,kr_exports_hbm_usd,12681000000,,yoy=+171%
+2026-06-P20,kcs,kr_exports_total_usd,61990000000,49.7,headline_yoy=+60.4%|working_days=15v14|value_wda=per_wd_adj_yoy_pct
+2026-06,derived,kr_inc_p21_end_usd,40260000000.0,,compare_same_window_only|per_wd_flash=4.133bn

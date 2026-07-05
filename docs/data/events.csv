@@ -1,0 +1,8 @@
+date,category,title,url,impact_tags
+2025-12-03,supply,"Micron announces exit from Crucial consumer business; shipments through end of fiscal Q2",https://investors.micron.com/news-releases/news-release-details/micron-announces-exit-crucial-consumer-business,consumer_supply|brand_churn
+2026-02-28,supply,"Crucial consumer shipments end (Micron fiscal Q2 close)",https://www.datacenterdynamics.com/en/news/micron-to-exit-the-consumer-memory-and-storage-market-in-favor-of-ai-data-center-customers/,consumer_supply
+2026-03-18,filing,"Micron FQ2-26 earnings 8-K (Item 2.02)",https://www.sec.gov/Archives/edgar/data/723125/0000723125-26-000004-index.html,fundamentals|guidance
+2026-03-25,tech,"Google TurboQuant: 3-bit KV-cache quantization, ~6x memory reduction; memory equities and DDR5 spot sentiment hit",https://www.silicondata.com/blog/march-2026-ram-price-update,narrative_shock|equity_physical_divergence
+2026-06-05,market,"MU -13% single day (Broadcom miss + rates); MUU -26.65%",https://finance.yahoo.com/markets/stocks/articles/2x-micron-etf-muu-shed-103012331.html,drawdown|leverage_mechanics
+2026-06-24,filing,"Micron FQ3-26 earnings; RAM (2x DRAM ETF) launches same day",https://www.roundhillinvestments.com/etf/ram/,fundamentals|instrument
+2026-07-01,policy,"Korea June exports first-ever $100B+ month; semiconductors $44.8B (+199.5% YoY), HBM broken out at $12.7B",https://www.upi.com/Top_News/World-News/2026/07/01/exports-semiconductors-ai-trade-surplus/5901782949549/,volume_regime|korea

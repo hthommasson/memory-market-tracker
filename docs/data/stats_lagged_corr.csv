@@ -1,0 +1,8 @@
+pair,lag_months,n,spearman,pearson,status,note
+tw_orders->kr_semis,,0,,,missing_series,
+kr_semis->mu_revenue,,0,,,missing_series,
+kr_semis->equity_mu,,0,,,missing_series,
+phys_ddr5->mu_gross_margin,,0,,,missing_series,
+phys_ddr5->equity_dram,,0,,,missing_series,
+nanya_rev->phys_ddr4,,0,,,missing_series,
+mu_inventory_days->phys_ddr5,,0,,,missing_series,

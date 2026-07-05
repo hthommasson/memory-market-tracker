@@ -1,0 +1,5 @@
+date,segment,metric,value_usd,source_url,note
+2025-06-05,ddr5_desktop,kit_32gb_typical,100,https://www.techtimes.com/articles/317872/20260605/ram-prices-2026-buy-now-wait-gartner-forecasts-130-memory-cost-surge.htm,"range $80-120 cited as year-earlier baseline"
+2026-01-15,ddr4_desktop,kit_32gb_typical,165,https://www.tomshardware.com/pc-components/ram/ram-price-index-2026-lowest-price-on-ddr5-and-ddr4-memory-of-all-capacities,"$150-180 range, Jan 2026"
+2026-03-29,ddr5_desktop,kit_2x16_6000c30_floor,390,https://dropreference.com/en/blog/news/price-ddr5-ram-april-2026-rumors-decline-reality,"avg $529 (WhereIsMyRam); plateau phase"
+2026-06-03,ddr5_desktop,kit_32gb_cheapest_us,374.97,https://www.techtimes.com/articles/317872/20260605/ram-prices-2026-buy-now-wait-gartner-forecasts-130-memory-cost-surge.htm,"Tom's Hardware daily tracker reading"

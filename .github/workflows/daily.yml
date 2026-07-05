@@ -1,0 +1,51 @@
+name: daily
+on:
+  schedule:
+    - cron: "30 22 * * *"   # ~22:30 UTC, after US market close year-round (spec §6)
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+      - name: equities
+        continue-on-error: true
+        run: python -m collectors.equities
+      - name: ebay prices
+        continue-on-error: true
+        env:
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+        run: python -m collectors.ebay_prices
+      - name: sec facts
+        continue-on-error: true
+        env:
+          SEC_CONTACT_EMAIL: ${{ secrets.SEC_CONTACT_EMAIL }}
+        run: python -m collectors.sec_facts
+      - name: regime engine
+        run: python -m engine.regime
+      - name: volume + composite
+        continue-on-error: true
+        run: |
+          python -m engine.volume
+          python -m engine.composite
+      - name: divergence flags
+        continue-on-error: true
+        run: python -m engine.divergence
+      - name: notify
+        continue-on-error: true
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: python -m engine.notify
+      - name: commit
+        run: |
+          git config user.name "tracker-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/data
+          git diff --cached --quiet || git commit -m "daily data $(date -u +%F)"
+          git push

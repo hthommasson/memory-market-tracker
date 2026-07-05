@@ -1,0 +1,28 @@
+name: weekly
+on:
+  schedule:
+    - cron: "0 9 * * 1"   # Mondays
+  workflow_dispatch: {}
+permissions:
+  contents: read
+  issues: write
+jobs:
+  basket-health:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+      - name: check basket
+        id: check
+        run: |
+          python -m engine.basket_health | tee report.txt
+          echo "issues=$(grep -c '^-' report.txt || true)" >> "$GITHUB_OUTPUT"
+      - name: file issue if unhealthy
+        if: steps.check.outputs.issues != '0'
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          TITLE="Basket health $(date -u +%G-W%V)"
+          gh issue list --search "$TITLE in:title" --state open --json number -q length | grep -q '^0$' \
+            && gh issue create --title "$TITLE" --body-file report.txt || echo "issue already open"
