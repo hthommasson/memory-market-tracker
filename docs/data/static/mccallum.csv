@@ -1,11 +1,132 @@
-Rank,Casino,Bonus,Omsättnings-krav,Antal spel,Licens
-1,Starzino,1500€,40x,2000+,Curacao
-2,Hugo Casino,600€ + 275 FS,45x,1000+,Curacao
-3,SlotSquad,1000€ + 888 FS,25x,1000+,MGA
-4,NewLucky,4000€ + 350 FS,40x,3500+,Curacao
-5,Djack Casino,1000€ + 777 FS,50-30x,Hundratals,EMTA
-6,Sugarino Casino,888€+ 888 FS,30-35x,Hundratals,MGA
-7,Rich Moose Casino,1000€ + 700 FS,40x,Hundratals,MGA
-8,WildTokyo,1300€ + 570 FS,50x,1000+,Curacao
-9,MoonWin,6500€ + 180 FS,40x,2000+,Curacao
-10,Winzter,3000€,30x,4000+,Anjouan
+date,series,usd_per_gb,source,note
+1957-01-01,dram,411041792000,mccallum,transistor flip-flop
+1959-01-01,dram,67947725000,mccallum,
+1960-01-01,dram,5242880000,mccallum,IBM 1401 core memory
+1965-01-01,dram,2642412000,mccallum,
+1970-01-01,dram,734003000,mccallum,
+1973-01-01,dram,399360000,mccallum,
+1974-01-01,dram,314573000,mccallum,
+1975-01-01,dram,421888000,mccallum,
+1975-10-02,dram,49920000,mccallum,Altair era
+1976-06-02,dram,23040000,mccallum,
+1977-01-30,dram,36800000,mccallum,
+1978-10-02,dram,15200000,mccallum,
+1979-10-02,dram,6704000,mccallum,
+1980-01-01,dram,6480000,mccallum,
+1981-08-01,dram,4479000,mccallum,
+1982-09-03,dram,1980000,mccallum,
+1983-09-03,dram,1980000,mccallum,
+1984-07-31,dram,1331000,mccallum,
+1985-01-01,dram,880000,mccallum,
+1985-09-03,dram,300000,mccallum,
+1986-05-01,dram,190000,mccallum,
+1987-10-02,dram,133000,mccallum,
+1988-01-01,dram,163000,mccallum,
+1988-07-01,dram,505000,mccallum,1988 DRAM shortage peak
+1989-01-01,dram,505000,mccallum,
+1989-12-03,dram,113000,mccallum,
+1990-01-01,dram,106000,mccallum,
+1990-12-03,dram,46000,mccallum,
+1991-10-31,dram,40000,mccallum,
+1992-10-01,dram,26300,mccallum,
+1993-01-30,dram,27500,mccallum,
+1994-10-31,dram,32300,mccallum,
+1995-08-01,dram,30600,mccallum,
+1996-01-01,dram,29900,mccallum,
+1996-10-30,dram,5250,mccallum,1996 price collapse
+1997-01-01,dram,4630,mccallum,
+1997-12-03,dram,2160,mccallum,
+1998-01-01,dram,2160,mccallum,
+1998-10-31,dram,840,mccallum,
+1999-07-02,dram,780,mccallum,
+1999-12-03,dram,2350,mccallum,Taiwan earthquake spike
+2000-01-01,dram,1560,mccallum,
+2000-04-30,dram,700,mccallum,
+2001-01-01,dram,750,mccallum,
+2001-10-09,dram,150,mccallum,dot-com collapse
+2002-04-02,dram,190,mccallum,
+2003-03-04,dram,176,mccallum,
+2003-04-02,dram,76,mccallum,
+2004-03-03,dram,146,mccallum,
+2005-10-31,dram,116,mccallum,
+2006-05-01,dram,73,mccallum,
+2007-01-01,dram,82,mccallum,
+2007-10-31,dram,24,mccallum,
+2008-01-01,dram,23,mccallum,
+2008-12-02,dram,10,mccallum,
+2009-01-01,dram,10,mccallum,
+2009-12-03,dram,20.5,mccallum,
+2010-05-01,dram,24.2,mccallum,
+2010-12-03,dram,12.2,mccallum,
+2011-01-30,dram,10.3,mccallum,
+2011-10-02,dram,5.1,mccallum,
+2012-10-30,dram,3.7,mccallum,
+2013-01-01,dram,4.3,mccallum,
+2013-10-31,dram,8.5,mccallum,
+2014-04-02,dram,7.3,mccallum,
+2015-01-01,dram,7.8,mccallum,
+2015-12-03,dram,3.7,mccallum,
+2016-06-02,dram,2.7,mccallum,
+2017-01-01,dram,4.9,mccallum,
+2017-12-03,dram,7.1,mccallum,2017-18 supercycle peak
+2018-03-04,dram,7.0,mccallum,
+2018-12-03,dram,4.6,mccallum,
+2019-07-02,dram,2.7,mccallum,
+2020-07-31,dram,2.7,mccallum,
+2021-12-03,dram,2.6,mccallum,
+2022-10-31,dram,2.1,mccallum,
+2023-10-31,dram,1.28,mccallum,pre-AI-boom cycle bottom
+2024-07-01,dram,1.53,mccallum,last McCallum point; splice to Keepa
+2024-08-01,dram,0.898,keepa_dam,splice start (cheapest listing across basket)
+2024-09-01,dram,1.625,keepa_dam,
+2024-10-01,dram,1.794,keepa_dam,
+2024-11-01,dram,1.809,keepa_dam,
+2024-12-01,dram,1.833,keepa_dam,
+2025-01-01,dram,1.886,keepa_dam,
+2025-02-01,dram,1.858,keepa_dam,
+2025-03-01,dram,1.788,keepa_dam,
+2025-04-01,dram,1.753,keepa_dam,
+2025-05-01,dram,1.499,keepa_dam,
+2025-06-01,dram,1.924,keepa_dam,
+2025-07-01,dram,2.166,keepa_dam,
+2025-08-01,dram,2.329,keepa_dam,
+2025-09-01,dram,2.116,keepa_dam,
+2025-10-01,dram,2.444,keepa_dam,
+2025-11-01,dram,2.880,keepa_dam,
+2025-12-01,dram,4.036,keepa_dam,
+2026-01-01,dram,2.850,keepa_dam,cheapest is legacy DDR3 scrap
+2026-02-01,dram,5.375,keepa_dam,
+2026-03-01,dram,4.717,keepa_dam,
+2026-04-01,dram,2.855,keepa_dam,
+2026-05-01,dram,3.451,keepa_dam,
+2026-06-01,dram,4.576,keepa_dam,
+2024-08-01,ddr5,2.824,keepa_dam,
+2024-09-01,ddr5,2.808,keepa_dam,
+2024-10-01,ddr5,2.291,keepa_dam,
+2024-11-01,ddr5,2.508,keepa_dam,
+2024-12-01,ddr5,1.837,keepa_dam,DDR5 low
+2025-01-01,ddr5,2.756,keepa_dam,
+2025-02-01,ddr5,2.458,keepa_dam,
+2025-03-01,ddr5,2.917,keepa_dam,
+2025-04-01,ddr5,2.708,keepa_dam,
+2025-05-01,ddr5,2.874,keepa_dam,
+2025-06-01,ddr5,2.538,keepa_dam,
+2025-07-01,ddr5,2.166,keepa_dam,
+2025-08-01,ddr5,2.329,keepa_dam,
+2025-09-01,ddr5,2.177,keepa_dam,last month before the surge
+2025-10-01,ddr5,2.920,keepa_dam,
+2025-11-01,ddr5,4.969,keepa_dam,
+2025-12-01,ddr5,6.847,keepa_dam,
+2026-01-01,ddr5,9.874,keepa_dam,
+2026-02-01,ddr5,9.874,keepa_dam,
+2026-03-01,ddr5,13.281,keepa_dam,spike peak so far
+2026-04-01,ddr5,10.938,keepa_dam,
+2026-05-01,ddr5,7.109,keepa_dam,single clearance listing; cheapest-list noise
+2026-06-01,ddr5,12.499,keepa_dam,
+2021-06-01,hbm,6.0,analyst_est_dam,HBM2e approx
+2022-12-01,hbm,9.0,analyst_est_dam,HBM3 (SemiAnalysis)
+2024-06-01,hbm,15.0,analyst_est_dam,HBM3e ramp approx
+2025-03-01,hbm,18.0,analyst_est_dam,HBM3e peak (TrendForce)
+2025-09-01,hbm,15.0,analyst_est_dam,Samsung discounting
+2026-03-01,hbm,16.0,analyst_est_dam,2026 price hike (TrendForce)
+2026-09-01,hbm,16.5,analyst_est_dam,HBM4 projected
