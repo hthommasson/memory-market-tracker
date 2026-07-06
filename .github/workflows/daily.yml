@@ -1,7 +1,7 @@
 name: daily
 on:
   schedule:
-    - cron: "30 22 * * *"   # ~22:30 UTC, after US market close year-round (spec §6)
+    - cron: "47 22 * * *"   # odd minute dodges GitHub's :00/:30 cron congestion (schedules there get dropped under load); still after US close year-round
   workflow_dispatch: {}
 permissions:
   contents: write
@@ -27,6 +27,9 @@ jobs:
         env:
           SEC_CONTACT_EMAIL: ${{ secrets.SEC_CONTACT_EMAIL }}
         run: python -m collectors.sec_facts
+      - name: memory inc aggregate
+        continue-on-error: true
+        run: python -m engine.memory_inc
       - name: regime engine
         run: python -m engine.regime
       - name: volume + composite
