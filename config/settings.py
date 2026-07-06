@@ -27,5 +27,15 @@ EBAY_LIMIT = 50
 TICKERS = ["MU", "DRAM", "RAM", "MUU"]
 EQUITY_BACKFILL_START = "2024-01-01"
 
-# SEC (spec §3.2)
-MICRON_CIK = "0000723125"
+# Fundamentals — Panel B + Memory Inc. (spec §3.2, extended 2026-07-05)
+MICRON_CIK = "0000723125"          # retained for reference/back-compat
+EDGAR_FILERS = ["MU", "SNDK", "STX", "WDC"]   # CIKs resolved at runtime from SEC ticker file
+DART_ENTITIES = {"000660": "SKHYNIX"}          # KRX stock code -> label; corp_code resolved at runtime
+DART_BACKFILL_START_YEAR = 2024
+FX_TICKER = "KRW=X"                            # via yfinance (already a dependency)
+# Memory Inc. aggregate membership. Ratios (GM%, inventory days) run ex-Samsung by necessity:
+# Samsung's company-level statements blend the conglomerate; only its memory-SEGMENT revenue
+# (manual quarterly entry, templates/samsung_memory_template.csv) is defensible in an aggregate.
+# STX/WDC are HDD, not memory: collected for breadth context, excluded from Memory Inc.
+MEMORY_INC_REV_MEMBERS = ["MU", "SNDK", "SKHYNIX", "SAMSUNG_MEM"]
+MEMORY_INC_RATIO_MEMBERS = ["MU", "SNDK", "SKHYNIX"]
