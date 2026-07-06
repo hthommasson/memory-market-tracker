@@ -1,7 +1,12 @@
 name: daily
 on:
   schedule:
-    - cron: "47 22 * * *"   # odd minute dodges GitHub's :00/:30 cron congestion (schedules there get dropped under load); still after US close year-round
+    # Redundant same-UTC-day schedules: GitHub's scheduler dropped runs on 2026-07-05
+    # and 2026-07-06. The pipeline is fully idempotent (eBay date guard, append-only
+    # equities, deterministic rebuilds), so whichever fires first does the work and
+    # any later one is a verified no-op — no duplicate data possible.
+    - cron: "47 22 * * *"   # primary — after US close year-round
+    - cron: "29 23 * * *"   # backup, 42 min later, still same UTC day
   workflow_dispatch: {}
 permissions:
   contents: write
