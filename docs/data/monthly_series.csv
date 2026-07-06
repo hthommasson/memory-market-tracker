@@ -117,3 +117,5 @@ period,source,metric,value,value_wda,meta
 2026-04,census,us_imports_memory_airshare:6021,1.0,,
 2026-04,census,us_imports_memory_airshare:6XXX,1.0,,
 2026-04,census,us_imports_memory_airshare:-,0.9991,,
+2026-06,samsung_ir,samsung_prelim_rev_krw,171000000000000,,yoy=+129.3%|prelim|consensus_173.3t_missed
+2026-06,samsung_ir,samsung_prelim_op_krw,89400000000000,,yoy=19x|prelim|all_time_record|consensus_84.4t_beaten
