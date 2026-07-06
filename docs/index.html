@@ -88,12 +88,16 @@
       <div class="plot" id="p_equity"></div>
     </div>
     <div class="card">
-      <h2>Trade &amp; volume — Korea</h2><p class="sub">semiconductor exports, USD · P10/P20 = customs flash</p>
+      <h2>Trade &amp; volume &mdash; Korea</h2><p class="sub">nested categories: HBM ⊂ semis ⊂ total &mdash; levels, not addends &middot; P10/P20 = customs flash</p>
       <div class="plot" id="p_korea"></div>
     </div>
     <div class="card">
-      <h2>Micron fundamentals</h2><p class="sub">gross margin % and inventory days (EDGAR XBRL)</p>
+      <h2>Fundamentals &mdash; gross margin by filer</h2><p class="sub">EDGAR + DART filers &middot; bold ink line = Memory Inc. aggregate (ex-Samsung)</p>
       <div class="plot" id="p_fund"></div>
+    </div>
+    <div class="card">
+      <h2>Memory Inc. &mdash; the industry as one company</h2><p class="sub">revenue = members present (pale bar = single member) &middot; inventory days ex-Samsung &middot; <span id="mi_breadth"></span></p>
+      <div class="plot" id="p_mi"></div>
     </div>
     <div class="card">
       <h2>Lead–lag scan</h2><p class="sub">monthly changes, Spearman at best lag · descriptive only, n shown</p>
@@ -141,13 +145,14 @@ function feedBadge(name, last, cadence){
 }
 
 (async () => {
-  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats, mc] = await Promise.all([
+  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats, mc, mi] = await Promise.all([
     csv("data/regime_daily.csv"), csv("data/segment_daily.csv"),
     csv("data/static/reference_points.csv"), csv("data/equity_daily.csv"),
     csv("data/monthly_series.csv"), csv("data/filings_facts.csv"),
     csv("data/events.csv"), csv("data/divergence_flags.csv"),
     csv("data/volume_regime.csv"), csv("data/composite_regime.csv"),
-    csv("data/stats_lagged_corr.csv"), csv("data/static/mccallum.csv")]);
+    csv("data/stats_lagged_corr.csv"), csv("data/static/mccallum.csv"),
+    csv("data/memory_inc.csv")]);
 
   // --- Regime strip + composite badge ---
   const dimm = document.getElementById("dimm");
@@ -282,27 +287,68 @@ function feedBadge(name, last, cadence){
   // --- Panel D: Korea ---
   const krows = (kor || []).filter(r => r.metric && r.metric.startsWith("kr_exports"));
   if(krows.length){
-    const traces = ["kr_exports_semis_usd","kr_exports_hbm_usd","kr_exports_total_usd"].map((m,i) => {
+    const KSER = [["kr_exports_total_usd","total exports",C.line],
+                  ["kr_exports_semis_usd","└ semiconductors ⊂ total",C.teal],
+                  ["kr_exports_hbm_usd","└─ HBM ⊂ semis",C.violet]];
+    const traces = KSER.map(([m, label, color]) => {
       const rows = krows.filter(r => r.metric === m);
       return {x:rows.map(r => r.period), y:rows.map(r => +r.value / 1e9), type:"bar",
-              name:m.replace("kr_exports_","").replace("_usd",""),
-              marker:{color:[C.teal,C.violet,C.line][i]}};
+              name:label, marker:{color},
+              hovertemplate:"%{x} · $%{y:.1f}bn<extra>" + label + "</extra>"};
     }).filter(t => t.x.length);
     Plotly.newPlot("p_korea", traces, {...LAYOUT, barmode:"group",
       yaxis:{...LAYOUT.yaxis, title:"US$ bn"}}, CFG);
   } else empty("p_korea", "Seeded from templates — add flash reads on the ~11th and ~21st.");
 
-  // --- Fundamentals ---
-  const gm = (fund || []).filter(r => r.concept === "gross_margin_pct");
-  const inv = (fund || []).filter(r => r.concept === "inventory_days");
-  if(gm.length || inv.length){
-    Plotly.newPlot("p_fund", [
-      {x:gm.map(r => r.period_end), y:gm.map(r => +r.value), name:"gross margin %",
-       mode:"lines+markers", line:{color:C.teal}},
-      {x:inv.map(r => r.period_end), y:inv.map(r => +r.value), name:"inventory days",
-       mode:"lines+markers", yaxis:"y2", line:{color:C.violet}}],
-      {...LAYOUT, yaxis2:{overlaying:"y", side:"right", gridcolor:"rgba(0,0,0,0)"}}, CFG);
+  // --- Fundamentals: per-filer gross margin + Memory Inc. aggregate overlay ---
+  const qDate = q => q.slice(0,4) + {"1":"-03-31","2":"-06-30","3":"-09-30","4":"-12-31"}[q[5]];
+  const gmRows = (fund || []).filter(r => r.concept === "gross_margin_pct");
+  if(gmRows.length){
+    const FCOL = {MU:C.teal, SKHYNIX:C.red, SNDK:C.amber, STX:C.slate, WDC:C.violet};
+    const tickers = [...new Set(gmRows.map(r => r.ticker))].sort();
+    const traces = tickers.map(t => {
+      const rows = gmRows.filter(r => r.ticker === t)
+                         .sort((a,b) => a.period_end.localeCompare(b.period_end));
+      return {x:rows.map(r => r.period_end), y:rows.map(r => +r.value), name:t,
+              mode:"lines+markers", marker:{size:4},
+              line:{width:1.5, color:FCOL[t] || C.muted}};
+    });
+    const agg = (mi || []).filter(r => r.metric === "gross_margin_pct")
+                          .sort((a,b) => a.quarter.localeCompare(b.quarter));
+    if(agg.length) traces.push({x:agg.map(r => qDate(r.quarter)), y:agg.map(r => +r.value),
+      name:"MEMORY INC.", mode:"lines", line:{width:3.5, color:C.ink},
+      text:agg.map(r => r.members),
+      hovertemplate:"%{x} · %{y:.1f}%<br>members: %{text}<extra>aggregate</extra>"});
+    Plotly.newPlot("p_fund", traces, {...LAYOUT,
+      yaxis:{...LAYOUT.yaxis, title:"gross margin %"}}, CFG);
   } else empty("p_fund", NO_DATA + " Runs with SEC_CONTACT_EMAIL set.");
+
+  // --- Memory Inc.: aggregate revenue + inventory days ---
+  const miRev = (mi || []).filter(r => r.metric === "revenue_usd_bn")
+                          .sort((a,b) => a.quarter.localeCompare(b.quarter));
+  if(miRev.length){
+    const multi = r => r.members.includes("|");
+    const invA = (mi || []).filter(r => r.metric === "inventory_days")
+                           .sort((a,b) => a.quarter.localeCompare(b.quarter));
+    const traces = [
+      {x:miRev.map(r => qDate(r.quarter)), y:miRev.map(r => +r.value), type:"bar",
+       name:"revenue US$ bn",
+       marker:{color:miRev.map(r => multi(r) ? C.teal : "rgba(14,124,134,0.28)")},
+       text:miRev.map(r => r.members),
+       hovertemplate:"%{x} · $%{y:.1f}bn<br>%{text}<extra></extra>"}];
+    if(invA.length) traces.push({x:invA.map(r => qDate(r.quarter)), y:invA.map(r => +r.value),
+      name:"inventory days (ex-Samsung)", yaxis:"y2", mode:"lines+markers",
+      line:{width:2.5, color:C.violet}, text:invA.map(r => r.members),
+      hovertemplate:"%{x} · %{y:.0f} days<br>members: %{text}<extra></extra>"});
+    Plotly.newPlot("p_mi", traces, {...LAYOUT,
+      yaxis:{...LAYOUT.yaxis, title:"revenue US$ bn"},
+      yaxis2:{overlaying:"y", side:"right", title:"days", gridcolor:"rgba(0,0,0,0)"}}, CFG);
+    const br = (mi || []).filter(r => r.metric === "breadth_improving")
+                         .sort((a,b) => a.quarter.localeCompare(b.quarter)).pop();
+    if(br) document.getElementById("mi_breadth").textContent =
+      "breadth " + br.quarter + ": " + br.value + " improving " +
+      (br.meta.includes(":") ? "(" + br.meta.split(":")[0] + ")" : "");
+  } else empty("p_mi", "Aggregate appears once the fundamentals collectors have run.");
 
   // --- Events ---
   const ul = document.getElementById("events");
