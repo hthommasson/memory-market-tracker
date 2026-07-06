@@ -21,6 +21,14 @@ jobs:
       - name: mccallum context (one-time)
         continue-on-error: true
         run: python -m collectors.mccallum
+      - name: dart facts (Korean filers)
+        continue-on-error: true
+        env:
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        run: python -m collectors.dart_facts
+      - name: memory inc aggregate
+        continue-on-error: true
+        run: python -m engine.memory_inc
       - name: lead-lag stats
         continue-on-error: true
         run: python -m engine.stats
