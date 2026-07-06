@@ -6,7 +6,7 @@ new filers are a one-line settings edit. filings_facts.csv is refreshed SURGICAL
 this collector replaces only rows for its own CIKs, preserving DART-sourced rows
 (cik prefix 'dart:') and manual entries (e.g. SAMSUNG_MEM memory-segment revenue).
 """
-import csv, os
+import csv, datetime as dt, os
 import requests
 from collectors.common import append_rows, log, warn, env
 from config.settings import EDGAR_FILERS, DATA_DIR
@@ -37,7 +37,6 @@ def resolve_ciks(headers):
 
 def quarterly(facts, names):
     """Quarterly (10-Q/10-K) series for the first concept found; restatements win."""
-    import datetime as dt
     for name in names:
         node = facts.get("us-gaap", {}).get(name)
         if not node: continue
@@ -54,12 +53,45 @@ def quarterly(facts, names):
     return {}
 
 
+def annual(facts, names):
+    """Full-year (10-K) figures for the first concept found, ~52/53-week spans."""
+    for name in names:
+        node = facts.get("us-gaap", {}).get(name)
+        if not node:
+            continue
+        out = {}
+        for unit_rows in node.get("units", {}).values():
+            for r in unit_rows:
+                if r.get("form") != "10-K" or "start" not in r:
+                    continue
+                span = (dt.date.fromisoformat(r["end"]) - dt.date.fromisoformat(r["start"])).days
+                if 340 <= span <= 380:
+                    out[r["end"]] = r["val"]
+        if out:
+            return out
+    return {}
+
+
 def filer_rows(ticker, cik, headers):
     url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"
     r = requests.get(url, headers=headers, timeout=60)
     r.raise_for_status()
     facts = r.json().get("facts", {})
     series = {k: quarterly(facts, v) for k, v in CONCEPTS.items()}
+    # v2.1: synthesize the 10-K-only fiscal Q4 as (annual - three reported quarters).
+    # Micron tags full-year income but not a standalone Q4, so its Aug-ending quarter
+    # otherwise contributes only balance-sheet rows and calendar-Q3 aggregates sawtooth.
+    synth = 0
+    for concept in ("revenue", "gross_profit", "cogs"):
+        for a_end, a_val in annual(facts, CONCEPTS[concept]).items():
+            if a_end in series[concept]:
+                continue
+            A = dt.date.fromisoformat(a_end)
+            qs = [v for e, v in series[concept].items()
+                  if 0 < (A - dt.date.fromisoformat(e)).days < 370]
+            if len(qs) == 3:
+                series[concept][a_end] = a_val - sum(qs)
+                synth += 1
     # Gross profit fallback: derive from revenue - cogs where the tag is absent
     for end, rev in series["revenue"].items():
         if end not in series["gross_profit"] and end in series["cogs"]:
@@ -75,7 +107,7 @@ def filer_rows(ticker, cik, headers):
             rows.append([end, cik, ticker, "gross_margin_pct", round(100 * gp / rev, 2)])
         if cogs and inv:
             rows.append([end, cik, ticker, "inventory_days", round(91.25 * inv / cogs, 1)])
-    return rows
+    return rows, synth
 
 
 def main():
@@ -85,9 +117,10 @@ def main():
     fresh = []
     for ticker, cik in ciks.items():
         try:
-            rows = filer_rows(ticker, cik, headers)
+            rows, synth = filer_rows(ticker, cik, headers)
             fresh.extend(rows)
-            log(f"{ticker} (CIK {cik}): {len(rows)} rows")
+            note = f" (+{synth} synthesized fiscal-Q4 values)" if synth else ""
+            log(f"{ticker} (CIK {cik}): {len(rows)} rows{note}")
         except Exception as e:
             warn(f"{ticker}: {e} — other filers unaffected")
     if not fresh:
