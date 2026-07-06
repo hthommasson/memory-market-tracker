@@ -106,9 +106,25 @@ def observe(sku, asks):
             sku.get("condition", "new"), n]
 
 
+def already_observed_today():
+    """Idempotent guard: True if price_obs already has rows dated today.
+    Prevents double-sampling when a manual run and a delayed cron both fire
+    (observed 2026-07-05: GitHub delivered the 22:30 schedule 62 minutes late,
+    19 minutes after a manual run — same day sampled twice)."""
+    import os
+    if not os.path.exists(PATH):
+        return False
+    prefix = today() + ","
+    with open(PATH) as f:
+        return any(line.startswith(prefix) for line in f)
+
+
 def main():
     dry = "--dry-run" in sys.argv
     fillability = "--fillability" in sys.argv
+    if not fillability and already_observed_today():
+        log(f"{today()} already observed — skipping (idempotent guard, double-run protection)")
+        return
     registry = load_registry()
     token = None
     if not dry:
