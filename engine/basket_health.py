@@ -18,10 +18,13 @@ def main():
     latest = obs["date"].max()
     ok = obs[(obs["in_stock"].astype(str) == "True")]
     last_ok = ok.groupby("sku_id")["date"].max()
+    first = dict(zip(reg["sku_id"], reg["first_seen"].fillna(latest)))
     for sku in active:
         seen = last_ok.get(sku)
         if seen is None:
-            problems.append(f"{sku}: never had >=k qualifying listings")
+            age = (pd.Timestamp(latest) - pd.Timestamp(first.get(sku, latest))).days
+            if age >= 7:   # grace period: new candidates get a week before being flagged
+                problems.append(f"{sku}: no qualifying listings in the {age} days since added")
         else:
             gap = (pd.Timestamp(latest) - pd.Timestamp(seen)).days
             if gap >= 7: problems.append(f"{sku}: no qualifying listings for {gap} days (last {seen})")
