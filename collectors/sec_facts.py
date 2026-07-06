@@ -1,10 +1,19 @@
-"""Panel B collector: Micron XBRL company facts -> gross margin %, inventory days (spec §3.2)."""
+"""Panel B collector v2: XBRL company facts for all US memory-complex filers
+(spec §3.2, extended 2026-07-05) -> per-filer revenue, gross margin %, inventory days.
+
+CIKs are resolved at runtime from the SEC's official ticker file — nothing hardcoded,
+new filers are a one-line settings edit. filings_facts.csv is refreshed SURGICALLY:
+this collector replaces only rows for its own CIKs, preserving DART-sourced rows
+(cik prefix 'dart:') and manual entries (e.g. SAMSUNG_MEM memory-segment revenue).
+"""
+import csv, os
 import requests
 from collectors.common import append_rows, log, warn, env
-from config.settings import MICRON_CIK, DATA_DIR
+from config.settings import EDGAR_FILERS, DATA_DIR
 
 PATH = f"{DATA_DIR}/filings_facts.csv"
 HEADER = ["period_end", "cik", "ticker", "concept", "value"]
+TICKER_FILE = "https://www.sec.gov/files/company_tickers.json"
 CONCEPTS = {
     "revenue": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues"],
     "gross_profit": ["GrossProfit"],
@@ -12,8 +21,22 @@ CONCEPTS = {
     "cogs": ["CostOfGoodsAndServicesSold", "CostOfRevenue"],
 }
 
+
+def resolve_ciks(headers):
+    r = requests.get(TICKER_FILE, headers=headers, timeout=60)
+    r.raise_for_status()
+    by_ticker = {v["ticker"].upper(): f"{v['cik_str']:010d}" for v in r.json().values()}
+    out = {}
+    for t in EDGAR_FILERS:
+        if t.upper() in by_ticker:
+            out[t] = by_ticker[t.upper()]
+        else:
+            warn(f"{t}: not found in SEC ticker file — skipping")
+    return out
+
+
 def quarterly(facts, names):
-    """Extract quarterly (10-Q/10-K) series for the first concept found; restatements win."""
+    """Quarterly (10-Q/10-K) series for the first concept found; restatements win."""
     import datetime as dt
     for name in names:
         node = facts.get("us-gaap", {}).get(name)
@@ -30,24 +53,56 @@ def quarterly(facts, names):
         if out: return out
     return {}
 
-def main():
-    contact = env("SEC_CONTACT_EMAIL", required=True)
-    url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{MICRON_CIK}.json"
-    r = requests.get(url, headers={"User-Agent": f"memory-market-tracker {contact}"}, timeout=60)
+
+def filer_rows(ticker, cik, headers):
+    url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"
+    r = requests.get(url, headers=headers, timeout=60)
     r.raise_for_status()
     facts = r.json().get("facts", {})
     series = {k: quarterly(facts, v) for k, v in CONCEPTS.items()}
+    # Gross profit fallback: derive from revenue - cogs where the tag is absent
+    for end, rev in series["revenue"].items():
+        if end not in series["gross_profit"] and end in series["cogs"]:
+            series["gross_profit"][end] = rev - series["cogs"][end]
     rows = []
     for concept, data in series.items():
         for end, val in sorted(data.items()):
-            rows.append([end, MICRON_CIK, "MU", concept, val])
-    for end in sorted(series.get("gross_profit", {})):
+            rows.append([end, cik, ticker, concept, val])
+    for end in sorted(series["gross_profit"]):
         rev, gp = series["revenue"].get(end), series["gross_profit"].get(end)
         cogs, inv = series["cogs"].get(end), series["inventory"].get(end)
-        if rev and gp: rows.append([end, MICRON_CIK, "MU", "gross_margin_pct", round(100 * gp / rev, 2)])
-        if cogs and inv: rows.append([end, MICRON_CIK, "MU", "inventory_days", round(91.25 * inv / cogs, 1)])
-    import os
-    if os.path.exists(PATH): os.remove(PATH)  # full-refresh table: restatements make append-only wrong here
-    append_rows(PATH, HEADER, rows)
+        if rev and gp:
+            rows.append([end, cik, ticker, "gross_margin_pct", round(100 * gp / rev, 2)])
+        if cogs and inv:
+            rows.append([end, cik, ticker, "inventory_days", round(91.25 * inv / cogs, 1)])
+    return rows
+
+
+def main():
+    contact = env("SEC_CONTACT_EMAIL", required=True)
+    headers = {"User-Agent": f"memory-market-tracker {contact}"}
+    ciks = resolve_ciks(headers)
+    fresh = []
+    for ticker, cik in ciks.items():
+        try:
+            rows = filer_rows(ticker, cik, headers)
+            fresh.extend(rows)
+            log(f"{ticker} (CIK {cik}): {len(rows)} rows")
+        except Exception as e:
+            warn(f"{ticker}: {e} — other filers unaffected")
+    if not fresh:
+        warn("no filer data collected — leaving filings_facts.csv untouched")
+        return
+    # Surgical refresh: replace only this collector's rows (matched by CIK)
+    mine = set(ciks.values())
+    keep = []
+    if os.path.exists(PATH):
+        with open(PATH) as f:
+            keep = [r for r in csv.reader(f)][1:]
+        keep = [r for r in keep if r and r[1] not in mine]
+        os.remove(PATH)
+    append_rows(PATH, HEADER, keep + fresh)
+    log(f"filings_facts rebuilt: {len(fresh)} EDGAR rows + {len(keep)} preserved (DART/manual)")
+
 
 if __name__ == "__main__": main()
