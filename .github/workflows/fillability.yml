@@ -16,3 +16,10 @@ jobs:
           EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
           EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
         run: python -m collectors.ebay_prices --fillability
+      - name: distributor fillability probe
+        continue-on-error: true
+        env:
+          MOUSER_API_KEY: ${{ secrets.MOUSER_API_KEY }}
+          DIGIKEY_CLIENT_ID: ${{ secrets.DIGIKEY_CLIENT_ID }}
+          DIGIKEY_CLIENT_SECRET: ${{ secrets.DIGIKEY_CLIENT_SECRET }}
+        run: python -m collectors.distributors --fillability
