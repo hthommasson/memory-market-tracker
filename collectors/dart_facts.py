@@ -32,6 +32,8 @@ REPRT = {"11013": ("03-31", 3), "11012": ("06-30", 6), "11014": ("09-30", 9), "1
 IS_TAGS = {"revenue": ("ifrs-full_Revenue", ("수익(매출액)", "매출액")),
            "cogs": ("ifrs-full_CostOfSales", ("매출원가",))}
 BS_TAGS = {"inventory": ("ifrs-full_Inventories", ("재고자산",))}
+CF_TAGS = {"capex": ("ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities",
+                     ("유형자산의 취득",))}
 
 
 def corp_codes(key):
@@ -84,6 +86,7 @@ def fetch_year(key, corp_code, year):
             "rev_cum": pick(rows, ("IS", "CIS"), *IS_TAGS["revenue"]),
             "cogs_cum": pick(rows, ("IS", "CIS"), *IS_TAGS["cogs"]),
             "inventory": pick(rows, ("BS",), *BS_TAGS["inventory"]),
+            "capex_cum": (lambda c: abs(c) if c is not None else None)(pick(rows, ("CF",), *CF_TAGS["capex"])),
         }
     return out
 
@@ -96,17 +99,19 @@ def quarterly_flows(cum_by_end):
     for end in ends:
         year = end[:4]
         if prev.get("year") != year:
-            prev = {"year": year, "rev": 0.0, "cogs": 0.0}
+            prev = {"year": year, "rev": 0.0, "cogs": 0.0, "capex": 0.0}
         c = cum_by_end[end]
         rev_c, cogs_c = c.get("rev_cum"), c.get("cogs_cum")
         if rev_c is None or cogs_c is None:
-            prev = {"year": year, "rev": None, "cogs": None}  # chain broken this year
+            prev = {"year": year, "rev": None, "cogs": None, "capex": None}  # chain broken this year
             continue
         if prev["rev"] is None:
             continue
+        cap_c = c.get("capex_cum")
+        cap_q = (cap_c - prev["capex"]) if (cap_c is not None and prev.get("capex") is not None) else None
         flows[end] = {"revenue": rev_c - prev["rev"], "cogs": cogs_c - prev["cogs"],
-                      "inventory": c.get("inventory")}
-        prev = {"year": year, "rev": rev_c, "cogs": cogs_c}
+                      "inventory": c.get("inventory"), "capex": cap_q}
+        prev = {"year": year, "rev": rev_c, "cogs": cogs_c, "capex": cap_c}
     return flows
 
 
@@ -154,6 +159,11 @@ def main():
                                   round(100 * (rev - cogs) / rev, 2)])
             if inv is not None and cogs:
                 fresh.append([end, cik, label, "inventory_days", round(91.25 * inv / cogs, 1)])
+            cap = f.get("capex")
+            if cap is not None:
+                fresh.append([end, cik, label, "capex_krw", cap])
+                if rev:
+                    fresh.append([end, cik, label, "capex_pct_revenue", round(100 * cap / rev, 2)])
             if fx and end in fx["avg"]:
                 a, e_ = fx["avg"][end], fx["eop"].get(end, fx["avg"][end])
                 fresh.append([end, cik, label, "fx_krwusd_avg", round(a, 2)])
@@ -161,6 +171,8 @@ def main():
                 fresh.append([end, cik, label, "cogs_usd", round(cogs / a, 0)])
                 if inv is not None:
                     fresh.append([end, cik, label, "inventory_usd", round(inv / e_, 0)])
+                if f.get("capex") is not None:
+                    fresh.append([end, cik, label, "capex_usd", round(f["capex"] / a, 0)])
         log(f"{label}: {len([r for r in fresh if r[1] == cik])} rows from {len(flows)} quarters")
     if not fresh:
         warn("no DART data collected — leaving filings_facts.csv untouched"); return
