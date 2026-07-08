@@ -20,6 +20,10 @@ CONCEPTS = {
     "inventory": ["InventoryNet"],
     "cogs": ["CostOfGoodsAndServicesSold", "CostOfRevenue"],
 }
+# Cash-flow tags are cumulative YTD in 10-Qs (no 3-month frames), so capex is
+# extracted by same-start grouping + differencing (the DART trick, applied to EDGAR).
+CAPEX_TAGS = ["PaymentsToAcquirePropertyPlantAndEquipment",
+              "PaymentsToAcquireProductiveAssets"]
 
 
 def resolve_ciks(headers):
@@ -72,6 +76,35 @@ def annual(facts, names):
     return {}
 
 
+def cumulative_flows(facts, names):
+    """Quarterly flows from cumulative cash-flow frames: group frames by their
+    shared start date (all YTD frames of one fiscal year begin at the fiscal-year
+    start), sort by end, take the first as-is, then successive differences.
+    Filers that tag true 3-month frames get singleton groups and pass through."""
+    for name in names:
+        node = facts.get("us-gaap", {}).get(name)
+        if not node:
+            continue
+        frames = {}
+        for unit_rows in node.get("units", {}).values():
+            for r in unit_rows:
+                if r.get("form") not in ("10-Q", "10-K") or "start" not in r:
+                    continue
+                frames[(r["start"], r["end"])] = r["val"]
+        by_start = {}
+        for (st, end), val in frames.items():
+            by_start.setdefault(st, []).append((end, val))
+        out = {}
+        for st, series in by_start.items():
+            prev = 0
+            for end, val in sorted(series):
+                out[end] = val - prev
+                prev = val
+        if out:
+            return out
+    return {}
+
+
 def filer_rows(ticker, cik, headers):
     url = f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"
     r = requests.get(url, headers=headers, timeout=60)
@@ -96,7 +129,13 @@ def filer_rows(ticker, cik, headers):
     for end, rev in series["revenue"].items():
         if end not in series["gross_profit"] and end in series["cogs"]:
             series["gross_profit"][end] = rev - series["cogs"][end]
+    capex = cumulative_flows(facts, CAPEX_TAGS)
     rows = []
+    for end, val in sorted(capex.items()):
+        rows.append([end, cik, ticker, "capex", val])
+        rev = series["revenue"].get(end)
+        if rev:
+            rows.append([end, cik, ticker, "capex_pct_revenue", round(100 * val / rev, 2)])
     for concept, data in series.items():
         for end, val in sorted(data.items()):
             rows.append([end, cik, ticker, concept, val])
