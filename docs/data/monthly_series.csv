@@ -119,3 +119,9 @@ period,source,metric,value,value_wda,meta
 2026-04,census,us_imports_memory_airshare:-,0.9991,,
 2026-06,samsung_ir,samsung_prelim_rev_krw,171000000000000,,yoy=+129.3%|prelim|consensus_173.3t_missed
 2026-06,samsung_ir,samsung_prelim_op_krw,89400000000000,,yoy=19x|prelim|all_time_record|consensus_84.4t_beaten
+2026-01,sia_wsts,global_semi_sales_usd,82500000000,,yoy=+46.1%|3mma
+2026-02,sia_wsts,global_semi_sales_usd,88800000000,,yoy=+61.8%|3mma
+2026-03,sia_wsts,global_semi_sales_usd,99500000000,,yoy=+79.2%|3mma
+2026-04,sia_wsts,global_semi_sales_usd,110500000000,,yoy=+93.9%|3mma
+2026-05,sia_wsts,global_semi_sales_usd,120600000000,,yoy=+104.1%|3mma|record|15th_consec_mom_gain
+2025-12,sia_wsts,memory_category_sales_usd_annual,223100000000,,fy2025|share_of_total=28.2%|total_791.7b
