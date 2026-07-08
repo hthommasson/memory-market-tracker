@@ -22,31 +22,47 @@ quarter,metric,value,members,meta
 2023Q1,revenue_usd_bn,3.69,MU,1/4 members
 2023Q2,revenue_usd_bn,3.75,MU,1/4 members
 2023Q4,revenue_usd_bn,6.39,MU|SNDK,2/4 members
+2023Q4,capex_usd_bn,1.9,MU|SNDK,supply response; 2/3 members
+2023Q4,capex_pct_revenue,29.65,MU|SNDK,supply response; 2/3 members
 2024Q1,revenue_usd_bn,16.89,MU|SNDK|SKHYNIX,3/4 members
+2024Q1,capex_usd_bn,1.41,MU|SNDK,supply response; 2/3 members
+2024Q1,capex_pct_revenue,18.77,MU|SNDK,supply response; 2/3 members
 2024Q1,gross_margin_pct,30.89,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2024Q1,inventory_days,162.6,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2024Q2,revenue_usd_bn,18.8,MU|SKHYNIX,2/4 members
 2024Q2,gross_margin_pct,38.85,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2024Q2,inventory_days,144.0,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2024Q3,revenue_usd_bn,22.6,MU|SNDK|SKHYNIX,3/4 members
+2024Q3,capex_usd_bn,3.19,MU|SNDK,supply response; 2/3 members
+2024Q3,capex_pct_revenue,33.08,MU|SNDK,supply response; 2/3 members
 2024Q3,gross_margin_pct,45.88,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2024Q3,inventory_days,155.2,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2024Q4,revenue_usd_bn,24.76,MU|SNDK|SKHYNIX,3/4 members
+2024Q4,capex_usd_bn,3.25,MU|SNDK,supply response; 2/3 members
+2024Q4,capex_pct_revenue,30.74,MU|SNDK,supply response; 2/3 members
 2024Q4,gross_margin_pct,45.99,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2024Q4,inventory_days,136.1,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q1,revenue_usd_bn,21.92,MU|SNDK|SKHYNIX,3/4 members
+2025Q1,capex_usd_bn,4.1,MU|SNDK,supply response; 2/3 members
+2025Q1,capex_pct_revenue,42.05,MU|SNDK,supply response; 2/3 members
 2025Q1,gross_margin_pct,47.06,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q1,inventory_days,165.7,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q2,revenue_usd_bn,27.09,MU|SNDK|SKHYNIX,3/4 members
+2025Q2,capex_usd_bn,2.98,MU|SNDK,supply response; 2/3 members
+2025Q2,capex_pct_revenue,26.63,MU|SNDK,supply response; 2/3 members
 2025Q2,gross_margin_pct,46.4,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q2,inventory_days,129.7,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q3,revenue_usd_bn,19.96,SNDK|SKHYNIX,2/4 members
 2025Q3,gross_margin_pct,54.19,SNDK|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2025Q3,inventory_days,112.8,SNDK|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2025Q4,revenue_usd_bn,39.35,MU|SNDK|SKHYNIX,3/4 members
+2025Q4,capex_usd_bn,5.43,MU|SNDK,supply response; 2/3 members
+2025Q4,capex_pct_revenue,32.57,MU|SNDK,supply response; 2/3 members
 2025Q4,gross_margin_pct,62.99,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q4,inventory_days,126.0,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2026Q1,revenue_usd_bn,65.76,MU|SNDK|SKHYNIX,3/4 members
+2026Q1,capex_usd_bn,6.43,MU|SNDK,supply response; 2/3 members
+2026Q1,capex_pct_revenue,21.58,MU|SNDK,supply response; 2/3 members
 2026Q1,gross_margin_pct,77.43,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2026Q1,inventory_days,129.3,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2026Q2,revenue_usd_bn,41.46,MU,1/4 members
