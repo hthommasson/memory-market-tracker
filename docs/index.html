@@ -88,7 +88,7 @@
       <div class="plot" id="p_equity"></div>
     </div>
     <div class="card">
-      <h2>Trade &amp; volume &mdash; Korea</h2><p class="sub">nested categories: HBM ⊂ semis ⊂ total &mdash; levels, not addends &middot; P10/P20 = customs flash</p>
+      <h2>Trade &amp; volume &mdash; Korea</h2><p class="sub">nested: HBM ⊂ KR semis ⊂ KR total; KR semis ⊂ world semis &mdash; levels, not addends &middot; P10/P20 = customs flash</p>
       <div class="plot" id="p_korea"></div>
     </div>
     <div class="card">
@@ -287,7 +287,8 @@ function feedBadge(name, last, cadence){
   // --- Panel D: Korea ---
   const krows = (kor || []).filter(r => r.metric && r.metric.startsWith("kr_exports"));
   if(krows.length){
-    const KSER = [["kr_exports_total_usd","total exports",C.line],
+    const KSER = [["global_semi_sales_usd","world semiconductors (SIA/WSTS, 3MMA)","#B9C4CE"],
+                  ["kr_exports_total_usd","KR total exports",C.line],
                   ["kr_exports_semis_usd","└ semiconductors ⊂ total",C.teal],
                   ["kr_exports_hbm_usd","└─ HBM ⊂ semis",C.violet]];
     const traces = KSER.map(([m, label, color]) => {
