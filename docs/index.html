@@ -88,15 +88,15 @@
       <div class="plot" id="p_equity"></div>
     </div>
     <div class="card">
-      <h2>Trade &amp; volume &mdash; Korea</h2><p class="sub">nested: HBM ⊂ KR semis ⊂ KR total; KR semis ⊂ world semis &mdash; levels, not addends &middot; P10/P20 = customs flash</p>
+      <h2>Trade &amp; volume &mdash; Korea</h2><p class="sub">nested: HBM ⊂ KR semis ⊂ KR total; KR semis ⊂ world semis &mdash; levels, not addends &middot; monthly totals (flash P-reads feed the engine, not the bars)</p>
       <div class="plot" id="p_korea"></div>
     </div>
     <div class="card">
-      <h2>Fundamentals &mdash; gross margin by filer</h2><p class="sub">EDGAR + DART filers &middot; bold ink line = Memory Inc. aggregate (ex-Samsung)</p>
+      <h2>Fundamentals &mdash; gross margin by filer</h2><p class="sub">EDGAR + DART filers &middot; bold ink = Memory Inc. aggregate (ex-Samsung) &middot; dotted = HDD control group</p>
       <div class="plot" id="p_fund"></div>
     </div>
     <div class="card">
-      <h2>Memory Inc. &mdash; the industry as one company</h2><p class="sub">revenue = members present (pale bar = single member) &middot; inventory days ex-Samsung &middot; <span id="mi_breadth"></span></p>
+      <h2>Memory Inc. &mdash; the industry as one company</h2><p class="sub">revenue bars &middot; red = capex (the supply response that ends squeezes) &middot; inventory days ex-Samsung &middot; <span id="mi_breadth"></span></p>
       <div class="plot" id="p_mi"></div>
     </div>
     <div class="card">
@@ -290,7 +290,7 @@ function feedBadge(name, last, cadence){
                 ["kr_exports_semis_usd","└ semiconductors ⊂ total",C.teal],
                 ["kr_exports_hbm_usd","└─ HBM ⊂ semis",C.violet]];
   const kmetrics = new Set(KSER.map(k => k[0]));
-  const krows = (kor || []).filter(r => kmetrics.has(r.metric));
+  const krows = (kor || []).filter(r => kmetrics.has(r.metric) && !String(r.period).includes("-P"));
   if(krows.length){
     const traces = KSER.map(([m, label, color]) => {
       const rows = krows.filter(r => r.metric === m);
@@ -312,9 +312,10 @@ function feedBadge(name, last, cadence){
     const traces = tickers.map(t => {
       const rows = gmRows.filter(r => r.ticker === t)
                          .sort((a,b) => a.period_end.localeCompare(b.period_end));
+      const hdd = (t === "STX" || t === "WDC");
       return {x:rows.map(r => r.period_end), y:rows.map(r => +r.value), name:t,
-              mode:"lines+markers", marker:{size:4},
-              line:{width:1.5, color:FCOL[t] || C.muted}};
+              mode:"lines+markers", marker:{size:hdd ? 3 : 4},
+              line:{width:hdd ? 1 : 1.5, dash:hdd ? "dot" : "solid", color:FCOL[t] || C.muted}};
     });
     const agg = (mi || []).filter(r => r.metric === "gross_margin_pct")
                           .sort((a,b) => a.quarter.localeCompare(b.quarter));
@@ -339,6 +340,12 @@ function feedBadge(name, last, cadence){
        marker:{color:miRev.map(r => multi(r) ? C.teal : "rgba(14,124,134,0.28)")},
        text:miRev.map(r => r.members),
        hovertemplate:"%{x} · $%{y:.1f}bn<br>%{text}<extra></extra>"}];
+    const capA = (mi || []).filter(r => r.metric === "capex_usd_bn")
+                           .sort((a,b) => a.quarter.localeCompare(b.quarter));
+    if(capA.length) traces.push({x:capA.map(r => qDate(r.quarter)), y:capA.map(r => +r.value),
+      name:"capex US$ bn (supply response)", mode:"lines+markers", marker:{size:4},
+      line:{width:2, color:C.red}, text:capA.map(r => r.members),
+      hovertemplate:"%{x} · $%{y:.1f}bn capex<br>members: %{text}<extra></extra>"});
     if(invA.length) traces.push({x:invA.map(r => qDate(r.quarter)), y:invA.map(r => +r.value),
       name:"inventory days (ex-Samsung)", yaxis:"y2", mode:"lines+markers",
       line:{width:2.5, color:C.violet}, text:invA.map(r => r.members),
