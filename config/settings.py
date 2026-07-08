@@ -39,3 +39,16 @@ FX_TICKER = "KRW=X"                            # via yfinance (already a depende
 # STX/WDC are HDD, not memory: collected for breadth context, excluded from Memory Inc.
 MEMORY_INC_REV_MEMBERS = ["MU", "SNDK", "SKHYNIX", "SAMSUNG_MEM"]
 MEMORY_INC_RATIO_MEMBERS = ["MU", "SNDK", "SKHYNIX"]
+
+# FRED — official US statistics (weekly-fresh macro context; free key from fred.stlouisfed.org)
+# NOTE 2026-07-07: several BLS product-line PPIs (IC packages, primary products) stopped
+# updating Sep 2025; the collector warns and skips any series that goes stale or vanishes.
+# No live memory-only PPI exists — these are semiconductor-industry-level lenses.
+FRED_SERIES = {
+    "PCU334413334413": "us_ppi_semiconductor_mfg",        # PPI: semiconductor & related device mfg
+    "PCU334413334413A": "us_ppi_other_semi_devices",      # PPI: other semi devices incl. wafers
+    "PCU33443344": "us_ppi_semi_electronic_components",   # PPI: semis & other electronic components
+    "IPG3344S": "us_ip_semiconductors",                   # industrial production: semis & components
+    "DEXKOUS": "fx_krwusd_monthly_avg",                   # KRW/USD monthly avg (yfinance FX fallback)
+}
+FRED_OBS_START = "2024-01-01"
