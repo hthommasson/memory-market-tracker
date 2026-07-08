@@ -34,6 +34,11 @@ jobs:
           DIGIKEY_CLIENT_ID: ${{ secrets.DIGIKEY_CLIENT_ID }}
           DIGIKEY_CLIENT_SECRET: ${{ secrets.DIGIKEY_CLIENT_SECRET }}
         run: python -m collectors.distributors
+      - name: fred macro context
+        continue-on-error: true
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python -m collectors.fred_series
       - name: sec facts
         continue-on-error: true
         env:
