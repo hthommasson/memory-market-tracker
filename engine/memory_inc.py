@@ -50,6 +50,13 @@ def load():
     return data
 
 
+def usd_capex(data, member, lab):
+    if member == "SAMSUNG_MEM":
+        return None
+    key = "capex_usd" if member == "SKHYNIX" else "capex"
+    return data.get((member, key), {}).get(lab)
+
+
 def usd_components(data, member, lab):
     """(revenue, cogs, inventory) in USD for one member-quarter, or Nones."""
     if member == "SKHYNIX":
@@ -90,6 +97,17 @@ def main():
                 rev_sum += rev; cogs_sum += cogs; inv_sum += inv
                 gp_sum += rev - cogs
                 ratio_hist[m][lab] = (100 * (rev - cogs) / rev, 91.25 * inv / cogs)
+        cap_sum, cap_rev, cap_members = 0.0, 0.0, []
+        for mmb in MEMORY_INC_RATIO_MEMBERS:
+            cap = usd_capex(data, mmb, lab)
+            rv, _, _ = usd_components(data, mmb, lab)
+            if cap is not None and rv:
+                cap_members.append(mmb); cap_sum += cap; cap_rev += rv
+        if len(cap_members) >= 2 and cap_rev:
+            nc = "|".join(cap_members)
+            meta_c = f"supply response; {len(cap_members)}/{len(MEMORY_INC_RATIO_MEMBERS)} members"
+            rows.append([lab, "capex_usd_bn", round(cap_sum / 1e9, 2), nc, meta_c])
+            rows.append([lab, "capex_pct_revenue", round(100 * cap_sum / cap_rev, 2), nc, meta_c])
         if len(ratio_members) >= 2 and rev_sum and cogs_sum:
             names = "|".join(ratio_members)
             note = f"ex-Samsung by necessity; {len(ratio_members)}/{len(MEMORY_INC_RATIO_MEMBERS)} members"
