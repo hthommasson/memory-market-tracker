@@ -271,3 +271,7 @@ period,source,metric,value,value_wda,meta
 2026-04,fred,fx_krwusd_monthly_avg,1483.8,,fred:DEXKOUS
 2026-05,fred,fx_krwusd_monthly_avg,1488.4,,fred:DEXKOUS
 2026-06,fred,fx_krwusd_monthly_avg,1529.46,,fred:DEXKOUS
+2026-04,derived,nanya_2408_monthly_revenue_twd,25490000000,,derived=q2_minus_may_jun|approx
+2026-05,derived,nanya_2408_monthly_revenue_twd,27670000000,,derived=jun_over_mom|approx
+2026-06,nanya_ir,nanya_2408_monthly_revenue_twd,29388000000,,yoy=+621.3%|mom=+6.2%|8th_consec_record
+2026-06,winbond_ir,tw_winbond_2344_monthly_revenue_twd,20600000000,,yoy=+189.9%|mom=+3.0%|7th_consec_record
