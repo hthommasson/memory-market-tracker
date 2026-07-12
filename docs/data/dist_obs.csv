@@ -29,3 +29,8 @@ date,sku_id,source,mpn_matched,matches,qty_available,lead_time_days,unit_price_u
 2026-07-11,ic_micron_d5_1g16,mouser,MT60B1G16HD-72B:H,6,1468,0,242.19
 2026-07-11,mod_micron_d4_8g,mouser,MTA8ATF1G64AZ-3G2E1,1,130,365,104.47
 2026-07-11,mod_kingston_d4_ecc,mouser,KSM32ED8/32HD,1,0,42,
+2026-07-12,ic_micron_d4_512m16,mouser,MT40A512M16TD-062E:R,4,1739,84,92.84
+2026-07-12,ic_micron_d5_2g8,mouser,MT60B2G8RZ-64B:D,1,1297,365,248.33
+2026-07-12,ic_micron_d5_1g16,mouser,MT60B1G16HD-64B IT:D,3,1468,0,242.19
+2026-07-12,mod_micron_d4_8g,mouser,MTA8ATF1G64AZ-3G2E1,1,130,365,104.47
+2026-07-12,mod_kingston_d4_ecc,mouser,KSM32ED8/32HD,1,0,42,
