@@ -24,7 +24,7 @@ SELLER_FEEDBACK_PCT_MIN = 97.0 # was 98.0
 EBAY_LIMIT = 50
 
 # Equities (spec §3.3)
-TICKERS = ["MU", "DRAM", "RAM", "MUU"]
+TICKERS = ["MU", "DRAM", "RAM", "MUU", "SKHY"]  # SKHY: hynix ADR, regular-way from 2026-07-13 (debut day traded as SKHYV, uncaptured)
 EQUITY_BACKFILL_START = "2024-01-01"
 
 # Fundamentals — Panel B + Memory Inc. (spec §3.2, extended 2026-07-05)
