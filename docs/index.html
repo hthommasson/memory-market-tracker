@@ -92,12 +92,20 @@
       <div class="plot" id="p_korea"></div>
     </div>
     <div class="card">
+      <h2>US producer prices &mdash; semis (FRED)</h2><p class="sub">official BLS indices, rebased to 100 at Jan 2024 &middot; monthly, ~2-week lag &middot; context, never a momentum input</p>
+      <div class="plot" id="p_fred"></div>
+    </div>
+    <div class="card">
       <h2>Fundamentals &mdash; gross margin by filer</h2><p class="sub">EDGAR + DART filers &middot; bold ink = Memory Inc. aggregate (ex-Samsung) &middot; dotted = HDD control group</p>
       <div class="plot" id="p_fund"></div>
     </div>
     <div class="card">
       <h2>Memory Inc. &mdash; the industry as one company</h2><p class="sub">revenue bars &middot; red = capex (the supply response that ends squeezes) &middot; inventory days ex-Samsung &middot; <span id="mi_breadth"></span></p>
       <div class="plot" id="p_mi"></div>
+    </div>
+    <div class="card">
+      <h2>Distributor telemetry &mdash; supply stress</h2><p class="sub">experimental (spec &sect;3.5) &middot; factory lead time by component, days &middot; 0 = ships now &middot; hover: shelf qty &middot; Mouser live, DigiKey pending</p>
+      <div class="plot" id="p_dist"></div>
     </div>
     <div class="card">
       <h2>Lead–lag scan</h2><p class="sub">monthly changes, Spearman at best lag · descriptive only, n shown</p>
@@ -145,14 +153,15 @@ function feedBadge(name, last, cadence){
 }
 
 (async () => {
-  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats, mc, mi] = await Promise.all([
+  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats, mc, mi, dobs, msf] = await Promise.all([
     csv("data/regime_daily.csv"), csv("data/segment_daily.csv"),
     csv("data/static/reference_points.csv"), csv("data/equity_daily.csv"),
     csv("data/monthly_series.csv"), csv("data/filings_facts.csv"),
     csv("data/events.csv"), csv("data/divergence_flags.csv"),
     csv("data/volume_regime.csv"), csv("data/composite_regime.csv"),
     csv("data/stats_lagged_corr.csv"), csv("data/static/mccallum.csv"),
-    csv("data/memory_inc.csv")]);
+    csv("data/memory_inc.csv"),
+    csv("data/dist_obs.csv"), csv("data/monthly_series.csv")]);
 
   // --- Regime strip + composite badge ---
   const dimm = document.getElementById("dimm");
@@ -360,6 +369,50 @@ function feedBadge(name, last, cadence){
       "breadth " + br.quarter + ": " + br.value + " improving " +
       (br.meta.includes(":") ? "(" + br.meta.split(":")[0] + ")" : "");
   } else empty("p_mi", "Aggregate appears once the fundamentals collectors have run.");
+
+  // --- Panel E: distributor lead times (qty in hover) ---
+  const drows = (dobs || []).filter(r => r.date && r.sku_id);
+  if(drows.length){
+    const byKey = {};
+    for(const r of drows){
+      const k = r.date + "|" + r.sku_id;
+      const b = byKey[k] || (byKey[k] = {date:r.date, sku:r.sku_id, qty:0, leads:[]});
+      b.qty += +r.qty_available || 0;
+      if((r.lead_time_days || "") !== "") b.leads.push(+r.lead_time_days);
+    }
+    const skus = [...new Set(Object.values(byKey).map(b => b.sku))].sort();
+    const DCOL = [C.teal, C.red, C.violet, C.amber, C.slate, C.ink, C.muted];
+    const traces = skus.map((s, i) => {
+      const pts = Object.values(byKey).filter(b => b.sku === s && b.leads.length)
+                        .sort((a,b) => a.date.localeCompare(b.date));
+      return {x:pts.map(p => p.date), y:pts.map(p => Math.min(...p.leads)),
+              name:s.replace(/^(ic_|mod_)/,""), mode:"lines+markers", marker:{size:4},
+              line:{width:1.5, color:DCOL[i % DCOL.length]},
+              text:pts.map(p => p.qty.toLocaleString()),
+              hovertemplate:"%{x} · %{y}d lead · qty %{text}<extra>" + s + "</extra>"};
+    }).filter(t => t.x.length);
+    Plotly.newPlot("p_dist", traces, {...LAYOUT,
+      yaxis:{...LAYOUT.yaxis, title:"factory lead, days"}}, CFG);
+  } else empty("p_dist", "Activates as dist_obs.csv accumulates (Mouser live since 2026-07-07).");
+
+  // --- FRED: official producer prices, rebased ---
+  const FRED_M = [["us_ppi_semiconductor_mfg","PPI: semiconductor mfg",C.teal],
+                  ["us_ppi_other_semi_devices","PPI: other semi devices",C.violet],
+                  ["us_ppi_semi_electronic_components","PPI: semis & components",C.amber],
+                  ["us_ip_semiconductors","industrial production: semis",C.slate]];
+  const frows = (msf || []).filter(r => r.source === "fred");
+  if(frows.length){
+    const traces = FRED_M.map(([m, label, color]) => {
+      const pts = frows.filter(r => r.metric === m).sort((a,b) => a.period.localeCompare(b.period));
+      if(!pts.length) return null;
+      const base = +pts[0].value;
+      return {x:pts.map(p => p.period), y:pts.map(p => 100 * +p.value / base),
+              name:label, mode:"lines", line:{width:1.5, color},
+              hovertemplate:"%{x} · %{y:.1f}<extra>" + label + "</extra>"};
+    }).filter(Boolean);
+    Plotly.newPlot("p_fred", traces, {...LAYOUT,
+      yaxis:{...LAYOUT.yaxis, title:"index, Jan-24 = 100"}}, CFG);
+  } else empty("p_fred", "Appears after the FRED collector runs with FRED_API_KEY set.");
 
   // --- Events ---
   const ul = document.getElementById("events");
