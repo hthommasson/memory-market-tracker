@@ -1,0 +1,15 @@
+name: tests
+on:
+  push:
+    paths: ["**.py", "requirements.txt", "tests/**"]
+  pull_request:
+    paths: ["**.py", "requirements.txt", "tests/**"]
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with: {python-version: "3.12"}
+      - run: pip install -r requirements.txt pytest
+      - run: python -m pytest tests/ -q
