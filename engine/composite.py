@@ -1,5 +1,5 @@
 """Composite price x volume matrix (spec §4.2). The headline regime badge."""
-import csv, os
+import csv, os, os
 import pandas as pd
 from collectors.common import log, warn
 from config.settings import DATA_DIR
@@ -36,10 +36,20 @@ def main():
     cell = MATRIX.get((p, v))
     if cell is None:
         cell = f"pending — price:{p}, volume:{v}"
+    today = pd.Timestamp.now("UTC").date().isoformat()
+    # v2 (2026-07-12): ledger, not latest-state — the matrix's trajectory is the
+    # instrument's memory (dwell times, transitions -> Monte Carlo priors later).
+    # Idempotent per date: a re-run replaces today's row, never duplicates it.
+    hist = []
+    if os.path.exists(OUT):
+        with open(OUT) as f:
+            hist = [r for r in csv.DictReader(f) if r["computed_date"] != today]
+    hist.append({"computed_date": today, "price_label": p, "volume_label": v, "cell": cell})
+    hist.sort(key=lambda r: r["computed_date"])
     with open(OUT, "w", newline="") as f:
-        w = csv.writer(f)
-        w.writerow(["computed_date", "price_label", "volume_label", "cell"])
-        w.writerow([pd.Timestamp.now("UTC").date().isoformat(), p, v, cell])
-    log(f"composite matrix: price={p} x volume={v} -> {cell}")
+        w = csv.DictWriter(f, fieldnames=["computed_date", "price_label", "volume_label", "cell"])
+        w.writeheader()
+        w.writerows(hist)
+    log(f"composite matrix: price={p} x volume={v} -> {cell} (ledger: {len(hist)} days)")
 
 if __name__ == "__main__": main()
