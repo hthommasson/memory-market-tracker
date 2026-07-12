@@ -84,7 +84,7 @@
       <div class="plot plot-tall" id="p_context"></div>
     </div>
     <div class="card">
-      <h2>Market layer</h2><p class="sub">rebased to 100 at first common date</p>
+      <h2>Market layer</h2><p class="sub">each series rebased to 100 at its own first close &middot; SKHY = SK hynix ADR (from 2026-07-13)</p>
       <div class="plot" id="p_equity"></div>
     </div>
     <div class="card">
@@ -288,7 +288,7 @@ function feedBadge(name, last, cadence){
       rows.sort((a,b) => a.date.localeCompare(b.date));
       const base = +rows[0].close;
       return {x:rows.map(r => r.date), y:rows.map(r => 100 * r.close / base), name:t,
-              mode:"lines", line:{width:2, color:[C.ink,C.teal,C.violet,C.amber][i % 4]}};
+              mode:"lines", line:{width:2, color:[C.ink,C.teal,C.violet,C.amber,C.red][i % 5]}};
     });
     Plotly.newPlot("p_equity", traces, LAYOUT, CFG);
   } else empty("p_equity", NO_DATA);
