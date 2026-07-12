@@ -114,6 +114,7 @@
     <div class="card">
       <h2>Regime matrix</h2><p class="sub" id="mxsub">price × volume — awaiting price warm-up</p>
       <table class="matrix" id="matrix"></table>
+      <div id="mx_ribbon" style="margin-top:10px; line-height:0"></div>
     </div>
     <div class="card">
       <h2>Event log</h2><p class="sub">hand-curated — half the analytical value</p>
@@ -215,6 +216,22 @@ function feedBadge(name, last, cadence){
     return `<td class="${cls.join(" ")}">${CELLS[i][j]}</td>`; }).join("") + "</tr>"; });
   document.getElementById("matrix").innerHTML = mx;
   if(crow) document.getElementById("mxsub").textContent = crow.cell;
+
+  // --- Regime ribbon: one square per day, colored by cell; dwell counter in caption ---
+  if(cmx && cmx.length){
+    const RCOL = {"Accelerating":C.teal, "Scarcity-led":C.amber, "Late-cycle":C.slate,
+                  "Rationed squeeze":C.violet, "Stagnating":C.muted, "Early weakening":"#D98E32",
+                  "CYCLE-TOP":C.red, "Softening":"#8A94A6", "Weakening":"#B3543F"};
+    const rows = [...cmx].sort((a,b) => a.computed_date.localeCompare(b.computed_date));
+    document.getElementById("mx_ribbon").innerHTML = rows.map(r =>
+      `<span title="${r.computed_date} · ${r.cell}" style="display:inline-block;width:10px;height:10px;margin:0 2px 2px 0;border-radius:2px;background:${RCOL[r.cell] || "#E6DFC8"}"></span>`
+    ).join("");
+    let dwell = 1;
+    for(let i = rows.length - 2; i >= 0 && rows[i].cell === rows[rows.length-1].cell; i--) dwell++;
+    document.getElementById("mxsub").textContent =
+      rows[rows.length-1].cell + " · " + dwell + " day" + (dwell === 1 ? "" : "s") +
+      " in this cell (since " + rows[rows.length - dwell].computed_date + ")";
+  }
 
   // --- Lead-lag scan ---
   const sul = document.getElementById("stats");
