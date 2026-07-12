@@ -108,7 +108,9 @@ def lag_corr(x, y, lag):
     if n < MIN_PAIRS:
         return n, None, None
     return (n,
-            round(pair["x"].corr(pair["y"], method="spearman"), 3),
+            # Spearman = Pearson on ranks; avoids the scipy dependency pandas would otherwise
+            # import here (never in requirements.txt — caught by CI run #1, 2026-07-12)
+            round(pair["x"].rank().corr(pair["y"].rank()), 3),
             round(pair["x"].corr(pair["y"], method="pearson"), 3))
 
 
