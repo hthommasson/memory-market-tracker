@@ -7,6 +7,6 @@ mod_micron_d4_8g,module_ddr4,Micron,MTA8ATF1G64AZ,8GB UDIMM,ddr4,2026-07-07,,can
 mod_micron_d4_16g,module_ddr4,Micron,MTA16ATF2G64AZ,16GB UDIMM,ddr4,2026-07-07,,candidate
 mod_micron_d5_rdimm,module_ddr5,Micron,MTC20F2085S1RC48,32GB RDIMM,ddr5,2026-07-07,,candidate
 mod_kingston_d4_ecc,module_ddr4,Kingston,KSM32ED8,32GB ECC UDIMM,ddr4,2026-07-07,,candidate
-mod_kingston_d5_ecc,module_ddr5,Kingston,KSM48E40BD8,32GB ECC,ddr5,2026-07-07,,candidate
-mod_crucial_d5_so,module_ddr5,Crucial,CT16G48C40S5,16GB SODIMM,ddr5,2026-07-07,,candidate
-mod_samsung_d5_16g,module_ddr5,Samsung,M323R2GA3BB0,16GB UDIMM,ddr5,2026-07-07,,candidate
+mod_kingston_d5_ecc,module_ddr5,Kingston,KSM48E40BD8,32GB ECC,ddr5,2026-07-07,2026-07-13,retired_double_miss
+mod_crucial_d5_so,module_ddr5,Crucial,CT16G48C40S5,16GB SODIMM,ddr5,2026-07-07,2026-07-13,retired_double_miss
+mod_samsung_d5_16g,module_ddr5,Samsung,M323R2GA3BB0,16GB UDIMM,ddr5,2026-07-07,2026-07-13,retired_double_miss
