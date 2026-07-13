@@ -277,3 +277,4 @@ period,source,metric,value,value_wda,meta
 2026-06,winbond_ir,tw_winbond_2344_monthly_revenue_twd,20600000000,,yoy=+189.9%|mom=+3.0%|7th_consec_record
 2026-07-P10,kcs_flash,kr_exports_total_usd,29800000000,,yoy=+53.9%|record_any_10day_period
 2026-07-P10,kcs_flash,kr_exports_semis_usd,11200000000,,yoy=+193.0%|record|share_37.6%
+2026-07-P10,derived,kr_inc_p10_usd,29800000000.0,,
