@@ -279,16 +279,33 @@ function feedBadge(name, last, cadence){
     if(live.length) traces.push({x:live.map(r => r.date), y:live.map(r => +r.usd_per_gb),
       name:"LIVE — DDR5 ask floor", mode:"lines", line:{width:3, color:C.teal}});
     const mn = dram.reduce((a, r) => +r.usd_per_gb < +a.usd_per_gb ? r : a, dram[0]);
-    const ctxPlot = Plotly.newPlot("p_context", traces, {...LAYOUT,
+    const winY = (t0, t1) => {
+      let lo = Infinity, hi = -Infinity;
+      traces.forEach(tr => (tr.x || []).forEach((xv, i) => {
+        const y = +tr.y[i], t = new Date(xv).getTime();
+        if(t >= t0 && t <= t1 && y > 0){ if(y < lo) lo = y; if(y > hi) hi = y; }
+      }));
+      return lo < Infinity ? [Math.log10(lo) - 0.15, Math.log10(hi) + 0.15] : null;
+    };
+    const endMs = Math.max(...traces.flatMap(tr => (tr.x || []).map(xv => new Date(xv).getTime())));
+    const D = 86400000, isoDay = ms => new Date(ms).toISOString().slice(0, 10);
+    const mkBtn = (label, years) => {
+      const t0 = endMs - years * 365.25 * D, pad = 60 * D;
+      const yr = winY(t0, endMs + pad);
+      return {label, method:"relayout", args:[{
+        "xaxis.range":[isoDay(t0), isoDay(endMs + pad)],
+        ...(yr ? {"yaxis.range": yr} : {"yaxis.autorange": true})}]};
+    };
+    const zoomBtns = [
+      {label:"69y", method:"relayout", args:[{"xaxis.autorange": true, "yaxis.autorange": true}]},
+      mkBtn("30y", 30), mkBtn("10y", 10), mkBtn("3y", 3), mkBtn("1y", 1)];
+    Plotly.newPlot("p_context", traces, {...LAYOUT,
       margin:{l:52,r:10,t:8,b:34},
       yaxis:{...LAYOUT.yaxis, type:"log", title:"$/GB (log)", exponentformat:"power"},
-      xaxis:{...LAYOUT.xaxis, rangeselector:{buttons:[
-        {step:"all", label:"69y"},
-        {count:30, step:"year", stepmode:"backward", label:"30y"},
-        {count:10, step:"year", stepmode:"backward", label:"10y"},
-        {count:3, step:"year", stepmode:"backward", label:"3y"},
-        {count:1, step:"year", stepmode:"backward", label:"1y"}],
-        font:{size:10}, bgcolor:"#FFFFFF", activecolor:"#D7DEE6"}},
+      xaxis:{...LAYOUT.xaxis},
+      updatemenus:[{type:"buttons", direction:"right", showactive:true,
+        x:0, xanchor:"left", y:1.18, yanchor:"top", font:{size:10},
+        bgcolor:"#FFFFFF", borderwidth:0, buttons:zoomBtns}],
       shapes:[{type:"line", x0:"2026-07-05", x1:"2026-07-05", y0:0, y1:1, yref:"paper",
                line:{color:C.muted, width:1, dash:"dot"}}],
       annotations:[
@@ -297,26 +314,6 @@ function feedBadge(name, last, cadence){
          showarrow:true, arrowcolor:C.muted, ax:-10, ay:-32, font:{size:10, color:C.ink}},
         {x:"2026-07-05", y:1, yref:"paper", yanchor:"bottom", text:"tracker live",
          showarrow:false, font:{size:10, color:C.muted}}]}, CFG);
-    const gdc = document.getElementById("p_context");
-    let yfix = false;
-    gdc.on("plotly_relayout", ev => {
-      if(yfix) return;
-      const auto = ev["xaxis.autorange"];
-      const x0 = ev["xaxis.range[0]"] ?? (ev["xaxis.range"] || [])[0];
-      if(!auto && x0 == null) return;
-      yfix = true;
-      if(auto){ Plotly.relayout(gdc, {"yaxis.autorange": true}).then(() => yfix = false); return; }
-      const x1 = ev["xaxis.range[1]"] ?? (ev["xaxis.range"] || [])[1];
-      const t0 = new Date(x0).getTime(), t1 = new Date(x1).getTime();
-      let lo = Infinity, hi = -Infinity;
-      gdc.data.forEach(tr => (tr.x || []).forEach((xv, i) => {
-        const y = +tr.y[i], t = new Date(xv).getTime();
-        if(t >= t0 && t <= t1 && y > 0){ if(y < lo) lo = y; if(y > hi) hi = y; }
-      }));
-      if(lo < Infinity)
-        Plotly.relayout(gdc, {"yaxis.range": [Math.log10(lo) - 0.15, Math.log10(hi) + 0.15]}).then(() => yfix = false);
-      else yfix = false;
-    });
   } else empty("p_context", "data/static/mccallum.csv missing — the 69-year context renders once it exists.");
 
   // --- Panel C: equities rebased ---
