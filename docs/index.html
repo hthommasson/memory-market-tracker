@@ -109,7 +109,7 @@
       <div class="plot" id="p_mi"></div>
     </div>
     <div class="card">
-      <h2>Distributor telemetry &mdash; supply stress</h2><p class="sub">how long factories say you’d wait for memory parts — 0 days = in stock today &middot; hover shows shelf quantity</p>
+      <h2>Distributor telemetry &mdash; supply stress</h2><p class="sub">how long you’d wait for memory parts — 0 days = in stock today &middot; in-stock quotes outrank empty-shelf catalog leads &middot; hover shows shelf quantity</p>
       <div class="plot" id="p_dist"></div>
     </div>
     <div class="card">
@@ -412,16 +412,21 @@ function feedBadge(name, last, cadence){
     const byKey = {};
     for(const r of drows){
       const k = r.date + "|" + r.sku_id;
-      const b = byKey[k] || (byKey[k] = {date:r.date, sku:r.sku_id, qty:0, leads:[]});
-      b.qty += +r.qty_available || 0;
-      if((r.lead_time_days || "") !== "") b.leads.push(+r.lead_time_days);
+      const b = byKey[k] || (byKey[k] = {date:r.date, sku:r.sku_id, qty:0, leads:[], stocked:[]});
+      const q = +r.qty_available || 0;
+      b.qty += q;
+      if((r.lead_time_days || "") !== ""){
+        b.leads.push(+r.lead_time_days);
+        if(q > 0) b.stocked.push(+r.lead_time_days);   // a lead quote from an empty shelf is catalog fiction
+      }
     }
     const skus = [...new Set(Object.values(byKey).map(b => b.sku))].sort();
     const DCOL = [C.teal, C.red, C.violet, C.amber, C.slate, C.ink, C.muted];
     const traces = skus.map((s, i) => {
       const pts = Object.values(byKey).filter(b => b.sku === s && b.leads.length)
                         .sort((a,b) => a.date.localeCompare(b.date));
-      return {x:pts.map(p => p.date), y:pts.map(p => Math.min(...p.leads)),
+      return {x:pts.map(p => p.date),
+              y:pts.map(p => Math.min(...(p.stocked.length ? p.stocked : p.leads))),
               name:s.replace(/^(ic_|mod_)/,""), mode:"lines+markers", marker:{size:4},
               line:{width:1.5, color:DCOL[i % DCOL.length]},
               text:pts.map(p => p.qty.toLocaleString()),
