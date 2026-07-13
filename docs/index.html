@@ -74,50 +74,51 @@
 
   <div class="grid">
     <div class="card" style="grid-column:1/-1">
+      <h2>Regime matrix</h2><p class="sub" id="mxsub">price × volume — labels arrive after 10 days of data</p>
+      <table class="matrix" id="matrix"></table>
+      <div id="mx_ribbon" style="margin-top:10px; line-height:0"></div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
       <h2>Physical ask-floor — $/GB by segment</h2>
-      <p class="sub">eBay qualified-seller asking prices (k-th lowest), not transactions · ◆ = published reference points</p>
+      <p class="sub">the cheapest credible eBay asking price per memory type — asks, not sales · ◆ = past published prices (click legend to show)</p>
       <div class="plot" id="p_price"></div>
     </div>
     <div class="card" style="grid-column:1/-1">
       <h2>69-year context &mdash; $/GB since 1957</h2>
-      <p class="sub">log scale &middot; McCallum backbone &rarr; Keepa splice (Aug '24) &rarr; live tracker overlay &middot; Jun-'26 DDR5 &asymp; 2013 prices</p>
+      <p class="sub">memory prices since 1957, log scale — today's DDR5 costs about what it did in 2013 · zoom buttons top-left</p>
       <div class="plot plot-tall" id="p_context"></div>
     </div>
     <div class="card">
-      <h2>Market layer</h2><p class="sub">each series rebased to 100 at its own first close &middot; SKHY = SK hynix ADR (from 2026-07-13)</p>
+      <h2>Market layer</h2><p class="sub">related stocks, all starting at 100 &middot; SKHY = SK hynix, newly listed in the US</p>
       <div class="plot" id="p_equity"></div>
     </div>
     <div class="card">
-      <h2>Trade &amp; volume &mdash; Korea</h2><p class="sub">nested: HBM ⊂ KR semis ⊂ KR total; KR semis ⊂ world semis &mdash; levels, not addends &middot; monthly totals (flash P-reads feed the engine, not the bars)</p>
+      <h2>Trade &amp; volume &mdash; Korea</h2><p class="sub">world chip sales, Korea's total exports, and Korea's chip &amp; HBM slices — each bar is its own level, don't add them</p>
       <div class="plot" id="p_korea"></div>
     </div>
     <div class="card">
-      <h2>US producer prices &mdash; semis (FRED)</h2><p class="sub">official BLS indices, rebased to 100 at Jan 2024 &middot; monthly, ~2-week lag &middot; context, never a momentum input</p>
+      <h2>US producer prices &mdash; semis (FRED)</h2><p class="sub">official US price statistics for chips — slow-moving but authoritative context</p>
       <div class="plot" id="p_fred"></div>
     </div>
     <div class="card">
-      <h2>Fundamentals &mdash; gross margin by filer</h2><p class="sub">EDGAR + DART filers &middot; bold ink = Memory Inc. aggregate (ex-Samsung) &middot; dotted = HDD control group</p>
+      <h2>Fundamentals &mdash; gross margin by filer</h2><p class="sub">profit margin per company &middot; bold black = all of them combined &middot; dotted = hard-drive makers, shown for contrast</p>
       <div class="plot" id="p_fund"></div>
     </div>
     <div class="card">
-      <h2>Memory Inc. &mdash; the industry as one company</h2><p class="sub">revenue bars &middot; red = capex (the supply response that ends squeezes) &middot; inventory days ex-Samsung &middot; <span id="mi_breadth"></span></p>
+      <h2>Memory Inc. &mdash; the industry as one company</h2><p class="sub">if the memory industry were one company — sales bars (pale = only one reporter yet), red = factory spending, purple = days of inventory on hand &middot; <span id="mi_breadth"></span></p>
       <div class="plot" id="p_mi"></div>
     </div>
     <div class="card">
-      <h2>Distributor telemetry &mdash; supply stress</h2><p class="sub">experimental (spec &sect;3.5) &middot; factory lead time by component, days &middot; 0 = ships now &middot; hover: shelf qty &middot; Mouser live, DigiKey pending</p>
+      <h2>Distributor telemetry &mdash; supply stress</h2><p class="sub">how long factories say you’d wait for memory parts — 0 days = in stock today &middot; hover shows shelf quantity</p>
       <div class="plot" id="p_dist"></div>
     </div>
     <div class="card">
-      <h2>Lead–lag scan</h2><p class="sub">monthly changes, Spearman at best lag · descriptive only, n shown</p>
+      <h2>Lead–lag scan</h2><p class="sub">which data series tends to move first — reports honestly once 6 months of data align</p>
       <ul class="events" id="stats"></ul>
     </div>
+
     <div class="card">
-      <h2>Regime matrix</h2><p class="sub" id="mxsub">price × volume — awaiting price warm-up</p>
-      <table class="matrix" id="matrix"></table>
-      <div id="mx_ribbon" style="margin-top:10px; line-height:0"></div>
-    </div>
-    <div class="card">
-      <h2>Event log</h2><p class="sub">hand-curated — half the analytical value</p>
+      <h2>Event log</h2><p class="sub">hand-picked headlines that matter — half the analytical value</p>
       <ul class="events" id="events"></ul>
     </div>
   </div>
@@ -254,6 +255,7 @@ function feedBadge(name, last, cadence){
     }).filter(t => t.x.length);
     if(refs) traces.push({x:refs.map(r => r.date),
       y:refs.map(r => +r.value_usd / 32), name:"reference points", mode:"markers",
+      visible:"legendonly",
       marker:{symbol:"diamond", size:9, color:C.ink},
       text:refs.map(r => r.note), hovertemplate:"%{x} $%{y:.2f}/GB<br>%{text}"});
     Plotly.newPlot("p_price", traces, {...LAYOUT, yaxis:{...LAYOUT.yaxis, title:"$/GB"}}, CFG);
@@ -277,7 +279,7 @@ function feedBadge(name, last, cadence){
     if(live.length) traces.push({x:live.map(r => r.date), y:live.map(r => +r.usd_per_gb),
       name:"LIVE — DDR5 ask floor", mode:"lines", line:{width:3, color:C.teal}});
     const mn = dram.reduce((a, r) => +r.usd_per_gb < +a.usd_per_gb ? r : a, dram[0]);
-    Plotly.newPlot("p_context", traces, {...LAYOUT,
+    const ctxPlot = Plotly.newPlot("p_context", traces, {...LAYOUT,
       margin:{l:52,r:10,t:8,b:34},
       yaxis:{...LAYOUT.yaxis, type:"log", title:"$/GB (log)", exponentformat:"power"},
       xaxis:{...LAYOUT.xaxis, rangeselector:{buttons:[
@@ -295,6 +297,26 @@ function feedBadge(name, last, cadence){
          showarrow:true, arrowcolor:C.muted, ax:-10, ay:-32, font:{size:10, color:C.ink}},
         {x:"2026-07-05", y:1, yref:"paper", yanchor:"bottom", text:"tracker live",
          showarrow:false, font:{size:10, color:C.muted}}]}, CFG);
+    const gdc = document.getElementById("p_context");
+    let yfix = false;
+    gdc.on("plotly_relayout", ev => {
+      if(yfix) return;
+      const auto = ev["xaxis.autorange"];
+      const x0 = ev["xaxis.range[0]"] ?? (ev["xaxis.range"] || [])[0];
+      if(!auto && x0 == null) return;
+      yfix = true;
+      if(auto){ Plotly.relayout(gdc, {"yaxis.autorange": true}).then(() => yfix = false); return; }
+      const x1 = ev["xaxis.range[1]"] ?? (ev["xaxis.range"] || [])[1];
+      const t0 = new Date(x0).getTime(), t1 = new Date(x1).getTime();
+      let lo = Infinity, hi = -Infinity;
+      gdc.data.forEach(tr => (tr.x || []).forEach((xv, i) => {
+        const y = +tr.y[i], t = new Date(xv).getTime();
+        if(t >= t0 && t <= t1 && y > 0){ if(y < lo) lo = y; if(y > hi) hi = y; }
+      }));
+      if(lo < Infinity)
+        Plotly.relayout(gdc, {"yaxis.range": [Math.log10(lo) - 0.15, Math.log10(hi) + 0.15]}).then(() => yfix = false);
+      else yfix = false;
+    });
   } else empty("p_context", "data/static/mccallum.csv missing — the 69-year context renders once it exists.");
 
   // --- Panel C: equities rebased ---
