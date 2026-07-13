@@ -58,7 +58,7 @@ def mouser_lookup(mpn, key):
     for p in fam:
         for br in p.get("PriceBreaks") or []:
             m = re.search(r"[\d.]+", str(br.get("Price", "")))
-            if m: prices.append(float(m.group())); break
+            if m: prices.append(float(m.group())) if float(m.group()) > 0 else None; break
     return {"mpn": fam[0].get("ManufacturerPartNumber", mpn), "matches": len(fam),
             "qty": qty, "lead": min(leads) if leads else None,
             "price": min(prices) if prices else None}
@@ -90,7 +90,8 @@ def digikey_lookup(mpn, cid, token):
         w = p.get("ManufacturerLeadWeeks")
         d = days_from(w if re.search(r"[a-z]", str(w), re.I) else f"{w} weeks") if w else None
         if d is not None: leads.append(d)
-    prices = [float(p["UnitPrice"]) for p in fam if p.get("UnitPrice") not in (None, "")]
+    prices = [float(p["UnitPrice"]) for p in fam
+              if p.get("UnitPrice") not in (None, "") and float(p["UnitPrice"]) > 0]
     return {"mpn": fam[0].get("ManufacturerProductNumber", mpn), "matches": len(fam),
             "qty": qty, "lead": min(leads) if leads else None,
             "price": min(prices) if prices else None}
