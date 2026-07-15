@@ -278,3 +278,6 @@ period,source,metric,value,value_wda,meta
 2026-07-P10,kcs_flash,kr_exports_total_usd,29800000000,,yoy=+53.9%|record_any_10day_period
 2026-07-P10,kcs_flash,kr_exports_semis_usd,11200000000,,yoy=+193.0%|record|share_37.6%
 2026-07-P10,derived,kr_inc_p10_usd,29800000000.0,,
+2026-06,fred,us_ppi_semiconductor_mfg,29.695,,fred:PCU334413334413
+2026-06,fred,us_ppi_other_semi_devices,51.703,,fred:PCU334413334413A
+2026-06,fred,us_ppi_semi_electronic_components,72.656,,fred:PCU33443344
