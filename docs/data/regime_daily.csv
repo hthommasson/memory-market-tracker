@@ -9,6 +9,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-12,ddr4_desktop,,,warming_up,warming_up
 2026-07-13,ddr4_desktop,,,warming_up,warming_up
 2026-07-14,ddr4_desktop,0.0,,flat,flat
+2026-07-15,ddr4_desktop,-0.0,,flat,flat
 2026-07-05,ddr5_desktop,,,warming_up,warming_up
 2026-07-06,ddr5_desktop,,,warming_up,warming_up
 2026-07-07,ddr5_desktop,,,warming_up,warming_up
@@ -19,6 +20,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-12,ddr5_desktop,,,warming_up,warming_up
 2026-07-13,ddr5_desktop,,,warming_up,warming_up
 2026-07-14,ddr5_desktop,0.0,,flat,flat
+2026-07-15,ddr5_desktop,0.0,,flat,flat
 2026-07-05,server_ecc,,,warming_up,warming_up
 2026-07-06,server_ecc,,,warming_up,warming_up
 2026-07-07,server_ecc,,,warming_up,warming_up
@@ -29,6 +31,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-12,server_ecc,,,warming_up,warming_up
 2026-07-13,server_ecc,,,warming_up,warming_up
 2026-07-14,server_ecc,0.6884,,rising,rising
+2026-07-15,server_ecc,0.5737,,rising,rising
 2026-07-05,sodimm,,,warming_up,warming_up
 2026-07-06,sodimm,,,warming_up,warming_up
 2026-07-07,sodimm,,,warming_up,warming_up
@@ -39,6 +42,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-12,sodimm,,,warming_up,warming_up
 2026-07-13,sodimm,,,warming_up,warming_up
 2026-07-14,sodimm,0.8839,,rising,rising
+2026-07-15,sodimm,1.1767,,rising,rising
 2026-07-05,COMPOSITE,,"gated:ddr4_desktop,ddr5_desktop,server_ecc,sodimm",warming_up,warming_up
 2026-07-06,COMPOSITE,,"gated:ddr4_desktop,ddr5_desktop,server_ecc,sodimm",warming_up,warming_up
 2026-07-07,COMPOSITE,,"gated:ddr4_desktop,ddr5_desktop,server_ecc,sodimm",warming_up,warming_up
@@ -49,3 +53,4 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-12,COMPOSITE,,"gated:ddr4_desktop,ddr5_desktop,server_ecc,sodimm",warming_up,warming_up
 2026-07-13,COMPOSITE,,"gated:ddr4_desktop,ddr5_desktop,server_ecc,sodimm",warming_up,warming_up
 2026-07-14,COMPOSITE,,"gated:ddr4_desktop,ddr5_desktop,server_ecc,sodimm",warming_up,warming_up
+2026-07-15,COMPOSITE,,"gated:ddr4_desktop,ddr5_desktop,server_ecc,sodimm",warming_up,warming_up
