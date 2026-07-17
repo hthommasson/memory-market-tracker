@@ -281,3 +281,4 @@ period,source,metric,value,value_wda,meta
 2026-06,fred,us_ppi_semiconductor_mfg,29.695,,fred:PCU334413334413
 2026-06,fred,us_ppi_other_semi_devices,51.703,,fred:PCU334413334413A
 2026-06,fred,us_ppi_semi_electronic_components,72.656,,fred:PCU33443344
+2026-06,fred,us_ip_semiconductors,181.8824,,fred:IPG3344S
