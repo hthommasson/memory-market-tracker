@@ -25,7 +25,8 @@
   /* Signature: DIMM edge-connector regime strip — gold contact tabs colored by segment state */
   .dimm{background:var(--panel);border:1px solid var(--line);border-radius:8px;margin:22px 0 10px;padding:18px 18px 0}
   .dimm-row{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-  .seg .name{font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+  .seg .gloss{font-size:10px; color:#8A94A6; margin:1px 0 3px; letter-spacing:0}
+.seg .name{font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
   .seg .state{font:800 20px "Big Shoulders Display",sans-serif;letter-spacing:.05em;text-transform:uppercase;margin:2px 0 1px}
   .seg .m30{font:400 12px "IBM Plex Mono",monospace;color:var(--muted)}
   .pins{display:flex;gap:3px;margin-top:10px;height:16px;align-items:flex-end}
@@ -132,6 +133,10 @@ const C = {teal:"#0E7C86", violet:"#6B5CA5", red:"#A4303F", slate:"#64748B", amb
            ink:"#1B2530", muted:"#5E6B7A", line:"#D7DEE6"};
 const SEGS = ["ddr5_desktop","ddr4_desktop","sodimm","server_ecc"];
 const SEGNAME = {ddr5_desktop:"DDR5 desktop", ddr4_desktop:"DDR4 desktop", sodimm:"SODIMM", server_ecc:"Server / ECC"};
+const SEGGLOSS = {ddr5_desktop:"memory for new desktop PCs",
+                  ddr4_desktop:"memory for older desktop PCs",
+                  sodimm:"laptop memory",
+                  server_ecc:"datacenter memory (error-correcting)"};
 const BADGE = {rising:C.teal, flat:C.slate, falling:C.red, warming_up:"#9AA6B2"};
 const LAYOUT = {margin:{l:46,r:10,t:8,b:34}, paper_bgcolor:"rgba(0,0,0,0)", plot_bgcolor:"rgba(0,0,0,0)",
   font:{family:"IBM Plex Mono, monospace", size:11, color:C.ink},
@@ -184,7 +189,8 @@ function feedBadge(name, last, cadence){
     const pins = Array.from({length:14}, (_,i) =>
       i === 4 ? '<span class="notch"></span>' : '<span class="pin"></span>').join("");
     dimm.insertAdjacentHTML("beforeend",
-      `<div class="seg ${lab}"><div class="name">${SEGNAME[s]}</div>
+      `<div class="seg ${lab}" title="${SEGGLOSS[s]}"><div class="name">${SEGNAME[s]}</div>
+       <div class="gloss">${SEGGLOSS[s]}</div>
        <div class="state">${lab.replace("_"," ")}</div><div class="m30">m30 ${m}</div>
        <div class="pins">${pins}</div></div>`);
   });
