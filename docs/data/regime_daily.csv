@@ -8,8 +8,8 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-11,ddr4_desktop,,,warming_up,warming_up
 2026-07-12,ddr4_desktop,,,warming_up,warming_up
 2026-07-13,ddr4_desktop,,,warming_up,warming_up
-2026-07-14,ddr4_desktop,0.0,,flat,flat
-2026-07-15,ddr4_desktop,-0.0,,flat,flat
+2026-07-14,ddr4_desktop,-0.0,,flat,flat
+2026-07-15,ddr4_desktop,0.0,,flat,flat
 2026-07-16,ddr4_desktop,0.0,,flat,flat
 2026-07-17,ddr4_desktop,0.0,,flat,flat
 2026-07-18,ddr4_desktop,-0.0,,flat,flat
@@ -26,7 +26,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-15,ddr5_desktop,0.0,,flat,flat
 2026-07-16,ddr5_desktop,0.0,,flat,flat
 2026-07-17,ddr5_desktop,0.0,,flat,flat
-2026-07-18,ddr5_desktop,0.0,,flat,flat
+2026-07-18,ddr5_desktop,-0.0,,flat,flat
 2026-07-05,server_ecc,,,warming_up,warming_up
 2026-07-06,server_ecc,,,warming_up,warming_up
 2026-07-07,server_ecc,,,warming_up,warming_up
