@@ -107,3 +107,16 @@ date,sku_id,source,mpn_matched,matches,qty_available,lead_time_days,unit_price_u
 2026-07-18,mod_micron_d4_16g,digikey,MTA16ATF2G64AZ-2G6J1,10,0,35,
 2026-07-18,mod_micron_d5_rdimm,digikey,MTC20F2085S1RC48BA1,1,0,28,282.0499
 2026-07-18,mod_kingston_d4_ecc,digikey,KSM32ED8/32HC,3,0,28,248.3826
+2026-07-19,ic_micron_d4_1g16,mouser,MT40A1G16TB-062E IT:F,4,25757,140,239.74
+2026-07-19,ic_micron_d4_1g16,digikey,MT40A1G16TD-062E:F,10,1995,21,13.0125
+2026-07-19,ic_micron_d4_512m16,mouser,MT40A512M16TD-062E:R,3,1381,84,92.84
+2026-07-19,ic_micron_d4_512m16,digikey,MT40A512M16TD-062E:R TR,10,2032,7,5.40552
+2026-07-19,ic_micron_d5_2g8,mouser,MT60B2G8RZ-64B:D,1,1297,365,248.33
+2026-07-19,ic_micron_d5_2g8,digikey,MT60B2G8RZ-56B IT:D,10,0,14,11.9835
+2026-07-19,ic_micron_d5_1g16,mouser,MT60B1G16HD-56B:D,2,1457,365,242.19
+2026-07-19,ic_micron_d5_1g16,digikey,MT60B1G16HD-56B IT:D,10,0,14,11.9835
+2026-07-19,mod_micron_d4_8g,mouser,MTA8ATF1G64AZ-3G2E1,1,130,365,104.47
+2026-07-19,mod_micron_d4_8g,digikey,MTA8ATF1G64AZ-3G2R1,10,0,35,478.247
+2026-07-19,mod_micron_d4_16g,digikey,MTA16ATF2G64AZ-2G6J1,10,0,35,
+2026-07-19,mod_micron_d5_rdimm,digikey,MTC20F2085S1RC48BA1,1,0,28,282.0499
+2026-07-19,mod_kingston_d4_ecc,digikey,KSM32ED8/32HC,3,0,28,248.3826
