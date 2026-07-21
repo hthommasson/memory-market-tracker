@@ -2,32 +2,42 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>document.documentElement.setAttribute("data-theme", localStorage.getItem("mmt-theme") || "dark");</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Memory Market Regime</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.32.0/plotly.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-  :root{
+  :root[data-theme="light"]{
     --bg:#EEF1F4; --panel:#FFFFFF; --ink:#1B2530; --muted:#5E6B7A; --line:#D7DEE6;
-    --teal:#0E7C86; --violet:#6B5CA5; --amber:#B26A00; --red:#A4303F; --slate:#64748B;
-    --gold:#C9A227; --gold-dim:#E4D9B0;
+    --line-hi:#B9C4CE; --teal:#0E7C86; --violet:#6B5CA5; --amber:#B26A00; --red:#A4303F;
+    --slate:#64748B; --gold:#C9A227; --gold-dim:#E4D9B0; --pale:#B9C4CE; --pending:#E6DFC8;
+    --gloss:#8A94A6; --danger-bg:#F6E3E6; --hint-bg:#E7F2F3; --shadow:rgba(27,37,48,.08);
+    --backdrop:rgba(238,241,244,.85);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0A0E16; --panel:#101623; --ink:#E6ECF5; --muted:#93A0B8; --line:#1E2842;
+    --line-hi:#31406B; --teal:#2DD4BF; --violet:#A78BFA; --amber:#F0B454; --red:#F4737E;
+    --slate:#8FA0B8; --gold:#D4AF37; --gold-dim:#453E28; --pale:#2B3654; --pending:#2E2A20;
+    --gloss:#6E7A94; --danger-bg:#3A1620; --hint-bg:#0F2A2E; --shadow:rgba(0,0,0,.5);
+    --backdrop:rgba(4,7,13,.82);
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "IBM Plex Sans",sans-serif}
   @media (prefers-reduced-motion:no-preference){ body{animation:fade .5s ease-out} @keyframes fade{from{opacity:0}} }
   .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
   header{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;justify-content:space-between}
-  h1{font:800 34px/1 "Big Shoulders Display",sans-serif;letter-spacing:.04em;margin:0;text-transform:uppercase}
+  h1{font:800 34px/1 "Space Grotesk",sans-serif;letter-spacing:.04em;margin:0;text-transform:uppercase}
   .asof{font:400 13px "IBM Plex Mono",monospace;color:var(--muted)}
   .badge{font:600 13px "IBM Plex Mono",monospace;padding:6px 12px;border-radius:4px;color:#fff;letter-spacing:.06em;text-transform:uppercase}
   /* Signature: DIMM edge-connector regime strip — gold contact tabs colored by segment state */
   .dimm{background:var(--panel);border:1px solid var(--line);border-radius:8px;margin:22px 0 10px;padding:18px 18px 0}
   .dimm-row{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-  .seg .gloss{font-size:10px; color:#8A94A6; margin:1px 0 3px; letter-spacing:0}
+  .seg .gloss{font-size:10px; color:var(--gloss); margin:1px 0 3px; letter-spacing:0}
 .seg .name{font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
-  .seg .state{font:800 20px "Big Shoulders Display",sans-serif;letter-spacing:.05em;text-transform:uppercase;margin:2px 0 1px}
+  .seg .state{font:800 20px "Space Grotesk",sans-serif;letter-spacing:.05em;text-transform:uppercase;margin:2px 0 1px}
   .seg .m30{font:400 12px "IBM Plex Mono",monospace;color:var(--muted)}
   .pins{display:flex;gap:3px;margin-top:10px;height:16px;align-items:flex-end}
   .pin{flex:1;height:14px;border-radius:1px 1px 0 0;background:var(--gold-dim)}
@@ -37,8 +47,25 @@
   .flags{margin:10px 0 20px;font:400 13px "IBM Plex Mono",monospace;color:var(--muted)}
   .flags .fired{color:var(--amber);font-weight:600}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 14px 6px}
-  .card h2{font:800 17px "Big Shoulders Display",sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 14px 6px;
+    position:relative;transition:border-color .15s,transform .15s,box-shadow .15s}
+  .card:hover{border-color:var(--line-hi);transform:translateY(-1px);box-shadow:0 8px 24px var(--shadow)}
+  .xbtn{position:absolute;top:10px;right:10px;width:26px;height:26px;border:1px solid var(--line);
+    border-radius:6px;background:none;color:var(--muted);cursor:pointer;font-size:13px;line-height:1;z-index:2}
+  .xbtn:hover{color:var(--ink);border-color:var(--line-hi)}
+  #focus{position:fixed;inset:0;background:var(--backdrop);display:none;z-index:100;padding:3vh 3vw}
+  #focus.open{display:block}
+  #focus .card{height:100%;overflow:auto;transform:none}
+  #focus .plot,#focus .plot-tall{height:calc(94vh - 150px)}
+  #sticky{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:14px;
+    background:var(--panel);border-bottom:1px solid var(--line);padding:8px 20px;
+    transform:translateY(-100%);transition:transform .2s;font:600 12px "IBM Plex Mono",monospace}
+  #sticky.show{transform:none}
+  #sticky .t{font:700 13px "Space Grotesk",sans-serif;letter-spacing:.05em;text-transform:uppercase;margin-right:auto}
+  .tbtn{border:1px solid var(--line);background:none;color:var(--muted);border-radius:6px;
+    padding:4px 10px;cursor:pointer;font:600 12px "IBM Plex Mono",monospace}
+  .tbtn:hover{color:var(--ink);border-color:var(--line-hi)}
+  .card h2{font:800 17px "Space Grotesk",sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2px}
   .card .sub{font:400 12px "IBM Plex Mono",monospace;color:var(--muted);margin:0 0 6px}
   .plot{height:280px}
   .plot-tall{height:360px}
@@ -53,8 +80,8 @@
   .matrix th,.matrix td{border:1px solid var(--line);padding:7px 6px;text-align:center}
   .matrix th{color:var(--muted);font-weight:600;background:var(--bg)}
   .matrix td.active{outline:3px solid var(--violet);outline-offset:-3px;font-weight:600}
-  .matrix td.danger{background:#F6E3E6;color:var(--red)}
-  .matrix td.volhint{background:#E7F2F3}
+  .matrix td.danger{background:var(--danger-bg);color:var(--red)}
+  .matrix td.volhint{background:var(--hint-bg)}
   footer{margin-top:26px;font:400 12px "IBM Plex Mono",monospace;color:var(--muted)}
   a{color:var(--teal)}
   :focus-visible{outline:2px solid var(--violet);outline-offset:2px}
@@ -67,7 +94,13 @@
     <span class="asof" id="asof">loading…</span>
     <span class="badge" id="composite" style="background:var(--slate)">warming up</span>
     <span class="badge" id="volbadge" style="background:var(--slate)">volume —</span>
+    <button class="tbtn" id="themebtn" title="Toggle light/dark">&#9681; theme</button>
   </header>
+  <div id="sticky"><span class="t">Memory Market Regime</span>
+    <span id="s_comp" class="badge" style="background:var(--slate)">&mdash;</span>
+    <span id="s_asof" class="asof"></span>
+    <button class="tbtn" id="themebtn2" title="Toggle light/dark">&#9681;</button></div>
+  <div id="focus"></div>
 
   <!-- Signature element: each segment rendered as a DIMM edge connector; pin color = committed regime -->
   <div class="dimm"><div class="dimm-row" id="dimm"></div></div>
@@ -129,15 +162,20 @@
 </div>
 
 <script>
-const C = {teal:"#0E7C86", violet:"#6B5CA5", red:"#A4303F", slate:"#64748B", amber:"#B26A00",
-           ink:"#1B2530", muted:"#5E6B7A", line:"#D7DEE6"};
+const _V = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C = {teal:_V("--teal"), violet:_V("--violet"), red:_V("--red"), slate:_V("--slate"),
+           amber:_V("--amber"), ink:_V("--ink"), muted:_V("--muted"), line:_V("--line"),
+           panel:_V("--panel"), pale:_V("--pale"), pending:_V("--pending")};
+const alpha = (hex, a) => { const x = hex.replace("#",""); const n = parseInt(x.length === 3 ?
+  x.split("").map(c => c + c).join("") : x, 16);
+  return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
 const SEGS = ["ddr5_desktop","ddr4_desktop","sodimm","server_ecc"];
 const SEGNAME = {ddr5_desktop:"DDR5 desktop", ddr4_desktop:"DDR4 desktop", sodimm:"SODIMM", server_ecc:"Server / ECC"};
 const SEGGLOSS = {ddr5_desktop:"memory for new desktop PCs",
                   ddr4_desktop:"memory for older desktop PCs",
                   sodimm:"laptop memory",
                   server_ecc:"datacenter memory (error-correcting)"};
-const BADGE = {rising:C.teal, flat:C.slate, falling:C.red, warming_up:"#9AA6B2"};
+const BADGE = {rising:C.teal, flat:C.slate, falling:C.red, warming_up:C.slate};
 const LAYOUT = {margin:{l:46,r:10,t:8,b:34}, paper_bgcolor:"rgba(0,0,0,0)", plot_bgcolor:"rgba(0,0,0,0)",
   font:{family:"IBM Plex Mono, monospace", size:11, color:C.ink},
   xaxis:{gridcolor:C.line}, yaxis:{gridcolor:C.line}, legend:{orientation:"h", y:-0.22}};
@@ -227,11 +265,11 @@ function feedBadge(name, last, cadence){
   // --- Regime ribbon: one square per day, colored by cell; dwell counter in caption ---
   if(cmx && cmx.length){
     const RCOL = {"Accelerating":C.teal, "Scarcity-led":C.amber, "Late-cycle":C.slate,
-                  "Rationed squeeze":C.violet, "Stagnating":C.muted, "Early weakening":"#D98E32",
-                  "CYCLE-TOP":C.red, "Softening":"#8A94A6", "Weakening":"#B3543F"};
+                  "Rationed squeeze":C.violet, "Stagnating":C.muted, "Early weakening":C.amber,
+                  "CYCLE-TOP":C.red, "Softening":C.slate, "Weakening":C.red};
     const rows = [...cmx].sort((a,b) => a.computed_date.localeCompare(b.computed_date));
     document.getElementById("mx_ribbon").innerHTML = rows.map(r =>
-      `<span title="${r.computed_date} · ${r.cell}" style="display:inline-block;width:10px;height:10px;margin:0 2px 2px 0;border-radius:2px;background:${RCOL[r.cell] || "#E6DFC8"}"></span>`
+      `<span title="${r.computed_date} · ${r.cell}" style="display:inline-block;width:10px;height:10px;margin:0 2px 2px 0;border-radius:2px;background:${RCOL[r.cell] || C.pending};${RCOL[r.cell] ? `box-shadow:0 0 6px ${alpha(RCOL[r.cell],.5)};` : ""}"></span>`
     ).join("");
     let dwell = 1;
     for(let i = rows.length - 2; i >= 0 && rows[i].cell === rows[rows.length-1].cell; i--) dwell++;
@@ -311,7 +349,7 @@ function feedBadge(name, last, cadence){
       xaxis:{...LAYOUT.xaxis},
       updatemenus:[{type:"buttons", direction:"right", showactive:true,
         x:0, xanchor:"left", y:1.18, yanchor:"top", font:{size:10},
-        bgcolor:"#FFFFFF", borderwidth:0, buttons:zoomBtns}],
+        bgcolor:C.panel, borderwidth:0, buttons:zoomBtns}],
       shapes:[{type:"line", x0:"2026-07-05", x1:"2026-07-05", y0:0, y1:1, yref:"paper",
                line:{color:C.muted, width:1, dash:"dot"}}],
       annotations:[
@@ -336,7 +374,7 @@ function feedBadge(name, last, cadence){
   } else empty("p_equity", NO_DATA);
 
   // --- Panel D: Korea ---
-  const KSER = [["global_semi_sales_usd","world semiconductors (SIA/WSTS, 3MMA)","#B9C4CE"],
+  const KSER = [["global_semi_sales_usd","world semiconductors (SIA/WSTS, 3MMA)",C.pale],
                 ["kr_exports_total_usd","KR total exports",C.line],
                 ["kr_exports_semis_usd","└ semiconductors ⊂ total",C.teal],
                 ["kr_exports_hbm_usd","└─ HBM ⊂ semis",C.violet]];
@@ -388,7 +426,7 @@ function feedBadge(name, last, cadence){
     const traces = [
       {x:miRev.map(r => qDate(r.quarter)), y:miRev.map(r => +r.value), type:"bar",
        name:"revenue US$ bn",
-       marker:{color:miRev.map(r => multi(r) ? C.teal : "rgba(14,124,134,0.28)")},
+       marker:{color:miRev.map(r => multi(r) ? C.teal : alpha(C.teal, 0.28))},
        text:miRev.map(r => r.members),
        hovertemplate:"%{x} · $%{y:.1f}bn<br>%{text}<extra></extra>"}];
     const capA = (mi || []).filter(r => r.metric === "capex_usd_bn")
@@ -477,6 +515,49 @@ function feedBadge(name, last, cadence){
   feedBadge("fundamentals", maxDate((fund||[]), "period_end"), 100);
   feedBadge("volume regime", vrow ? vrow.computed_date : null, 3);
 })();
+
+// ---------- chrome: theme toggle, sticky telemetry bar, focus view ----------
+function flipTheme(){
+  const cur = document.documentElement.getAttribute("data-theme") || "dark";
+  localStorage.setItem("mmt-theme", cur === "dark" ? "light" : "dark");
+  location.reload();
+}
+document.getElementById("themebtn").onclick = flipTheme;
+document.getElementById("themebtn2").onclick = flipTheme;
+
+const stickyEl = document.getElementById("sticky");
+addEventListener("scroll", () => {
+  stickyEl.classList.toggle("show", scrollY > 170);
+  const comp = document.getElementById("composite");
+  const sc = document.getElementById("s_comp");
+  sc.textContent = comp.textContent; sc.style.background = comp.style.background;
+  document.getElementById("s_asof").textContent = document.getElementById("asof").textContent;
+}, {passive:true});
+
+const focusEl = document.getElementById("focus");
+let focusHome = null;
+function openFocus(card){
+  focusHome = {parent: card.parentNode, next: card.nextSibling};
+  focusEl.appendChild(card); focusEl.classList.add("open");
+  document.body.style.overflow = "hidden";
+  card.querySelectorAll(".plot, .plot-tall").forEach(p => p.id && Plotly.Plots.resize(p));
+}
+function closeFocus(){
+  const card = focusEl.firstElementChild;
+  if(!card) return;
+  focusHome.parent.insertBefore(card, focusHome.next);
+  focusEl.classList.remove("open");
+  document.body.style.overflow = "";
+  card.querySelectorAll(".plot, .plot-tall").forEach(p => p.id && Plotly.Plots.resize(p));
+}
+focusEl.addEventListener("click", e => { if(e.target === focusEl) closeFocus(); });
+addEventListener("keydown", e => { if(e.key === "Escape") closeFocus(); });
+document.querySelectorAll(".grid .card").forEach(card => {
+  const b = document.createElement("button");
+  b.className = "xbtn"; b.title = "Focus view"; b.innerHTML = "&#10530;";
+  b.onclick = () => (focusEl.classList.contains("open") ? closeFocus() : openFocus(card));
+  card.appendChild(b);
+});
 </script>
 </body>
 </html>
