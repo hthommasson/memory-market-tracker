@@ -23,4 +23,4 @@ srv_hynix_32g_4800,server_ecc,SKhynix,HMCG88MEBRA107N,32,1x32,ddr5,4800,,new,150
 srv_samsung_32g_base,server_ecc,Samsung,M321R4GA3BB6,32,1x32,ddr5,4800,,new,150,1200,2026-07-05,,1,candidate
 srv_samsung_64g_base,server_ecc,Samsung,M321R8GA0BB0,64,1x64,ddr5,4800,,new,400,1800,2026-07-05,,1,candidate
 srv_hynix_32g_base,server_ecc,SK hynix,HMCG88MEBRA,32,1x32,ddr5,4800,,new,150,1200,2026-07-05,,1,candidate
-d5_kingston_fury_b_6000c36,ddr5_desktop,Kingston,KF560C36BBK2-32,32,2x16,ddr5,6000,36,new,250,900,2026-07-12,,1,candidate
+d5_kingston_fury_b_6000c36,ddr5_desktop,Kingston,KF560C36BBK2-32,32,2x16,ddr5,6000,36,new,250,900,2026-07-12,2026-07-21,1,retired_no_listings
