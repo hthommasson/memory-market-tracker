@@ -285,3 +285,4 @@ period,source,metric,value,value_wda,meta
 2026-07-P20,kcs_flash,kr_exports_total_usd,54930000000,,yoy=+52.3%|daily_avg_yoy=+62.9%
 2026-07-P20,kcs_flash,kr_exports_semis_usd,22110000000,,yoy=+180.6%|share_40.2%|autos_-10.6%
 2026-06,moea,tw_export_orders_electronics_usd,40500000000,,yoy=+79.9%|record_total_95.3b
+2026-07-P20,derived,kr_inc_p11_20_usd,25130000000.0,,
