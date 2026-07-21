@@ -73,6 +73,11 @@
   .tbtn{border:1px solid var(--line);background:none;color:var(--muted);border-radius:6px;
     padding:4px 10px;cursor:pointer;font:600 12px "IBM Plex Mono",monospace}
   .tbtn:hover{color:var(--ink);border-color:var(--line-hi)}
+  .grab{position:absolute;top:10px;right:42px;width:26px;height:26px;border:1px solid var(--line);
+    border-radius:6px;background:none;color:var(--muted);cursor:grab;font-size:12px;line-height:1;z-index:2;
+    letter-spacing:-2px}
+  .grab:hover{color:var(--ink);border-color:var(--line-hi)}
+  .card.dragging{opacity:.45;border-style:dashed}
   .card h2{font:800 17px "Space Grotesk",sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2px}
   .card .sub{font:400 12px "IBM Plex Mono",monospace;color:var(--muted);margin:0 0 6px}
   .plot{height:280px}
@@ -166,7 +171,7 @@
   </div>
 
   <div class="stale" id="stale"></div>
-  <footer>Instrument panel, not investment advice · regime labels are descriptive classifications of data, not forecasts · spec v0.4</footer>
+  <footer><button class="tbtn" id="layoutreset" title="Restore default card order" style="float:right">reset layout</button>Instrument panel, not investment advice · regime labels are descriptive classifications of data, not forecasts · spec v0.4</footer>
 </div>
 
 <script>
@@ -406,7 +411,7 @@ function feedBadge(name, last, cadence){
     });
     document.getElementById("p_context").before(zrow);
     Plotly.newPlot("p_context", traces, {...LAYOUT,
-      margin:{l:52,r:10,t:8,b:34},
+      margin:{l:52,r:10,t:26,b:34},
       yaxis:{...LAYOUT.yaxis, type:"log", title:"$/GB (log)", exponentformat:"power"},
       xaxis:{...LAYOUT.xaxis},
 
@@ -618,6 +623,50 @@ document.querySelectorAll(".grid .card").forEach(card => {
   b.onclick = () => (focusEl.classList.contains("open") ? closeFocus() : openFocus(card));
   card.appendChild(b);
 });
+
+// ---------- layout: drag the grip to re-arrange; order persists in this browser ----------
+const grid = document.querySelector(".grid");
+const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40);
+grid.querySelectorAll(".card").forEach(c => c.dataset.cid = slug(c.querySelector("h2").textContent));
+try{
+  const saved = JSON.parse(localStorage.getItem("mmt-layout") || "null");
+  if(Array.isArray(saved)){
+    const byId = {};
+    grid.querySelectorAll(".card").forEach(c => byId[c.dataset.cid] = c);
+    const order = saved.filter(id => byId[id]);
+    grid.querySelectorAll(".card").forEach(c => { if(!order.includes(c.dataset.cid)) order.push(c.dataset.cid); });
+    order.forEach(id => grid.appendChild(byId[id]));
+  }
+}catch(e){}
+const saveLayout = () => localStorage.setItem("mmt-layout",
+  JSON.stringify([...grid.querySelectorAll(".card")].map(c => c.dataset.cid)));
+let dragged = null;
+grid.querySelectorAll(".card").forEach(card => {
+  const g = document.createElement("button");
+  g.className = "grab"; g.title = "Drag to re-arrange"; g.innerHTML = "&#8942;&#8942;";
+  g.draggable = true;
+  g.addEventListener("dragstart", e => {
+    dragged = card; card.classList.add("dragging");
+    e.dataTransfer.setData("text/plain", card.dataset.cid);
+    e.dataTransfer.setDragImage(card, 24, 24);
+  });
+  g.addEventListener("dragend", () => {
+    card.classList.remove("dragging"); dragged = null; saveLayout();
+    card.querySelectorAll(".plot, .plot-tall").forEach(p => p.id && Plotly.Plots.resize(p));
+  });
+  card.appendChild(g);
+});
+grid.addEventListener("dragover", e => {
+  if(!dragged) return;
+  e.preventDefault();
+  const over = e.target.closest(".card");
+  if(!over || over === dragged) return;
+  const r = over.getBoundingClientRect();
+  grid.insertBefore(dragged, (e.clientY - r.top) < r.height / 2 ? over : over.nextSibling);
+});
+document.getElementById("layoutreset").onclick = () => {
+  localStorage.removeItem("mmt-layout"); location.reload();
+};
 </script>
 </body>
 </html>
