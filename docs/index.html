@@ -78,12 +78,27 @@
     letter-spacing:-2px}
   .grab:hover{color:var(--ink);border-color:var(--line-hi)}
   .card.dragging{opacity:.45;border-style:dashed}
+  .card{--ph:280px;--pht:360px}
+  .card[data-h="s"]{--ph:200px;--pht:250px}
+  .card[data-h="l"]{--ph:420px;--pht:500px}
+  .card[data-h="x"]{--ph:560px;--pht:640px}
+  .card[data-w="1"]{grid-column:auto}
+  .card[data-w="2"]{grid-column:span 2}
+  .card[data-w="3"]{grid-column:1/-1}
+  .xbtn,.grab,.szbtn{opacity:0;transition:opacity .12s}
+  .card:hover .xbtn,.card:hover .grab,.card:hover .szbtn,
+  .xbtn:focus-visible,.grab:focus-visible,.szbtn:focus-visible{opacity:1}
+  .szbtn{position:absolute;top:10px;width:26px;height:26px;border:1px solid var(--line);
+    border-radius:6px;background:none;color:var(--muted);cursor:pointer;font-size:12px;line-height:1;z-index:2}
+  .szbtn:hover{color:var(--ink);border-color:var(--line-hi)}
+  .szbtn.w{right:74px}.szbtn.hh{right:106px}
+  @media (max-width:760px){ .grid .card{grid-column:1/-1 !important} }
   .card h2{font:800 17px "Space Grotesk",sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:0 0 2px}
   .card .sub{font:400 12px "IBM Plex Mono",monospace;color:var(--muted);margin:0 0 6px}
-  .plot{height:280px}
-  .plot-tall{height:360px}
-  .empty{display:flex;align-items:center;justify-content:center;height:280px;color:var(--muted);font:400 13px "IBM Plex Mono",monospace;text-align:center;padding:0 20px}
-  .events{list-style:none;margin:0;padding:0;max-height:280px;overflow:auto}
+  .plot{height:var(--ph,280px)}
+  .plot-tall{height:var(--pht,360px)}
+  .empty{display:flex;align-items:center;justify-content:center;height:var(--ph,280px);color:var(--muted);font:400 13px "IBM Plex Mono",monospace;text-align:center;padding:0 20px}
+  .events{list-style:none;margin:0;padding:0;max-height:var(--ph,280px);overflow:auto}
   .events li{padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
   .events time{font:600 12px "IBM Plex Mono",monospace;color:var(--violet);margin-right:8px}
   .stale{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
@@ -599,6 +614,26 @@ addEventListener("scroll", () => {
   document.getElementById("s_asof").textContent = document.getElementById("asof").textContent;
 }, {passive:true});
 
+// ---------- layout: drag the grip to re-arrange; order persists in this browser ----------
+const grid = document.querySelector(".grid");
+const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40);
+grid.querySelectorAll(".card").forEach(c => c.dataset.cid = slug(c.querySelector("h2").textContent));
+const SIZES = (() => { try{ return JSON.parse(localStorage.getItem("mmt-size") || "{}"); }catch(e){ return {}; } })();
+grid.querySelectorAll(".card").forEach(c => {
+  const wide = (c.getAttribute("style") || "").replace(/\s/g, "").includes("grid-column:1/-1");
+  c.dataset.dw = wide ? "3" : "1";
+  if(wide) c.style.gridColumn = "";
+  const s = SIZES[c.dataset.cid] || {};
+  c.dataset.w = s.w || c.dataset.dw;
+  c.dataset.h = s.h || "m";
+});
+const saveSizes = () => localStorage.setItem("mmt-size", JSON.stringify(SIZES));
+const WNAME = {1:"one column", 2:"two columns", 3:"full row"};
+const HNAME = {s:"short", m:"standard", l:"tall", x:"extra tall"};
+const HSEQ = ["s","m","l","x"];
+function resizeCardPlots(card){
+  card.querySelectorAll(".plot, .plot-tall").forEach(p => p.id && Plotly.Plots.resize(p));
+}
 const focusEl = document.getElementById("focus");
 let focusHome = null;
 function openFocus(card){
@@ -622,12 +657,28 @@ document.querySelectorAll(".grid .card").forEach(card => {
   b.className = "xbtn"; b.title = "Focus view"; b.innerHTML = "&#10530;";
   b.onclick = () => (focusEl.classList.contains("open") ? closeFocus() : openFocus(card));
   card.appendChild(b);
+  const wb = document.createElement("button");
+  wb.className = "szbtn w"; wb.innerHTML = "&#8596;";
+  const wt = () => wb.title = "width: " + WNAME[card.dataset.w] + " — click to cycle";
+  wt();
+  wb.onclick = () => {
+    card.dataset.w = String(+card.dataset.w % 3 + 1);
+    (SIZES[card.dataset.cid] = SIZES[card.dataset.cid] || {}).w = card.dataset.w;
+    saveSizes(); wt(); resizeCardPlots(card);
+  };
+  card.appendChild(wb);
+  const hb = document.createElement("button");
+  hb.className = "szbtn hh"; hb.innerHTML = "&#8597;";
+  const ht = () => hb.title = "height: " + HNAME[card.dataset.h] + " — click to cycle";
+  ht();
+  hb.onclick = () => {
+    card.dataset.h = HSEQ[(HSEQ.indexOf(card.dataset.h) + 1) % HSEQ.length];
+    (SIZES[card.dataset.cid] = SIZES[card.dataset.cid] || {}).h = card.dataset.h;
+    saveSizes(); ht(); resizeCardPlots(card);
+  };
+  card.appendChild(hb);
 });
 
-// ---------- layout: drag the grip to re-arrange; order persists in this browser ----------
-const grid = document.querySelector(".grid");
-const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40);
-grid.querySelectorAll(".card").forEach(c => c.dataset.cid = slug(c.querySelector("h2").textContent));
 try{
   const saved = JSON.parse(localStorage.getItem("mmt-layout") || "null");
   if(Array.isArray(saved)){
@@ -665,7 +716,7 @@ grid.addEventListener("dragover", e => {
   grid.insertBefore(dragged, (e.clientY - r.top) < r.height / 2 ? over : over.nextSibling);
 });
 document.getElementById("layoutreset").onclick = () => {
-  localStorage.removeItem("mmt-layout"); location.reload();
+  localStorage.removeItem("mmt-layout"); localStorage.removeItem("mmt-size"); location.reload();
 };
 </script>
 </body>
