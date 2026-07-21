@@ -426,6 +426,8 @@ function feedBadge(name, last, cadence){
       zrow.appendChild(b);
     });
     document.getElementById("p_context").before(zrow);
+    const defz = [...zrow.children].find(x => x.textContent === "1y");
+    if(defz) defz.click();
     Plotly.newPlot("p_context", traces, {...LAYOUT,
       margin:{l:52,r:10,t:26,b:58},
       yaxis:{...LAYOUT.yaxis, type:"log", title:"$/GB (log)", exponentformat:"power"},
@@ -630,7 +632,11 @@ function feedBadge(name, last, cadence){
       };
       zrow.appendChild(b);
     });
-    if(zrow.children.length > 1) gd.before(zrow);
+    if(zrow.children.length > 1){
+      gd.before(zrow);
+      const def = [...zrow.children].find(x => x.textContent === "1y");
+      if(def) def.click();
+    }
   });
 
   // --- Events ---
@@ -691,12 +697,13 @@ function resizeCardPlots(card, reframe){
       if(!p.id || !p.data) return;
       Plotly.Plots.resize(p);
       if(reframe){
-        const rl = {"xaxis.autorange": true, "yaxis.autorange": true};
-        if(p.layout && p.layout.yaxis2) rl["yaxis2.autorange"] = true;
-        Plotly.relayout(p, rl);
         const zr = p.previousElementSibling;
-        if(zr && zr.classList.contains("zrow")){
-          zr.querySelectorAll(".zbtn").forEach((x, i) => x.classList.toggle("active", i === 0));
+        const act = zr && zr.classList.contains("zrow") ? zr.querySelector(".zbtn.active") : null;
+        if(act){ act.click(); }        // re-frame the user's chosen window at the new size
+        else {
+          const rl = {"xaxis.autorange": true, "yaxis.autorange": true};
+          if(p.layout && p.layout.yaxis2) rl["yaxis2.autorange"] = true;
+          Plotly.relayout(p, rl);
         }
       }
     });
