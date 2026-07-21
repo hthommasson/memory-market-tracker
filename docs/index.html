@@ -204,9 +204,10 @@ const SEGGLOSS = {ddr5_desktop:"memory for new desktop PCs",
                   sodimm:"laptop memory",
                   server_ecc:"datacenter memory (error-correcting)"};
 const BADGE = {rising:C.teal, flat:C.slate, falling:C.red, warming_up:C.slate};
-const LAYOUT = {margin:{l:46,r:10,t:8,b:34}, paper_bgcolor:"rgba(0,0,0,0)", plot_bgcolor:"rgba(0,0,0,0)",
+const LAYOUT = {margin:{l:46,r:10,t:8,b:58}, paper_bgcolor:"rgba(0,0,0,0)", plot_bgcolor:"rgba(0,0,0,0)",
   font:{family:"IBM Plex Mono, monospace", size:11, color:C.ink},
-  xaxis:{gridcolor:C.line}, yaxis:{gridcolor:C.line}, legend:{orientation:"h", y:-0.22}};
+  xaxis:{gridcolor:C.line}, yaxis:{gridcolor:C.line},
+  legend:{orientation:"h", y:-0.16, yanchor:"top", x:0, font:{size:10}}};
 const CFG = {displayModeBar:false, responsive:true};
 
 function csv(path){ return new Promise(res => Papa.parse(path, {download:true, header:true,
@@ -426,7 +427,7 @@ function feedBadge(name, last, cadence){
     });
     document.getElementById("p_context").before(zrow);
     Plotly.newPlot("p_context", traces, {...LAYOUT,
-      margin:{l:52,r:10,t:26,b:34},
+      margin:{l:52,r:10,t:26,b:58},
       yaxis:{...LAYOUT.yaxis, type:"log", title:"$/GB (log)", exponentformat:"power"},
       xaxis:{...LAYOUT.xaxis},
 
@@ -520,7 +521,7 @@ function feedBadge(name, last, cadence){
       line:{width:2.5, color:C.violet}, text:invA.map(r => r.members),
       hovertemplate:"%{x} · %{y:.0f} days<br>members: %{text}<extra></extra>"});
     Plotly.newPlot("p_mi", traces, {...LAYOUT,
-      margin:{l:52, r:52, t:8, b:30},
+      margin:{l:52, r:52, t:8, b:58},
       yaxis:{...LAYOUT.yaxis, title:"revenue US$ bn"},
       yaxis2:{overlaying:"y", side:"right", title:"days", gridcolor:"rgba(0,0,0,0)"}}, CFG);
     const br = (mi || []).filter(r => r.metric === "breadth_improving")
@@ -579,6 +580,59 @@ function feedBadge(name, last, cadence){
       yaxis:{...LAYOUT.yaxis, title:"index, Jan-24 = 100"}}, CFG);
   } else empty("p_fred", "Appears after the FRED collector runs with FRED_API_KEY set.");
 
+  // --- Period chips: every date-axis chart gets the context card's toggle treatment ---
+  const CHIP_PRESETS = [["all", null], ["2y", 730], ["1y", 365], ["6m", 182], ["1m", 31]];
+  ["p_price", "p_equity", "p_fund", "p_mi", "p_dist", "p_fred"].forEach(pid => {
+    const gd = document.getElementById(pid);
+    if(!gd || !gd.data || !gd.data.length) return;
+    if(gd.layout && gd.layout.xaxis && gd.layout.xaxis.type === "category") return;
+    const times = gd.data.flatMap(tr => (tr.x || []).map(xv => new Date(xv).getTime()))
+                         .filter(t => !isNaN(t));
+    if(times.length < 3) return;
+    const tEnd = Math.max(...times), tStart = Math.min(...times);
+    const spanD = (tEnd - tStart) / 86400000;
+    const winRange = (t0, t1, ax) => {
+      let lo = Infinity, hi = -Infinity;
+      gd.data.forEach(tr => {
+        if((ax === "y2") !== ((tr.yaxis || "y") === "y2")) return;
+        (tr.x || []).forEach((xv, i) => {
+          const t = new Date(xv).getTime(), v = +tr.y[i];
+          if(t >= t0 && t <= t1 && isFinite(v)){ if(v < lo) lo = v; if(v > hi) hi = v; }
+        });
+      });
+      if(lo > hi) return null;
+      const pad = (hi - lo) * 0.08 || Math.abs(hi) * 0.08 || 1;
+      return [lo - pad, hi + pad];
+    };
+    const hasY2 = gd.data.some(tr => (tr.yaxis || "y") === "y2");
+    const zrow = document.createElement("div");
+    zrow.className = "zrow";
+    CHIP_PRESETS.forEach(([label, days], i) => {
+      if(days && days > spanD * 1.15 && label !== "all") return;
+      const b = document.createElement("button");
+      b.className = "zbtn" + (i === 0 ? " active" : ""); b.textContent = label;
+      b.onclick = () => {
+        const args = days
+          ? (() => {
+              const t0 = tEnd - days * 86400000, pd = 86400000 * Math.max(1, days * 0.03);
+              const a = {"xaxis.range": [new Date(t0).toISOString().slice(0,10),
+                                          new Date(tEnd + pd).toISOString().slice(0,10)]};
+              const yr = winRange(t0, tEnd + pd, "y");
+              if(yr) a["yaxis.range"] = yr;
+              if(hasY2){ const y2r = winRange(t0, tEnd + pd, "y2"); if(y2r) a["yaxis2.range"] = y2r; }
+              return a;
+            })()
+          : (hasY2 ? {"xaxis.autorange": true, "yaxis.autorange": true, "yaxis2.autorange": true}
+                   : {"xaxis.autorange": true, "yaxis.autorange": true});
+        Plotly.relayout(gd, args);
+        zrow.querySelectorAll(".zbtn").forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+      };
+      zrow.appendChild(b);
+    });
+    if(zrow.children.length > 1) gd.before(zrow);
+  });
+
   // --- Events ---
   const ul = document.getElementById("events");
   (ev || []).slice().reverse().forEach(e => {
@@ -631,8 +685,22 @@ const saveSizes = () => localStorage.setItem("mmt-size", JSON.stringify(SIZES));
 const WNAME = {1:"one column", 2:"two columns", 3:"full row"};
 const HNAME = {s:"short", m:"standard", l:"tall", x:"extra tall"};
 const HSEQ = ["s","m","l","x"];
-function resizeCardPlots(card){
-  card.querySelectorAll(".plot, .plot-tall").forEach(p => p.id && Plotly.Plots.resize(p));
+function resizeCardPlots(card, reframe){
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    card.querySelectorAll(".plot, .plot-tall").forEach(p => {
+      if(!p.id || !p.data) return;
+      Plotly.Plots.resize(p);
+      if(reframe){
+        const rl = {"xaxis.autorange": true, "yaxis.autorange": true};
+        if(p.layout && p.layout.yaxis2) rl["yaxis2.autorange"] = true;
+        Plotly.relayout(p, rl);
+        const zr = p.previousElementSibling;
+        if(zr && zr.classList.contains("zrow")){
+          zr.querySelectorAll(".zbtn").forEach((x, i) => x.classList.toggle("active", i === 0));
+        }
+      }
+    });
+  }));
 }
 const focusEl = document.getElementById("focus");
 let focusHome = null;
@@ -664,7 +732,7 @@ document.querySelectorAll(".grid .card").forEach(card => {
   wb.onclick = () => {
     card.dataset.w = String(+card.dataset.w % 3 + 1);
     (SIZES[card.dataset.cid] = SIZES[card.dataset.cid] || {}).w = card.dataset.w;
-    saveSizes(); wt(); resizeCardPlots(card);
+    saveSizes(); wt(); resizeCardPlots(card, true);
   };
   card.appendChild(wb);
   const hb = document.createElement("button");
@@ -674,7 +742,7 @@ document.querySelectorAll(".grid .card").forEach(card => {
   hb.onclick = () => {
     card.dataset.h = HSEQ[(HSEQ.indexOf(card.dataset.h) + 1) % HSEQ.length];
     (SIZES[card.dataset.cid] = SIZES[card.dataset.cid] || {}).h = card.dataset.h;
-    saveSizes(); ht(); resizeCardPlots(card);
+    saveSizes(); ht(); resizeCardPlots(card, true);
   };
   card.appendChild(hb);
 });
