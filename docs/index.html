@@ -227,6 +227,7 @@ function feedBadge(name, last, cadence){
     b.style.background = BADGE[comp.label_committed] || C.slate;
     document.getElementById("asof").textContent = "as of " + comp.date + " UTC";
   } else { document.getElementById("asof").textContent = "awaiting first run"; }
+  const SPARKD = {};
   SEGS.forEach(s => {
     const r = latest[s] || {label_committed:"warming_up", m30_annualized:""};
     const lab = r.label_committed || "warming_up";
@@ -237,19 +238,8 @@ function feedBadge(name, last, cadence){
                           .sort((a,b) => a.date.localeCompare(b.date)).slice(-30);
     let spark = "";
     if(fl.length > 1){
-      const ys = fl.map(x => +x.value), lo = Math.min(...ys), hi = Math.max(...ys);
-      const W = 200, H = 34, pad = 3;
-      const px = i => pad + i * (W - 2*pad) / (fl.length - 1);
-      const py = v => hi === lo ? H/2 : (H - pad) - (v - lo) * (H - 2*pad) / (hi - lo);
-      const pts = ys.map((v, i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(" ");
-      const col = SCOL[lab] || C.slate;
-      spark = `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"
-        aria-label="floor $/GB, last ${fl.length} days (${lo.toFixed(2)}–${hi.toFixed(2)})">
-        <polyline points="${pts} ${W-pad},${H} ${pad},${H}" fill="${alpha(col,.12)}" stroke="none"/>
-        <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.8"
-          stroke-linejoin="round" stroke-linecap="round"/>
-        <circle cx="${px(fl.length-1).toFixed(1)}" cy="${py(ys[ys.length-1]).toFixed(1)}" r="2.6" fill="${col}"/>
-      </svg>`;
+      SPARKD[s] = {ys: fl.map(x => +x.value), col: SCOL[lab] || C.slate};
+      spark = `<canvas class="spark" data-seg="${s}"></canvas>`;
     } else spark = '<div class="spark sparkempty">collecting…</div>';
     dimm.insertAdjacentHTML("beforeend",
       `<div class="seg ${lab}" title="${SEGGLOSS[s]} — line = ask-floor $/GB, last ${Math.max(fl.length,0)} days">
@@ -257,6 +247,27 @@ function feedBadge(name, last, cadence){
        <div class="gloss">${SEGGLOSS[s]}</div>
        <div class="state">${lab.replace("_"," ")}</div><div class="m30">m30 ${m}</div>
        ${spark}</div>`);
+  });
+  // canvas draw pass — no parser between coordinates and pixels
+  document.querySelectorAll("canvas.spark").forEach(cv => {
+    const d = SPARKD[cv.dataset.seg]; if(!d) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = cv.clientWidth || 200, hg = cv.clientHeight || 34;
+    cv.width = w * dpr; cv.height = hg * dpr;
+    const ctx = cv.getContext("2d"); ctx.scale(dpr, dpr);
+    const ys = d.ys, lo = Math.min(...ys), hi = Math.max(...ys), pad = 3;
+    const px = i => pad + i * (w - 2*pad) / (ys.length - 1);
+    const py = v => hi === lo ? hg/2 : (hg - pad) - (v - lo) * (hg - 2*pad) / (hi - lo);
+    ctx.beginPath(); ctx.moveTo(px(0), hg);
+    ys.forEach((v, i) => ctx.lineTo(px(i), py(v)));
+    ctx.lineTo(px(ys.length - 1), hg); ctx.closePath();
+    ctx.fillStyle = alpha(d.col, .12); ctx.fill();
+    ctx.beginPath();
+    ys.forEach((v, i) => i ? ctx.lineTo(px(i), py(v)) : ctx.moveTo(px(i), py(v)));
+    ctx.strokeStyle = d.col; ctx.lineWidth = 1.8;
+    ctx.lineJoin = ctx.lineCap = "round"; ctx.stroke();
+    ctx.beginPath(); ctx.arc(px(ys.length - 1), py(ys[ys.length - 1]), 2.6, 0, 7);
+    ctx.fillStyle = d.col; ctx.fill();
   });
 
   // --- Divergence flags ---
