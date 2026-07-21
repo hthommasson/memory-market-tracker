@@ -39,11 +39,19 @@
 .seg .name{font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
   .seg .state{font:800 20px "Space Grotesk",sans-serif;letter-spacing:.05em;text-transform:uppercase;margin:2px 0 1px}
   .seg .m30{font:400 12px "IBM Plex Mono",monospace;color:var(--muted)}
-  .pins{display:flex;gap:3px;margin-top:10px;height:16px;align-items:flex-end}
-  .pin{flex:1;height:14px;border-radius:1px 1px 0 0;background:var(--gold-dim)}
-  .notch{flex:0 0 8px;height:6px;background:transparent}
-  .rising .pin{background:var(--teal)} .falling .pin{background:var(--red)}
-  .flat .pin{background:var(--slate)} .warming_up .pin{background:var(--gold-dim)}
+  .spark{display:block;width:100%;height:34px;margin:10px 0 12px}
+  .sparkempty{display:flex;align-items:center;font:400 11px "IBM Plex Mono",monospace;color:var(--gloss)}
+  .ribbon{display:flex;gap:2px;height:22px;margin-top:10px}
+  .run{border-radius:4px;min-width:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .run span{font:600 10px "IBM Plex Mono",monospace;color:var(--ink);white-space:nowrap;
+    text-shadow:0 0 4px var(--panel)}
+  .ribbondates{display:flex;justify-content:space-between;font:400 10px "IBM Plex Mono",monospace;
+    color:var(--gloss);margin-top:3px}
+  .zrow{display:flex;gap:6px;margin:0 0 8px}
+  .zbtn{border:1px solid var(--line);background:none;color:var(--muted);border-radius:6px;
+    padding:3px 10px;cursor:pointer;font:600 11px "IBM Plex Mono",monospace}
+  .zbtn:hover{color:var(--ink);border-color:var(--line-hi)}
+  .zbtn.active{background:var(--hint-bg);color:var(--teal);border-color:var(--teal)}
   .flags{margin:10px 0 20px;font:400 13px "IBM Plex Mono",monospace;color:var(--muted)}
   .flags .fired{color:var(--amber);font-weight:600}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
@@ -224,13 +232,31 @@ function feedBadge(name, last, cadence){
     const lab = r.label_committed || "warming_up";
     const m = r.m30_annualized !== "" && r.m30_annualized !== undefined
       ? (100*(+r.m30_annualized)).toFixed(1) + "% ann." : "—";
-    const pins = Array.from({length:14}, (_,i) =>
-      i === 4 ? '<span class="notch"></span>' : '<span class="pin"></span>').join("");
+    const SCOL = {rising:C.teal, falling:C.red, flat:C.slate, warming_up:_V("--gold")};
+    const fl = (seg || []).filter(x => x.segment === s && x.series === "floor")
+                          .sort((a,b) => a.date.localeCompare(b.date)).slice(-30);
+    let spark = "";
+    if(fl.length > 1){
+      const ys = fl.map(x => +x.value), lo = Math.min(...ys), hi = Math.max(...ys);
+      const W = 200, H = 34, pad = 3;
+      const px = i => pad + i * (W - 2*pad) / (fl.length - 1);
+      const py = v => hi === lo ? H/2 : (H - pad) - (v - lo) * (H - 2*pad) / (hi - lo);
+      const pts = ys.map((v, i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(" ");
+      const col = SCOL[lab] || C.slate;
+      spark = `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"
+        aria-label="floor $/GB, last ${fl.length} days (${lo.toFixed(2)}–${hi.toFixed(2)})">
+        <polyline points="${pts} ${W-pad},${H} ${pad},${H}" fill="${alpha(col,.12)}" stroke="none"/>
+        <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.8"
+          stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="${px(fl.length-1).toFixed(1)}" cy="${py(ys[ys.length-1]).toFixed(1)}" r="2.6" fill="${col}"/>
+      </svg>`;
+    } else spark = '<div class="spark sparkempty">collecting…</div>';
     dimm.insertAdjacentHTML("beforeend",
-      `<div class="seg ${lab}" title="${SEGGLOSS[s]}"><div class="name">${SEGNAME[s]}</div>
+      `<div class="seg ${lab}" title="${SEGGLOSS[s]} — line = ask-floor $/GB, last ${Math.max(fl.length,0)} days">
+       <div class="name">${SEGNAME[s]}</div>
        <div class="gloss">${SEGGLOSS[s]}</div>
        <div class="state">${lab.replace("_"," ")}</div><div class="m30">m30 ${m}</div>
-       <div class="pins">${pins}</div></div>`);
+       ${spark}</div>`);
   });
 
   // --- Divergence flags ---
@@ -268,9 +294,23 @@ function feedBadge(name, last, cadence){
                   "Rationed squeeze":C.violet, "Stagnating":C.muted, "Early weakening":C.amber,
                   "CYCLE-TOP":C.red, "Softening":C.slate, "Weakening":C.red};
     const rows = [...cmx].sort((a,b) => a.computed_date.localeCompare(b.computed_date));
-    document.getElementById("mx_ribbon").innerHTML = rows.map(r =>
-      `<span title="${r.computed_date} · ${r.cell}" style="display:inline-block;width:10px;height:10px;margin:0 2px 2px 0;border-radius:2px;background:${RCOL[r.cell] || C.pending};${RCOL[r.cell] ? `box-shadow:0 0 6px ${alpha(RCOL[r.cell],.5)};` : ""}"></span>`
-    ).join("");
+    const runs = [];
+    for(const r of rows){
+      const last = runs[runs.length - 1];
+      if(last && last.cell === r.cell){ last.days++; last.end = r.computed_date; }
+      else runs.push({cell:r.cell, days:1, start:r.computed_date, end:r.computed_date});
+    }
+    const total = rows.length;
+    document.getElementById("mx_ribbon").innerHTML =
+      '<div class="ribbon">' + runs.map(u => {
+        const col = RCOL[u.cell];
+        const short = u.cell.startsWith("pending") ? "pending" : u.cell;
+        return `<div class="run" style="flex:${u.days};background:${col || C.pending};` +
+               `${col ? `box-shadow:0 0 8px ${alpha(col,.45)};` : ""}"` +
+               ` title="${short} · ${u.days} day${u.days>1?"s":""} (${u.start} → ${u.end})">` +
+               `${u.days / total > 0.18 ? `<span>${short} · ${u.days}d</span>` : ""}</div>`;
+      }).join("") + '</div>' +
+      `<div class="ribbondates"><span>${rows[0].computed_date}</span><span>${rows[rows.length-1].computed_date}</span></div>`;
     let dwell = 1;
     for(let i = rows.length - 2; i >= 0 && rows[i].cell === rows[rows.length-1].cell; i--) dwell++;
     document.getElementById("mxsub").textContent =
@@ -343,13 +383,22 @@ function feedBadge(name, last, cadence){
     const zoomBtns = [
       {label:"69y", method:"relayout", args:[{"xaxis.autorange": true, "yaxis.autorange": true}]},
       mkBtn("30y", 30), mkBtn("10y", 10), mkBtn("3y", 3), mkBtn("1y", 1)];
+    const zrow = document.createElement("div");
+    zrow.className = "zrow";
+    zoomBtns.forEach((zb, i) => {
+      const b = document.createElement("button");
+      b.className = "zbtn" + (i === 0 ? " active" : ""); b.textContent = zb.label;
+      b.onclick = () => { Plotly.relayout("p_context", zb.args[0]);
+        zrow.querySelectorAll(".zbtn").forEach(x => x.classList.remove("active"));
+        b.classList.add("active"); };
+      zrow.appendChild(b);
+    });
+    document.getElementById("p_context").before(zrow);
     Plotly.newPlot("p_context", traces, {...LAYOUT,
       margin:{l:52,r:10,t:8,b:34},
       yaxis:{...LAYOUT.yaxis, type:"log", title:"$/GB (log)", exponentformat:"power"},
       xaxis:{...LAYOUT.xaxis},
-      updatemenus:[{type:"buttons", direction:"right", showactive:true,
-        x:0, xanchor:"left", y:1.18, yanchor:"top", font:{size:10},
-        bgcolor:C.panel, borderwidth:0, buttons:zoomBtns}],
+
       shapes:[{type:"line", x0:"2026-07-05", x1:"2026-07-05", y0:0, y1:1, yref:"paper",
                line:{color:C.muted, width:1, dash:"dot"}}],
       annotations:[
