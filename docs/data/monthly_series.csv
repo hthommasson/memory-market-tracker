@@ -282,3 +282,5 @@ period,source,metric,value,value_wda,meta
 2026-06,fred,us_ppi_other_semi_devices,51.703,,fred:PCU334413334413A
 2026-06,fred,us_ppi_semi_electronic_components,72.656,,fred:PCU33443344
 2026-06,fred,us_ip_semiconductors,181.8824,,fred:IPG3344S
+2026-07-P20,kcs_flash,kr_exports_total_usd,54930000000,,yoy=+52.3%|daily_avg_yoy=+62.9%
+2026-07-P20,kcs_flash,kr_exports_semis_usd,22110000000,,yoy=+180.6%|share_40.2%|autos_-10.6%
