@@ -286,3 +286,5 @@ period,source,metric,value,value_wda,meta
 2026-07-P20,kcs_flash,kr_exports_semis_usd,22110000000,,yoy=+180.6%|share_40.2%|autos_-10.6%
 2026-06,moea,tw_export_orders_electronics_usd,40500000000,,yoy=+79.9%|record_total_95.3b
 2026-07-P20,derived,kr_inc_p11_20_usd,25130000000.0,,
+2026-03,semi_wwsems,semi_equip_billings_global_usd,36550000000,,q1_2026|yoy=+14%|qoq=+1%|record
+2025-12,semi_wwsems,semi_equip_billings_global_usd_annual,135000000000,,fy2025|yoy=+15%
