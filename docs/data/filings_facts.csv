@@ -1281,3 +1281,4 @@ period_end,cik,ticker,concept,value
 2026-06-30,dart:00164779,SKHYNIX,capex_usd,7354000000
 2026-06-30,dart:00164779,SKHYNIX,capex_pct_revenue,13.45
 2026-06-30,dart:00164779,SKHYNIX,fx_krwusd_avg,1451
+2026-06-30,manual,SAMSUNG_MEM,revenue_krw,120800000000000
