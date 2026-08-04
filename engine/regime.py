@@ -11,7 +11,7 @@ from collectors.common import log, warn
 from config.settings import (DATA_DIR, WEIGHTS, THRESH_UP, THRESH_DOWN,
                              MOMENTUM_WINDOW, ACCEL_LAG, HYSTERESIS_DAYS,
                              MIN_OBS_FOR_LABEL, QUALITY_GATE_MIN_OBS,
-                             QUALITY_GATE_MAX_GAP)
+                             QUALITY_GATE_MAX_GAP, MIN_BOOKS_FOR_LABEL)
 
 REGISTRY = "config/sku_registry.csv"
 OBS = f"{DATA_DIR}/price_obs.csv"
@@ -94,6 +94,11 @@ def main():
     seg = build_segment_daily()
     floor = seg[seg["series"] == "floor"].pivot(index="date", columns="segment",
                                                 values="usd_per_gb").sort_index()
+    # Minimum-book gate (2026-08-05): floors from a single in-stock book are
+    # composition noise, not price signal -- mask them out of label momentum.
+    nbooks = seg[seg["series"] == "floor"].pivot(index="date", columns="segment",
+                                                 values="n_obs").astype(float)
+    floor = floor.where(nbooks >= MIN_BOOKS_FOR_LABEL)
     rows = []
     seg_state = {}
     m30_by_segment = {}
