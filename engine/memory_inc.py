@@ -80,14 +80,17 @@ def main():
     rows = []
     ratio_hist = defaultdict(dict)   # member -> {lab: (gm, inv_days)}
     for lab in labels:
-        rev_members, rev_total = [], 0.0
+        rev_members, rev_total, member_rev = [], 0.0, {}
         for m in MEMORY_INC_REV_MEMBERS:
             rev, _, _ = usd_components(data, m, lab)
             if rev:
-                rev_members.append(m); rev_total += rev
+                rev_members.append(m); rev_total += rev; member_rev[m] = rev
         if rev_members:
             rows.append([lab, "revenue_usd_bn", round(rev_total / 1e9, 2),
                          "|".join(rev_members), f"{len(rev_members)}/{len(MEMORY_INC_REV_MEMBERS)} members"])
+            for mm in rev_members:
+                mv = member_rev[mm]
+                rows.append([lab, "member_revenue_usd_bn", round(mv / 1e9, 2), mm, ""])
         gp_sum = rev_sum = cogs_sum = inv_sum = 0.0
         ratio_members = []
         for m in MEMORY_INC_RATIO_MEMBERS:
