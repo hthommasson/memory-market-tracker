@@ -1286,8 +1286,3 @@ period_end,cik,ticker,concept,value
 2024-06-30,manual,SAMSUNG_MEM,revenue_krw,21740000000000
 2024-09-30,manual,SAMSUNG_MEM,revenue_krw,22270000000000
 2024-12-31,manual,SAMSUNG_MEM,revenue_krw,23000000000000
-2025-03-31,manual,SAMSUNG_MEM,revenue_krw,<from Q1-25 deck>
-2025-06-30,manual,SAMSUNG_MEM,revenue_krw,<Q2-25>
-2025-09-30,manual,SAMSUNG_MEM,revenue_krw,<Q3-25>
-2025-12-31,manual,SAMSUNG_MEM,revenue_krw,<Q4-25 — their release calls it an all-time high>
-2026-03-31,manual,SAMSUNG_MEM,revenue_krw,<Q1-26>
