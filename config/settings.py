@@ -7,8 +7,16 @@ QUALITY_GATE_MIN_OBS = 30      # days of live data before a segment carries weig
 QUALITY_GATE_MAX_GAP = 3       # max consecutive missing days
 
 # Momentum thresholds — asymmetric by design: early-warning bias for a levered long (spec §4.1)
-THRESH_UP = 0.20               # annualized ln-slope above this  -> Rising
-THRESH_DOWN = -0.10            # annualized ln-slope below this  -> Falling
+# Recalibrated 2026-08-05 (4-week review): ask-floors are step functions -- a single
+# ~3% repricing annualizes to ~0.4 and was tripping labels set for smooth series.
+# New bands require ~5% cumulative move across the 30-obs window to earn "rising"
+# (ln(1.05)*365/30 ~= 0.59), ~3.8% to earn "falling" -- asymmetric by design: this
+# instrument exists to catch tops, so downside stays more sensitive.
+THRESH_UP = 0.60               # annualized ln-slope above this  -> Rising
+THRESH_DOWN = -0.45            # annualized ln-slope below this  -> Falling
+MIN_BOOKS_FOR_LABEL = 2        # floor days computed from fewer in-stock books are
+                               # masked out of label momentum (a 1-book "floor" is
+                               # a coin-flip over whichever SKU restocked)
 MOMENTUM_WINDOW = 30           # days
 ACCEL_LAG = 15                 # days between slope measurements
 HYSTERESIS_DAYS = 5            # consecutive days required to commit a state change
