@@ -289,3 +289,5 @@ period,source,metric,value,value_wda,meta
 2026-03,semi_wwsems,semi_equip_billings_global_usd,36550000000,,q1_2026|yoy=+14%|qoq=+1%|record
 2025-12,semi_wwsems,semi_equip_billings_global_usd_annual,135000000000,,fy2025|yoy=+15%
 2026-07,fred,fx_krwusd_monthly_avg,1497.9,,fred:DEXKOUS
+2026-07,motie,kr_exports_total_usd,98890000000,,yoy=+62.8%|2nd_highest_ever|record_for_july
+2026-07,motie,kr_exports_semis_usd,41000000000,,yoy=+179%|2nd_consec_month_above_40b|mom_dip_vs_jun_44.8
