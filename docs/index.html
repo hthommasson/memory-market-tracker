@@ -167,7 +167,7 @@
       <div class="plot" id="p_fund"></div>
     </div>
     <div class="card">
-      <h2>Memory Inc. &mdash; the industry as one company</h2><p class="sub">if the memory industry were one company — sales bars (pale = only one reporter yet), red = factory spending, purple = days of inventory on hand &middot; <span id="mi_breadth"></span></p>
+      <h2>Memory Inc. &mdash; the industry as one company</h2><p class="sub">if the memory industry were one company — sales stacked by member (compare heights only where the stack matches), red = factory spending, purple = days of inventory on hand &middot; <span id="mi_breadth"></span></p>
       <div class="plot" id="p_mi"></div>
     </div>
     <div class="card">
@@ -506,7 +506,15 @@ function feedBadge(name, last, cadence){
     const multi = r => r.members.includes("|");
     const invA = (mi || []).filter(r => r.metric === "inventory_days")
                            .sort((a,b) => a.quarter.localeCompare(b.quarter));
-    const traces = [
+    const MEMCOL = {MU:C.teal, SKHYNIX:C.red, SNDK:C.amber, SAMSUNG_MEM:_V("--gold")};
+    const mrev = (mi || []).filter(r => r.metric === "member_revenue_usd_bn");
+    const members = [...new Set(mrev.map(r => r.members))];
+    const traces = members.length ? members.map(mm => {
+      const pts = mrev.filter(r => r.members === mm).sort((a,b) => a.quarter.localeCompare(b.quarter));
+      return {x:pts.map(r => qDate(r.quarter)), y:pts.map(r => +r.value), type:"bar",
+              name:mm, marker:{color:MEMCOL[mm] || C.slate},
+              hovertemplate:"%{x} \u00b7 " + mm + " $%{y:.1f}bn<extra></extra>"};
+    }) : [
       {x:miRev.map(r => qDate(r.quarter)), y:miRev.map(r => +r.value), type:"bar",
        name:"revenue US$ bn",
        marker:{color:miRev.map(r => multi(r) ? C.teal : alpha(C.teal, 0.28))},
@@ -522,7 +530,7 @@ function feedBadge(name, last, cadence){
       name:"inventory days (ex-Samsung)", yaxis:"y2", mode:"lines+markers",
       line:{width:2.5, color:C.violet}, text:invA.map(r => r.members),
       hovertemplate:"%{x} · %{y:.0f} days<br>members: %{text}<extra></extra>"});
-    Plotly.newPlot("p_mi", traces, {...LAYOUT,
+    Plotly.newPlot("p_mi", traces, {...LAYOUT, barmode:"stack",
       margin:{l:52, r:52, t:8, b:58},
       yaxis:{...LAYOUT.yaxis, title:"revenue US$ bn"},
       yaxis2:{overlaying:"y", side:"right", title:"days", gridcolor:"rgba(0,0,0,0)"}}, CFG);
