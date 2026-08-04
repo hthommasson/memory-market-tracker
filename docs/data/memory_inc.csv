@@ -1,71 +1,132 @@
 quarter,metric,value,members,meta
 2017Q4,revenue_usd_bn,6.8,MU,1/4 members
+2017Q4,member_revenue_usd_bn,6.8,MU,
 2018Q1,revenue_usd_bn,7.35,MU,1/4 members
+2018Q1,member_revenue_usd_bn,7.35,MU,
 2018Q2,revenue_usd_bn,7.8,MU,1/4 members
+2018Q2,member_revenue_usd_bn,7.8,MU,
 2018Q3,revenue_usd_bn,8.44,MU,1/4 members
+2018Q3,member_revenue_usd_bn,8.44,MU,
 2018Q4,revenue_usd_bn,7.91,MU,1/4 members
+2018Q4,member_revenue_usd_bn,7.91,MU,
 2019Q1,revenue_usd_bn,5.83,MU,1/4 members
+2019Q1,member_revenue_usd_bn,5.83,MU,
 2019Q2,revenue_usd_bn,4.79,MU,1/4 members
+2019Q2,member_revenue_usd_bn,4.79,MU,
 2019Q3,revenue_usd_bn,4.87,MU,1/4 members
+2019Q3,member_revenue_usd_bn,4.87,MU,
 2019Q4,revenue_usd_bn,5.14,MU,1/4 members
+2019Q4,member_revenue_usd_bn,5.14,MU,
 2020Q1,revenue_usd_bn,4.8,MU,1/4 members
+2020Q1,member_revenue_usd_bn,4.8,MU,
 2020Q2,revenue_usd_bn,5.44,MU,1/4 members
+2020Q2,member_revenue_usd_bn,5.44,MU,
 2020Q3,revenue_usd_bn,6.06,MU,1/4 members
+2020Q3,member_revenue_usd_bn,6.06,MU,
 2020Q4,revenue_usd_bn,5.77,MU,1/4 members
+2020Q4,member_revenue_usd_bn,5.77,MU,
 2021Q1,revenue_usd_bn,6.24,MU,1/4 members
+2021Q1,member_revenue_usd_bn,6.24,MU,
 2021Q2,revenue_usd_bn,7.42,MU,1/4 members
+2021Q2,member_revenue_usd_bn,7.42,MU,
 2021Q4,revenue_usd_bn,7.69,MU,1/4 members
+2021Q4,member_revenue_usd_bn,7.69,MU,
 2022Q1,revenue_usd_bn,7.79,MU,1/4 members
+2022Q1,member_revenue_usd_bn,7.79,MU,
 2022Q2,revenue_usd_bn,8.64,MU,1/4 members
+2022Q2,member_revenue_usd_bn,8.64,MU,
 2022Q3,revenue_usd_bn,6.64,MU,1/4 members
+2022Q3,member_revenue_usd_bn,6.64,MU,
 2022Q4,revenue_usd_bn,4.08,MU,1/4 members
+2022Q4,member_revenue_usd_bn,4.08,MU,
 2023Q1,revenue_usd_bn,3.69,MU,1/4 members
+2023Q1,member_revenue_usd_bn,3.69,MU,
 2023Q2,revenue_usd_bn,3.75,MU,1/4 members
+2023Q2,member_revenue_usd_bn,3.75,MU,
 2023Q4,revenue_usd_bn,6.39,MU|SNDK,2/4 members
+2023Q4,member_revenue_usd_bn,4.73,MU,
+2023Q4,member_revenue_usd_bn,1.67,SNDK,
 2023Q4,capex_usd_bn,1.9,MU|SNDK,supply response; 2/3 members
 2023Q4,capex_pct_revenue,29.65,MU|SNDK,supply response; 2/3 members
-2024Q1,revenue_usd_bn,16.89,MU|SNDK|SKHYNIX,3/4 members
+2024Q1,revenue_usd_bn,30.06,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members
+2024Q1,member_revenue_usd_bn,5.82,MU,
+2024Q1,member_revenue_usd_bn,1.71,SNDK,
+2024Q1,member_revenue_usd_bn,9.36,SKHYNIX,
+2024Q1,member_revenue_usd_bn,13.17,SAMSUNG_MEM,
 2024Q1,capex_usd_bn,1.41,MU|SNDK,supply response; 2/3 members
 2024Q1,capex_pct_revenue,18.77,MU|SNDK,supply response; 2/3 members
 2024Q1,gross_margin_pct,30.89,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2024Q1,inventory_days,162.6,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
-2024Q2,revenue_usd_bn,18.8,MU|SKHYNIX,2/4 members
+2024Q2,revenue_usd_bn,34.68,MU|SKHYNIX|SAMSUNG_MEM,3/4 members
+2024Q2,member_revenue_usd_bn,6.81,MU,
+2024Q2,member_revenue_usd_bn,11.99,SKHYNIX,
+2024Q2,member_revenue_usd_bn,15.87,SAMSUNG_MEM,
 2024Q2,gross_margin_pct,38.85,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2024Q2,inventory_days,144.0,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
-2024Q3,revenue_usd_bn,22.6,MU|SNDK|SKHYNIX,3/4 members
+2024Q3,revenue_usd_bn,39.03,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members
+2024Q3,member_revenue_usd_bn,7.75,MU,
+2024Q3,member_revenue_usd_bn,1.88,SNDK,
+2024Q3,member_revenue_usd_bn,12.97,SKHYNIX,
+2024Q3,member_revenue_usd_bn,16.43,SAMSUNG_MEM,
 2024Q3,capex_usd_bn,3.19,MU|SNDK,supply response; 2/3 members
 2024Q3,capex_pct_revenue,33.08,MU|SNDK,supply response; 2/3 members
 2024Q3,gross_margin_pct,45.88,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2024Q3,inventory_days,155.2,MU|SKHYNIX,ex-Samsung by necessity; 2/3 members
-2024Q4,revenue_usd_bn,24.76,MU|SNDK|SKHYNIX,3/4 members
+2024Q4,revenue_usd_bn,41.26,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members
+2024Q4,member_revenue_usd_bn,8.71,MU,
+2024Q4,member_revenue_usd_bn,1.88,SNDK,
+2024Q4,member_revenue_usd_bn,14.18,SKHYNIX,
+2024Q4,member_revenue_usd_bn,16.5,SAMSUNG_MEM,
 2024Q4,capex_usd_bn,3.25,MU|SNDK,supply response; 2/3 members
 2024Q4,capex_pct_revenue,30.74,MU|SNDK,supply response; 2/3 members
 2024Q4,gross_margin_pct,45.99,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2024Q4,inventory_days,136.1,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
-2025Q1,revenue_usd_bn,21.92,MU|SNDK|SKHYNIX,3/4 members
+2025Q1,revenue_usd_bn,35.1,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members
+2025Q1,member_revenue_usd_bn,8.05,MU,
+2025Q1,member_revenue_usd_bn,1.7,SNDK,
+2025Q1,member_revenue_usd_bn,12.17,SKHYNIX,
+2025Q1,member_revenue_usd_bn,13.18,SAMSUNG_MEM,
 2025Q1,capex_usd_bn,4.1,MU|SNDK,supply response; 2/3 members
 2025Q1,capex_pct_revenue,42.05,MU|SNDK,supply response; 2/3 members
 2025Q1,gross_margin_pct,47.06,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q1,inventory_days,165.7,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
-2025Q2,revenue_usd_bn,27.09,MU|SNDK|SKHYNIX,3/4 members
+2025Q2,revenue_usd_bn,42.25,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members
+2025Q2,member_revenue_usd_bn,9.3,MU,
+2025Q2,member_revenue_usd_bn,1.9,SNDK,
+2025Q2,member_revenue_usd_bn,15.89,SKHYNIX,
+2025Q2,member_revenue_usd_bn,15.15,SAMSUNG_MEM,
 2025Q2,capex_usd_bn,2.98,MU|SNDK,supply response; 2/3 members
 2025Q2,capex_pct_revenue,26.63,MU|SNDK,supply response; 2/3 members
 2025Q2,gross_margin_pct,46.4,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q2,inventory_days,129.7,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
-2025Q3,revenue_usd_bn,19.96,SNDK|SKHYNIX,2/4 members
+2025Q3,revenue_usd_bn,39.24,SNDK|SKHYNIX|SAMSUNG_MEM,3/4 members
+2025Q3,member_revenue_usd_bn,2.31,SNDK,
+2025Q3,member_revenue_usd_bn,17.65,SKHYNIX,
+2025Q3,member_revenue_usd_bn,19.28,SAMSUNG_MEM,
 2025Q3,gross_margin_pct,54.19,SNDK|SKHYNIX,ex-Samsung by necessity; 2/3 members
 2025Q3,inventory_days,112.8,SNDK|SKHYNIX,ex-Samsung by necessity; 2/3 members
-2025Q4,revenue_usd_bn,39.35,MU|SNDK|SKHYNIX,3/4 members
+2025Q4,revenue_usd_bn,64.99,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members
+2025Q4,member_revenue_usd_bn,13.64,MU,
+2025Q4,member_revenue_usd_bn,3.02,SNDK,
+2025Q4,member_revenue_usd_bn,22.69,SKHYNIX,
+2025Q4,member_revenue_usd_bn,25.64,SAMSUNG_MEM,
 2025Q4,capex_usd_bn,5.43,MU|SNDK,supply response; 2/3 members
 2025Q4,capex_pct_revenue,32.57,MU|SNDK,supply response; 2/3 members
 2025Q4,gross_margin_pct,62.99,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q4,inventory_days,126.0,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
-2026Q1,revenue_usd_bn,65.76,MU|SNDK|SKHYNIX,3/4 members
+2026Q1,revenue_usd_bn,116.92,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members
+2026Q1,member_revenue_usd_bn,23.86,MU,
+2026Q1,member_revenue_usd_bn,5.95,SNDK,
+2026Q1,member_revenue_usd_bn,35.95,SKHYNIX,
+2026Q1,member_revenue_usd_bn,51.15,SAMSUNG_MEM,
 2026Q1,capex_usd_bn,6.43,MU|SNDK,supply response; 2/3 members
 2026Q1,capex_pct_revenue,21.58,MU|SNDK,supply response; 2/3 members
 2026Q1,gross_margin_pct,77.43,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2026Q1,inventory_days,129.3,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2026Q2,revenue_usd_bn,179.37,MU|SKHYNIX|SAMSUNG_MEM,3/4 members
+2026Q2,member_revenue_usd_bn,41.46,MU,
+2026Q2,member_revenue_usd_bn,54.66,SKHYNIX,
+2026Q2,member_revenue_usd_bn,83.25,SAMSUNG_MEM,
 2026Q2,capex_usd_bn,15.18,MU|SKHYNIX,supply response; 2/3 members
 2026Q2,capex_pct_revenue,15.79,MU|SKHYNIX,supply response; 2/3 members
 2018Q1,breadth_improving,1,MU,of 1 reporting: GM up AND inv days down q/q
