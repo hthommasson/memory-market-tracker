@@ -114,6 +114,12 @@ def filer_rows(ticker, cik, headers):
     # v2.1: synthesize the 10-K-only fiscal Q4 as (annual - three reported quarters).
     # Micron tags full-year income but not a standalone Q4, so its Aug-ending quarter
     # otherwise contributes only balance-sheet rows and calendar-Q3 aggregates sawtooth.
+    # v2.2 (2026-08-04): sibling window tightened <370 -> <360 days. A 52-week
+    # prior-year FQ4 ends 363-365 days back, so <370 counted it as a fourth
+    # sibling (len==4 -> skip) whenever it existed, and each synthesized FQ4 then
+    # blocked the following year — alternating holes (fiscal Q4 2021/2023/2025
+    # missing, 2022/2024 present). Bounds: own Q1 ends <=~280 days back (kept);
+    # 52-week prior FQ4 >=363 and 53-week ~371 (both dropped). 360 splits cleanly.
     synth = 0
     for concept in ("revenue", "gross_profit", "cogs"):
         for a_end, a_val in annual(facts, CONCEPTS[concept]).items():
@@ -121,7 +127,7 @@ def filer_rows(ticker, cik, headers):
                 continue
             A = dt.date.fromisoformat(a_end)
             qs = [v for e, v in series[concept].items()
-                  if 0 < (A - dt.date.fromisoformat(e)).days < 370]
+                  if 0 < (A - dt.date.fromisoformat(e)).days < 360]
             if len(qs) == 3:
                 series[concept][a_end] = a_val - sum(qs)
                 synth += 1
