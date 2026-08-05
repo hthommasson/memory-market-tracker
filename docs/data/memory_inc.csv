@@ -29,6 +29,8 @@ quarter,metric,value,members,meta
 2021Q1,member_revenue_usd_bn,6.24,MU,
 2021Q2,revenue_usd_bn,7.42,MU,1/4 members
 2021Q2,member_revenue_usd_bn,7.42,MU,
+2021Q3,revenue_usd_bn,8.27,MU,1/4 members
+2021Q3,member_revenue_usd_bn,8.27,MU,
 2021Q4,revenue_usd_bn,7.69,MU,1/4 members
 2021Q4,member_revenue_usd_bn,7.69,MU,
 2022Q1,revenue_usd_bn,7.79,MU,1/4 members
@@ -43,6 +45,8 @@ quarter,metric,value,members,meta
 2023Q1,member_revenue_usd_bn,3.69,MU,
 2023Q2,revenue_usd_bn,3.75,MU,1/4 members
 2023Q2,member_revenue_usd_bn,3.75,MU,
+2023Q3,revenue_usd_bn,4.01,MU,1/4 members
+2023Q3,member_revenue_usd_bn,4.01,MU,
 2023Q4,revenue_usd_bn,6.39,MU|SNDK,2/4 members
 2023Q4,member_revenue_usd_bn,4.73,MU,
 2023Q4,member_revenue_usd_bn,1.67,SNDK,
@@ -101,14 +105,15 @@ quarter,metric,value,members,meta
 2025Q2,capex_pct_revenue,22.44,MU|SNDK|SKHYNIX,supply response; 3/3 members
 2025Q2,gross_margin_pct,46.4,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q2,inventory_days,129.7,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
-2025Q3,revenue_usd_bn,39.24,SNDK|SKHYNIX|SAMSUNG_MEM,3/4 members
+2025Q3,revenue_usd_bn,50.55,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members
+2025Q3,member_revenue_usd_bn,11.31,MU,
 2025Q3,member_revenue_usd_bn,2.31,SNDK,
 2025Q3,member_revenue_usd_bn,17.65,SKHYNIX,
 2025Q3,member_revenue_usd_bn,19.28,SAMSUNG_MEM,
-2025Q3,capex_usd_bn,3.68,SNDK|SKHYNIX,supply response; 2/3 members
-2025Q3,capex_pct_revenue,18.45,SNDK|SKHYNIX,supply response; 2/3 members
-2025Q3,gross_margin_pct,54.19,SNDK|SKHYNIX,ex-Samsung by necessity; 2/3 members
-2025Q3,inventory_days,112.8,SNDK|SKHYNIX,ex-Samsung by necessity; 2/3 members
+2025Q3,capex_usd_bn,9.34,MU|SNDK|SKHYNIX,supply response; 3/3 members
+2025Q3,capex_pct_revenue,29.87,MU|SNDK|SKHYNIX,supply response; 3/3 members
+2025Q3,gross_margin_pct,50.74,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
+2025Q3,inventory_days,116.5,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2025Q4,revenue_usd_bn,64.99,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members
 2025Q4,member_revenue_usd_bn,13.64,MU,
 2025Q4,member_revenue_usd_bn,3.02,SNDK,
@@ -131,6 +136,8 @@ quarter,metric,value,members,meta
 2026Q2,member_revenue_usd_bn,41.46,MU,
 2018Q1,breadth_improving,1,MU,of 1 reporting: GM up AND inv days down q/q
 2018Q2,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
+2018Q3,breadth_improving,1,MU,of 1 reporting: GM up AND inv days down q/q
+2018Q4,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2019Q1,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2019Q2,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2019Q3,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
@@ -141,19 +148,23 @@ quarter,metric,value,members,meta
 2020Q4,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2021Q1,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2021Q2,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
+2021Q3,breadth_improving,1,MU,of 1 reporting: GM up AND inv days down q/q
+2021Q4,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2022Q1,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2022Q2,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2022Q3,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2022Q4,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2023Q1,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2023Q2,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
+2023Q3,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
+2023Q4,breadth_improving,1,MU,of 1 reporting: GM up AND inv days down q/q
 2024Q1,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2024Q2,breadth_improving,2,MU|SKHYNIX,of 2 reporting: GM up AND inv days down q/q
 2024Q3,breadth_improving,0,-,of 2 reporting: GM up AND inv days down q/q
 2024Q4,breadth_improving,2,MU|SKHYNIX,of 2 reporting: GM up AND inv days down q/q
 2025Q1,breadth_improving,0,-,of 3 reporting: GM up AND inv days down q/q
 2025Q2,breadth_improving,2,MU|SNDK,of 3 reporting: GM up AND inv days down q/q
-2025Q3,breadth_improving,2,SNDK|SKHYNIX,of 2 reporting: GM up AND inv days down q/q
-2025Q4,breadth_improving,0,-,of 2 reporting: GM up AND inv days down q/q
+2025Q3,breadth_improving,3,MU|SNDK|SKHYNIX,of 3 reporting: GM up AND inv days down q/q
+2025Q4,breadth_improving,0,-,of 3 reporting: GM up AND inv days down q/q
 2026Q1,breadth_improving,1,MU,of 3 reporting: GM up AND inv days down q/q
 2026Q2,breadth_improving,1,MU,of 1 reporting: GM up AND inv days down q/q
