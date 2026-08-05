@@ -158,10 +158,12 @@ def test_sec_fq4_synthesis(tmp_path, monkeypatch):
     def qe(s, e, v): return {"start": s, "end": e, "val": v, "form": "10-Q"}
     facts = {"facts": {"us-gaap": {
         "Revenues": {"units": {"USD": [
+            qe("2024-05-31", "2024-08-29", 9 * B),   # prior-year FQ4, 364d back: must NOT count as a sibling (v2.2)
             qe("2024-08-30", "2024-11-28", 10 * B), qe("2024-11-29", "2025-02-27", 12 * B),
             qe("2025-02-28", "2025-05-29", 14 * B),
             {"start": "2024-08-30", "end": "2025-08-28", "val": 50 * B, "form": "10-K"}]}},
         "CostOfGoodsAndServicesSold": {"units": {"USD": [
+            qe("2024-05-31", "2024-08-29", 5 * B),   # prior-year FQ4
             qe("2024-08-30", "2024-11-28", 6 * B), qe("2024-11-29", "2025-02-27", 6 * B),
             qe("2025-02-28", "2025-05-29", 6 * B),
             {"start": "2024-08-30", "end": "2025-08-28", "val": 26 * B, "form": "10-K"}]}},
