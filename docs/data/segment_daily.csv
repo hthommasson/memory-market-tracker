@@ -263,3 +263,11 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-06,server_ecc,floor,30.9025,3,
 2026-08-06,sodimm,basket,12.0569,4,0.8
 2026-08-06,sodimm,floor,10.6247,4,
+2026-08-07,ddr4_desktop,basket,6.5625,4,0.667
+2026-08-07,ddr4_desktop,floor,3.9831,4,
+2026-08-07,ddr5_desktop,basket,15.3219,2,0.25
+2026-08-07,ddr5_desktop,floor,14.3422,2,
+2026-08-07,server_ecc,basket,32.655,3,0.5
+2026-08-07,server_ecc,floor,32.655,3,
+2026-08-07,sodimm,basket,11.9005,4,0.8
+2026-08-07,sodimm,floor,9.6562,4,
