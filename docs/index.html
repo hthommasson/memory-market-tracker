@@ -54,6 +54,29 @@
   .zbtn.active{background:var(--hint-bg);color:var(--teal);border-color:var(--teal)}
   .flags{margin:10px 0 20px;font:400 13px "IBM Plex Mono",monospace;color:var(--muted)}
   .flags .fired{color:var(--amber);font-weight:600}
+  .matrix td.watch{background:var(--hint-bg)}
+  .rawstrip{display:flex;gap:2px;height:6px;margin-top:4px}
+  .rawstrip>div{border-radius:2px;min-width:2px}
+  .gaugeline{font:400 12px "IBM Plex Mono",monospace;color:var(--muted);margin-top:8px}
+  .gaugeline b{color:var(--ink)}
+  .books{font:400 11px "IBM Plex Mono",monospace;color:var(--muted);display:flex;align-items:center;gap:7px;margin:4px 0 0}
+  .bdots{display:flex;gap:3px;align-items:center}
+  .bdot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .bdot.on{background:var(--teal)}
+  .bdot.off{background:none;border:1.4px solid var(--red)}
+  .sig{font:400 13px "IBM Plex Mono",monospace}
+  .sigrow{display:grid;grid-template-columns:16px 150px 1fr;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);align-items:baseline}
+  .sig .sigrow:last-child{border-bottom:none}
+  .sigdot{width:9px;height:9px;border-radius:50%;align-self:center;justify-self:center}
+  .sigdot.warn{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+  .sigdot.alert{background:var(--red);box-shadow:0 0 10px var(--red)}
+  .sigdot.clear{background:var(--teal)}
+  .sigdot.blind{background:none;border:1.4px solid var(--muted)}
+  .signame{font:600 11px "IBM Plex Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .sigread{color:var(--ink)}
+  .sigread b{font-weight:600}
+  .sigread .dim,#sigsum .dim,.sig .dim{color:var(--muted);font-weight:400}
+  @media (max-width:620px){.sigrow{grid-template-columns:16px 1fr}.sigread{grid-column:2}}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 14px 6px;
     position:relative;transition:border-color .15s,transform .15s,box-shadow .15s}
@@ -132,14 +155,24 @@
 
   <!-- Signature element: each segment rendered as a DIMM edge connector; pin color = committed regime -->
   <div class="dimm"><div class="dimm-row" id="dimm"></div></div>
-  <div class="flags" id="flags">divergence flags: loading…</div>
 
   <div class="grid">
+    <div class="card" style="grid-column:1/-1">
+      <h2>Signal board &mdash; top-cycle signature</h2><p class="sub">the spec's watch-state as a checklist &mdash; descriptive conditions, not forecasts, and never a buy/sell signal &middot; <span id="sigsum"></span></p>
+      <div class="sig" id="sigboard"><span class="dim">loading&hellip;</span></div>
+    </div>
+
     <div class="card" style="grid-column:1/-1">
       <h2>Regime matrix</h2><p class="sub" id="mxsub">price × volume — labels arrive after 10 days of data</p>
       <table class="matrix" id="matrix"></table>
       <div id="mx_ribbon" style="margin-top:10px; line-height:0"></div>
     </div>
+    <div class="card" style="grid-column:1/-1">
+      <h2>Paper vs physical &mdash; the central divergence</h2><p class="sub">market layer (DRAM ETF, 20-day return, left axis) against the physical floor composite (30-day trend annualized, right axis) &middot; amber shading = a D-flag fired &middot; axes are scaled so the zero lines coincide &mdash; lines on opposite sides of that line ARE the divergence</p>
+      <div class="flags" id="flags" style="margin:4px 0 8px">divergence flags: loading&hellip;</div>
+      <div class="plot" id="p_div"></div>
+    </div>
+
     <div class="card" style="grid-column:1/-1">
       <h2>Physical ask-floor — $/GB by segment</h2>
       <p class="sub">the cheapest credible eBay asking price per memory type — asks, not sales · ◆ = past published prices (click legend to show)</p>
@@ -227,7 +260,7 @@ function feedBadge(name, last, cadence){
 }
 
 (async () => {
-  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats, mc, mi, dobs, msf] = await Promise.all([
+  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats, mc, mi, dobs, msf, pob] = await Promise.all([
     csv("data/regime_daily.csv"), csv("data/segment_daily.csv"),
     csv("data/static/reference_points.csv"), csv("data/equity_daily.csv"),
     csv("data/monthly_series.csv"), csv("data/filings_facts.csv"),
@@ -235,7 +268,8 @@ function feedBadge(name, last, cadence){
     csv("data/volume_regime.csv"), csv("data/composite_regime.csv"),
     csv("data/stats_lagged_corr.csv"), csv("data/static/mccallum.csv"),
     csv("data/memory_inc.csv"),
-    csv("data/dist_obs.csv"), csv("data/monthly_series.csv")]);
+    csv("data/dist_obs.csv"), csv("data/monthly_series.csv"),
+    csv("data/price_obs.csv")]);
 
   // --- Regime strip + composite badge ---
   const dimm = document.getElementById("dimm");
@@ -248,6 +282,28 @@ function feedBadge(name, last, cadence){
     b.style.background = BADGE[comp.label_committed] || C.slate;
     document.getElementById("asof").textContent = "as of " + comp.date + " UTC";
   } else { document.getElementById("asof").textContent = "awaiting first run"; }
+  // Book health per segment from raw observations (v0.4.2). A "book" = a SKU that has
+  // qualified (in-stock with an ask) at least once in the trailing 60 days; a filled dot
+  // = qualified on the latest date. Never-qualified tails stay off the strip by design.
+  const PFX = [["d4_","ddr4_desktop"],["d5_","ddr5_desktop"],["srv_","server_ecc"],["so_","sodimm"]];
+  const BOOKS = {};
+  if(pob && pob.length){
+    const lastD = pob.map(r => r.date).filter(Boolean).sort().pop();
+    const cut = new Date(new Date(lastD + "T00:00Z") - 60 * 864e5).toISOString().slice(0,10);
+    const bySku = {};
+    pob.forEach(r => { if(r.sku_id) (bySku[r.sku_id] = bySku[r.sku_id] || []).push(r); });
+    const qual = r => r.in_stock === "True" && +r.price > 0;
+    Object.entries(bySku).forEach(([sku, rws]) => {
+      const hit = PFX.find(([p]) => sku.startsWith(p)); if(!hit) return;
+      rws.sort((a,b) => a.date.localeCompare(b.date));
+      let lastQ = null; rws.forEach(r => { if(qual(r)) lastQ = r.date; });
+      if(!lastQ || lastQ < cut) return;
+      const today = rws[rws.length-1];
+      (BOOKS[hit[1]] = BOOKS[hit[1]] || []).push({sku, on: today.date === lastD && qual(today), since: lastQ});
+    });
+    Object.values(BOOKS).forEach(a => a.sort((x,y) => x.sku.localeCompare(y.sku)));
+  }
+
   const SPARKD = {};
   SEGS.forEach(s => {
     const r = latest[s] || {label_committed:"warming_up", m30_annualized:""};
@@ -262,12 +318,18 @@ function feedBadge(name, last, cadence){
       SPARKD[s] = {ys: fl.map(x => +x.value), col: SCOL[lab] || C.slate};
       spark = `<canvas class="spark" data-seg="${s}"></canvas>`;
     } else spark = '<div class="spark sparkempty">collecting…</div>';
+    const bl = BOOKS[s] || [];
+    const bOn = bl.filter(b => b.on).length;
+    const bookRow = bl.length
+      ? `<div class="books"><span>books ${bOn}/${bl.length}</span><span class="bdots">` +
+        bl.map(b => `<span class="bdot ${b.on ? "on" : "off"}" title="${b.sku} — ${b.on ? "qualified today" : "dark since " + b.since}"></span>`).join("") +
+        `</span></div>` : ``;
     dimm.insertAdjacentHTML("beforeend",
       `<div class="seg ${lab}" title="${SEGGLOSS[s]} — line = ask-floor $/GB, last ${Math.max(fl.length,0)} days">
        <div class="name">${SEGNAME[s]}</div>
        <div class="gloss">${SEGGLOSS[s]}</div>
        <div class="state">${lab.replace("_"," ")}</div><div class="m30">m30 ${m}</div>
-       ${spark}</div>`);
+       ${bookRow}${spark}</div>`);
   });
   // canvas draw pass — no parser between coordinates and pixels
   document.querySelectorAll("canvas.spark").forEach(cv => {
@@ -298,6 +360,128 @@ function feedBadge(name, last, cadence){
     fl.innerHTML = "divergence: " + recent;
   } else fl.textContent = "divergence flags: none — layers agree (or awaiting data)";
 
+  // --- Signal board: the spec's top-cycle signature as a live checklist (v0.4.2) ---
+  // Descriptive only: which parts of the documented CYCLE-TOP signature are observable.
+  {
+    const el = document.getElementById("sigboard");
+    const rows = [];
+    const add = (state, name, read) => rows.push({state, name, read});
+    const S = v => (v >= 0 ? "+" : "") + (100 * v).toFixed(1) + "%";
+    const f1 = v => (+v).toFixed(1);
+    const pct = v => (100 * v).toFixed(0) + "%";
+
+    // 1 · regime cell · dwell · gate margin · flip countdown
+    const cRows2 = (cmx || []).filter(r => r.cell);
+    const compR2 = (reg || []).filter(r => r.segment === "COMPOSITE" && r.m30_annualized !== "" && !isNaN(+r.m30_annualized));
+    if(cRows2.length && compR2.length){
+      const cell = cRows2[cRows2.length-1].cell;
+      let dw = 1; for(let i = cRows2.length-2; i >= 0 && cRows2[i].cell === cell; i--) dw++;
+      const lastc = compR2[compR2.length-1];
+      const m30 = +lastc.m30_annualized;
+      let run = 0; for(let i = compR2.length-1; i >= 0 && compR2[i].label_raw === lastc.label_raw; i--) run++;
+      const top = /CYCLE-TOP/.test(cell), slide = /Scarcity-led|Rationed/.test(cell);
+      add(top ? "alert" : slide ? "warn" : "clear", "regime cell",
+        `<b>${cell}</b> · dwell ${dw}d · m30 ${S(m30)} vs gates +60.0% / −45.0% · raw <b>${lastc.label_raw}</b> ×${run}d` +
+        (lastc.label_raw !== lastc.label_committed ? ` <span class="dim">— a flip commits at 5 consecutive</span>` : ``));
+    } else add("blind", "regime cell", "warming up — labels arrive with data");
+
+    // 2 · consumer / enterprise bifurcation
+    const lab = s => (latest[s] || {}).label_committed || "warming_up";
+    const mS  = s => latest[s] && latest[s].m30_annualized !== "" ? S(+latest[s].m30_annualized) : "—";
+    const consumerDown = ["ddr4_desktop","ddr5_desktop"].every(s => lab(s) === "falling");
+    const enterpriseUp = ["server_ecc","sodimm"].some(s => lab(s) === "rising");
+    add(consumerDown && enterpriseUp ? "warn" : "clear", "bifurcation",
+      consumerDown && enterpriseUp
+        ? `<b>consumer falling / enterprise rising</b> — D4 ${mS("ddr4_desktop")}, D5 ${mS("ddr5_desktop")} vs server ${mS("server_ecc")}, SODIMM ${mS("sodimm")} <span class="dim">· the Rationed-squeeze fingerprint forming under the composite</span>`
+        : `not confirmed — D4 ${lab("ddr4_desktop")}, D5 ${lab("ddr5_desktop")} · server ${lab("server_ecc")}, SODIMM ${lab("sodimm")}`);
+
+    // 3 · capex inflection (blind if the newest revenue quarter lacks a capex row)
+    const revq = (mi || []).filter(r => r.metric === "revenue_usd_bn").sort((a,b) => a.quarter.localeCompare(b.quarter));
+    const capq = (mi || []).filter(r => r.metric === "capex_pct_revenue").sort((a,b) => a.quarter.localeCompare(b.quarter));
+    const lastRevQ = revq.length ? revq[revq.length-1].quarter : null;
+    if(capq.length){
+      const c = capq[capq.length-1], p = capq[capq.length-2];
+      const mem = q => (q.meta.split(";").pop() || "").trim();
+      if(lastRevQ && lastRevQ > c.quarter){
+        add("blind", "capex inflection",
+          `<b>unobservable for ${lastRevQ}</b> — awaiting SK hynix Q2 capex · last read ${c.quarter}: ${f1(c.value)}% (${mem(c)})`);
+      } else {
+        const cmp = p && p.members === c.members;
+        const rising = p && +c.value > +p.value;
+        add(cmp && rising ? "warn" : "clear", "capex inflection",
+          `${c.quarter}: <b>${f1(c.value)}%</b> of revenue (${mem(c)})` +
+          (p ? (cmp ? ` · ${rising ? "rising" : "compressing"} vs ${p.quarter} ${f1(p.value)}%`
+                    : ` <span class="dim">· vs ${p.quarter} ${f1(p.value)}% — member set changed, direction not comparable</span>`) : ""));
+      }
+    } else add("blind", "capex inflection", "no capex quarters yet");
+
+    // 4 · margin roll (the top-adjacent event is the first lower high)
+    const gmq = (mi || []).filter(r => r.metric === "gross_margin_pct").sort((a,b) => a.quarter.localeCompare(b.quarter));
+    if(gmq.length){
+      const lastg = gmq[gmq.length-1];
+      const prevMax = gmq.length > 1 ? Math.max(...gmq.slice(0,-1).map(r => +r.value)) : -Infinity;
+      const rolled = gmq.length > 1 && +lastg.value < prevMax;
+      const mus = (fund || []).filter(r => r.ticker === "MU" && r.concept === "gross_margin_pct")
+                              .sort((a,b) => a.period_end.localeCompare(b.period_end));
+      const mu = mus[mus.length-1];
+      add(rolled ? "warn" : "clear", "margin roll",
+        (rolled ? `combined GM <b>${f1(lastg.value)}%</b> (${lastg.quarter}) — <b>first lower high</b> vs ${f1(prevMax)}%`
+                : `combined GM <b>${f1(lastg.value)}%</b> (${lastg.quarter}) — still making highs`) +
+        (mu ? ` <span class="dim">· freshest filer: MU ${f1(mu.value)}% @ ${mu.period_end}</span>` : ""));
+    } else add("blind", "margin roll", "needs ≥2 ratio members");
+
+    // 5 · paper vs physical (streak from the flag ledger; live spread from raw inputs)
+    const fdates = [...new Set((flags || []).map(r => r.date).filter(Boolean))].sort();
+    const dramC = (eq || []).filter(r => r.ticker === "DRAM").sort((a,b) => a.date.localeCompare(b.date));
+    let spread = "";
+    if(dramC.length >= 21 && compR2.length){
+      const r20 = +dramC[dramC.length-1].close / +dramC[dramC.length-21].close - 1;
+      spread = ` · today: equity 20d ${S(r20)} vs physical ${S(+compR2[compR2.length-1].m30_annualized)}`;
+    }
+    if(fdates.length){
+      const end = new Date(fdates[fdates.length-1] + "T00:00Z");
+      let hits = 0;
+      for(let k = 0; k < 5; k++) if(fdates.includes(new Date(end - k*864e5).toISOString().slice(0,10))) hits++;
+      const fresh = daysOld(fdates[fdates.length-1]) < 3;
+      add(fresh ? "warn" : "clear", "paper vs physical",
+        `<b>D1 ${fresh ? "active" : "last " + fdates[fdates.length-1]}</b> — fired ${hits} of the 5 days to ${fdates[fdates.length-1]}${spread}`);
+    } else add("clear", "paper vs physical", "no flags — layers agree" + spread);
+
+    // 6 · amplitude ≈ Memory-Inc quarter / (3 × SIA 3mma at quarter end)
+    const sia = (msf || []).filter(r => r.source === "sia_wsts" && r.metric === "global_semi_sales_usd");
+    let amp = null;
+    for(let i = revq.length-1; i >= 0 && !amp; i--){
+      const q = revq[i].quarter;
+      const endM = q.slice(0,4) + "-" + ({"1":"03","2":"06","3":"09","4":"12"})[q[5]];
+      const hit = sia.find(r => r.period === endM);
+      if(hit && +hit.value > 0) amp = {q, share: 1e9 * +revq[i].value / (3 * +hit.value), meta: revq[i].meta};
+    }
+    if(amp) add(amp.share > 0.34 ? "warn" : "clear", "amplitude",
+      `memory ≈ <b>${pct(amp.share)}</b> of world semis (${amp.q}, ${amp.meta}) <span class="dim">· 2018 top ≈ 33% · FY25 28.2% · approx: quarter ≈ 3× end-month SIA 3mma</span>`);
+    else add("blind", "amplitude", "needs a Memory-Inc quarter whose end-month SIA figure exists");
+
+    // 7 · book health (thinning books = event-level per spec)
+    const segF = (seg || []).filter(r => r.series === "floor" && r.n_obs !== "" && !isNaN(+r.n_obs));
+    const fdts = [...new Set(segF.map(r => r.date))].sort();
+    if(fdts.length){
+      const sumAt = d => segF.filter(r => r.date === d).reduce((a,r) => a + +r.n_obs, 0);
+      const dNow = fdts[fdts.length-1], dAgo = fdts[Math.max(0, fdts.length-31)];
+      const now = sumAt(dNow), ago = sumAt(dAgo);
+      const dark = Object.values(BOOKS).flat().filter(b => !b.on).length;
+      add(now < ago ? "warn" : "clear", "book health",
+        `<b>${now} qualified books</b> vs ${ago} on ${dAgo}${dark ? ` · ${dark} dark` : ""} <span class="dim">· thinning books move the composite — see the dots above</span>`);
+    } else add("blind", "book health", "collecting");
+
+    const nS = s => rows.filter(r => r.state === s).length;
+    const sum = document.getElementById("sigsum");
+    if(sum) sum.innerHTML =
+      `<b style="color:var(--amber)">${nS("warn") + nS("alert")} warning</b> · ` +
+      `<b style="color:var(--teal)">${nS("clear")} clear</b>` +
+      (nS("blind") ? ` · <span class="dim">${nS("blind")} blind</span>` : "");
+    if(el) el.innerHTML = rows.map(r =>
+      `<div class="sigrow"><span class="sigdot ${r.state}"></span><span class="signame">${r.name}</span><span class="sigread">${r.read}</span></div>`).join("");
+  }
+
   // --- Volume badge + regime matrix ---
   const CELLS = [["Accelerating","Scarcity-led","Late-cycle"],
                  ["Rationed squeeze","Stagnating","Early weakening"],
@@ -315,6 +499,7 @@ function feedBadge(name, last, cadence){
     const cls = [];
     if(p===plab && v===vlab) cls.push("active");
     if(i===2 && j===0) cls.push("danger");
+    if((i===0 && j===1) || (i===1 && j===0)) cls.push("watch");   // documented slide path toward CYCLE-TOP
     if(plab==="warming_up" && v===vlab) cls.push("volhint");
     return `<td class="${cls.join(" ")}">${CELLS[i][j]}</td>`; }).join("") + "</tr>"; });
   document.getElementById("matrix").innerHTML = mx;
@@ -348,6 +533,26 @@ function feedBadge(name, last, cadence){
     document.getElementById("mxsub").textContent =
       rows[rows.length-1].cell + " · " + dwell + " day" + (dwell === 1 ? "" : "s") +
       " in this cell (since " + rows[rows.length - dwell].computed_date + ")";
+
+    // v0.4.2: raw daily label under the committed ribbon — hysteresis chatter made visible
+    const rawR = (reg || []).filter(r => r.segment === "COMPOSITE" && r.label_raw);
+    if(rawR.length){
+      const rruns = [];
+      rawR.forEach(r => { const L = rruns[rruns.length-1];
+        if(L && L.lab === r.label_raw) L.n++; else rruns.push({lab:r.label_raw, n:1}); });
+      const RC2 = {rising:C.teal, flat:C.slate, falling:C.red, warming_up:C.pending};
+      document.getElementById("mx_ribbon").insertAdjacentHTML("beforeend",
+        '<div class="rawstrip" title="raw daily composite label, before the 5-day hysteresis — chatter here previews a flip">' +
+        rruns.map(u => `<div style="flex:${u.n};background:${alpha(RC2[u.lab] || C.slate, .6)}" title="raw ${u.lab} ×${u.n}d"></div>`).join("") + "</div>");
+      const lastR2 = rawR[rawR.length-1];
+      let rrun = 0; for(let i = rawR.length-1; i >= 0 && rawR[i].label_raw === lastR2.label_raw; i--) rrun++;
+      const m30v = +lastR2.m30_annualized;
+      document.getElementById("mx_ribbon").insertAdjacentHTML("beforeend",
+        `<div class="gaugeline">composite m30 <b>${(m30v >= 0 ? "+" : "") + (100*m30v).toFixed(1)}% ann.</b> · gates +60% / −45% · raw <b>${lastR2.label_raw}</b> ×${rrun}d` +
+        (lastR2.label_raw !== lastR2.label_committed
+          ? ` · <b>flip commits at 5 consecutive</b> (committed: ${lastR2.label_committed})`
+          : " · raw and committed agree") + "</div>");
+    }
   }
 
   // --- Lead-lag scan ---
@@ -455,6 +660,38 @@ function feedBadge(name, last, cadence){
     });
     Plotly.newPlot("p_equity", traces, LAYOUT, CFG);
   } else empty("p_equity", NO_DATA);
+
+  // --- Paper vs physical: D1 rendered as a chart, flag days shaded (v0.4.2) ---
+  {
+    const dramR = (eq || []).filter(r => r.ticker === "DRAM" && r.close !== "")
+                            .sort((a,b) => a.date.localeCompare(b.date));
+    const compR = (reg || []).filter(r => r.segment === "COMPOSITE" && r.m30_annualized !== "" && !isNaN(+r.m30_annualized));
+    if(dramR.length >= 21 && compR.length){
+      const rx = [], ry = [];
+      for(let i = 20; i < dramR.length; i++){
+        rx.push(dramR[i].date);
+        ry.push(100 * (+dramR[i].close / +dramR[i-20].close - 1));
+      }
+      const py = compR.map(r => 100 * +r.m30_annualized);
+      const symA = Math.max(...ry.map(Math.abs), 1) * 1.15;
+      const symB = Math.max(...py.map(Math.abs), 1) * 1.15;
+      const shade = [...new Set((flags || []).map(f => f.date).filter(Boolean))].map(d => ({
+        type:"rect", xref:"x", yref:"paper", y0:0, y1:1, x0:d,
+        x1:new Date(new Date(d + "T00:00Z").getTime() + 864e5).toISOString().slice(0,10),
+        fillcolor:alpha(C.amber, .13), line:{width:0}}));
+      Plotly.newPlot("p_div", [
+        {x:rx, y:ry, name:"DRAM ETF — 20d return", mode:"lines", line:{width:2, color:C.violet},
+         hovertemplate:"%{x} · %{y:+.1f}%<extra>equity 20d</extra>"},
+        {x:compR.map(r => r.date), y:py, yaxis:"y2", name:"physical composite — m30 ann.",
+         mode:"lines", line:{width:2, color:C.teal},
+         hovertemplate:"%{x} · %{y:+.1f}% ann.<extra>physical m30</extra>"}],
+        {...LAYOUT, margin:{l:46, r:52, t:8, b:58}, shapes:shade,
+         yaxis:{...LAYOUT.yaxis, title:"equity 20d %", range:[-symA, symA],
+                zeroline:true, zerolinecolor:C.muted, zerolinewidth:1},
+         yaxis2:{overlaying:"y", side:"right", title:"physical % ann.", range:[-symB, symB],
+                 gridcolor:"rgba(0,0,0,0)", zeroline:false}}, CFG);
+    } else empty("p_div", "Renders once the DRAM ticker has 21 closes and the composite regime is live.");
+  }
 
   // --- Panel D: Korea ---
   const KSER = [["global_semi_sales_usd","world semiconductors (SIA/WSTS, 3MMA)",C.pale],
@@ -592,7 +829,7 @@ function feedBadge(name, last, cadence){
 
   // --- Period chips: every date-axis chart gets the context card's toggle treatment ---
   const CHIP_PRESETS = [["all", null], ["2y", 730], ["1y", 365], ["6m", 182], ["1m", 31]];
-  ["p_price", "p_equity", "p_fund", "p_mi", "p_dist", "p_fred"].forEach(pid => {
+  ["p_price", "p_equity", "p_fund", "p_mi", "p_dist", "p_fred", "p_div"].forEach(pid => {
     const gd = document.getElementById(pid);
     if(!gd || !gd.data || !gd.data.length) return;
     if(gd.layout && gd.layout.xaxis && gd.layout.xaxis.type === "category") return;
@@ -768,7 +1005,13 @@ try{
     const byId = {};
     grid.querySelectorAll(".card").forEach(c => byId[c.dataset.cid] = c);
     const order = saved.filter(id => byId[id]);
-    grid.querySelectorAll(".card").forEach(c => { if(!order.includes(c.dataset.cid)) order.push(c.dataset.cid); });
+    // v0.4.2: cards added after a layout was saved slot in at their default position
+    // instead of being exiled to the bottom of the grid.
+    [...grid.querySelectorAll(".card")].forEach((c, i, all) => {
+      if(order.includes(c.dataset.cid)) return;
+      const prev = all.slice(0, i).reverse().find(p => order.includes(p.dataset.cid));
+      order.splice(prev ? order.indexOf(prev.dataset.cid) + 1 : 0, 0, c.dataset.cid);
+    });
     order.forEach(id => grid.appendChild(byId[id]));
   }
 }catch(e){}
