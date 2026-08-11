@@ -5,6 +5,10 @@ Aggregates per-filer fundamentals from filings_facts.csv into industry-level row
   gross_margin_pct      aggregate ex-Samsung: 100 * sigma(GP) / sigma(rev), USD basis
   inventory_days        91.25 * sigma(inventory) / sigma(quarterly COGS), USD basis
   breadth_improving     count of ratio members with GM up AND inventory days down q/q
+  memory_share_of_semis 100 * quarter revenue / (3 x end-month SIA 3mma) — the amplitude
+                        gauge (spec §watch). SIA publishes 3-month moving averages, so
+                        3x the quarter-end month IS the true quarter total; the only
+                        approximation is member coverage, which the row carries.
 
 Honesty rules: every row carries its member list — the aggregate never pretends to
 more coverage than it has. Ratio rows require >= 2 members (no aggregate-of-one).
@@ -20,6 +24,8 @@ from config.settings import (DATA_DIR, MEMORY_INC_REV_MEMBERS, MEMORY_INC_RATIO_
 
 FACTS = f"{DATA_DIR}/filings_facts.csv"
 OUT = f"{DATA_DIR}/memory_inc.csv"
+MONTHLY = f"{DATA_DIR}/monthly_series.csv"
+Q_END_MONTH = {"1": "03", "2": "06", "3": "09", "4": "12"}
 
 
 def bucket(period_end):
@@ -50,6 +56,43 @@ def load():
     return data
 
 
+def load_sia():
+    """-> {'YYYY-MM': 3mma USD} from monthly_series.csv (source=sia_wsts, monthly rows only)."""
+    if not os.path.exists(MONTHLY):
+        return {}
+    out = {}
+    with open(MONTHLY) as f:
+        for r in csv.DictReader(f):
+            if r.get("source") != "sia_wsts" or r.get("metric") != "global_semi_sales_usd":
+                continue
+            period = (r.get("period") or "").strip()
+            if len(period) != 7:                      # skip annual / flash-style periods
+                continue
+            try:
+                v = float(r["value"])
+            except (TypeError, ValueError):
+                continue
+            if v > 0:
+                out[period] = v
+    return out
+
+
+def share_row(lab, rev_total_usd, members, meta, sia):
+    """Amplitude gauge: memory's share of world semis for one quarter, or None.
+
+    share = 100 * quarter revenue / (3 x SIA 3mma at the quarter-end month). Because
+    the SIA series is a 3-month moving average, 3x the end month equals the true
+    quarter total — the remaining approximation is member coverage, carried on the row.
+    Returns None when the quarter-end SIA month isn't published yet.
+    """
+    month = f"{lab[:4]}-{Q_END_MONTH[lab[5]]}"
+    v = sia.get(month)
+    if not v:
+        return None
+    return [lab, "memory_share_of_semis", round(100 * rev_total_usd / (3 * v), 2),
+            members, f"{meta}; vs 3x SIA 3mma {month}"]
+
+
 def usd_capex(data, member, lab):
     if member == "SAMSUNG_MEM":
         return None
@@ -76,6 +119,7 @@ def main():
     data = load()
     if not data:
         warn("no filings_facts.csv yet — run a fundamentals collector first"); return
+    sia = load_sia()
     labels = sorted({lab for series in data.values() for lab in series})
     rows = []
     ratio_hist = defaultdict(dict)   # member -> {lab: (gm, inv_days)}
@@ -91,6 +135,10 @@ def main():
             for mm in rev_members:
                 mv = member_rev[mm]
                 rows.append([lab, "member_revenue_usd_bn", round(mv / 1e9, 2), mm, ""])
+            sr = share_row(lab, rev_total, "|".join(rev_members),
+                           f"{len(rev_members)}/{len(MEMORY_INC_REV_MEMBERS)} members", sia)
+            if sr:
+                rows.append(sr)
         gp_sum = rev_sum = cogs_sum = inv_sum = 0.0
         ratio_members = []
         for m in MEMORY_INC_RATIO_MEMBERS:
