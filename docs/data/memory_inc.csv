@@ -128,6 +128,7 @@ quarter,metric,value,members,meta
 2026Q1,member_revenue_usd_bn,5.95,SNDK,
 2026Q1,member_revenue_usd_bn,35.95,SKHYNIX,
 2026Q1,member_revenue_usd_bn,51.15,SAMSUNG_MEM,
+2026Q1,memory_share_of_semis,39.17,MU|SNDK|SKHYNIX|SAMSUNG_MEM,4/4 members; vs 3x SIA 3mma 2026-03
 2026Q1,capex_usd_bn,11.67,MU|SNDK|SKHYNIX,supply response; 3/3 members
 2026Q1,capex_pct_revenue,17.74,MU|SNDK|SKHYNIX,supply response; 3/3 members
 2026Q1,gross_margin_pct,77.43,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
