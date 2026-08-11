@@ -47,7 +47,7 @@
     text-shadow:0 0 4px var(--panel)}
   .ribbondates{display:flex;justify-content:space-between;font:400 10px "IBM Plex Mono",monospace;
     color:var(--gloss);margin-top:3px}
-  .zrow{display:flex;gap:6px;margin:0 0 8px}
+  .zrow{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
   .zbtn{border:1px solid var(--line);background:none;color:var(--muted);border-radius:6px;
     padding:3px 10px;cursor:pointer;font:600 11px "IBM Plex Mono",monospace}
   .zbtn:hover{color:var(--ink);border-color:var(--line-hi)}
@@ -77,6 +77,9 @@
   .sigread b{font-weight:600}
   .sigread .dim,#sigsum .dim,.sig .dim{color:var(--muted);font-weight:400}
   @media (max-width:620px){.sigrow{grid-template-columns:16px 1fr}.sigread{grid-column:2}}
+  .evdens{display:flex;gap:2px;align-items:flex-end;height:22px;margin:2px 0 8px}
+  .evdens>div{flex:1;border-radius:2px;min-width:0}
+  .heartbeat{font:400 11px "IBM Plex Mono",monospace;color:var(--muted);margin-top:4px}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 14px 6px;
     position:relative;transition:border-color .15s,transform .15s,box-shadow .15s}
@@ -149,6 +152,8 @@
   </header>
   <div id="sticky"><span class="t">Memory Market Regime</span>
     <span id="s_comp" class="badge" style="background:var(--slate)">&mdash;</span>
+    <span id="s_cell" class="asof"></span>
+    <span id="s_flag" class="badge" style="background:var(--amber);display:none" title="a divergence flag fired within the last 2 days">D1</span>
     <span id="s_asof" class="asof"></span>
     <button class="tbtn" id="themebtn2" title="Toggle light/dark">&#9681;</button></div>
   <div id="focus"></div>
@@ -184,16 +189,12 @@
       <div class="plot plot-tall" id="p_context"></div>
     </div>
     <div class="card">
-      <h2>Market layer</h2><p class="sub">related stocks, all starting at 100 &middot; SKHY = SK hynix, newly listed in the US</p>
+      <h2>Market layer</h2><p class="sub">related stocks &middot; lines re-base to 100 at the start of the selected window &middot; SKHY = SK hynix, newly listed in the US &middot; dotted = 2&times;MU compounded daily, the daily-reset baseline &mdash; a 2&times; product’s drift from twice the window return is path decay, by design</p>
       <div class="plot" id="p_equity"></div>
     </div>
     <div class="card">
       <h2>Trade &amp; volume &mdash; Korea</h2><p class="sub">world chip sales, Korea's total exports, and Korea's chip &amp; HBM slices — each bar is its own level, don't add them</p>
       <div class="plot" id="p_korea"></div>
-    </div>
-    <div class="card">
-      <h2>US producer prices &mdash; semis (FRED)</h2><p class="sub">official US price statistics for chips — slow-moving but authoritative context</p>
-      <div class="plot" id="p_fred"></div>
     </div>
     <div class="card">
       <h2>Fundamentals &mdash; gross margin by filer</h2><p class="sub">profit margin per company &middot; bold black = all of them combined &middot; dotted = hard-drive makers, shown for contrast</p>
@@ -207,18 +208,25 @@
       <h2>Distributor telemetry &mdash; supply stress</h2><p class="sub">how long you’d wait for memory parts — 0 days = in stock today &middot; in-stock quotes outrank empty-shelf catalog leads &middot; hover shows shelf quantity</p>
       <div class="plot" id="p_dist"></div>
     </div>
+
+    <div class="card">
+      <h2>Event log</h2><p class="sub">hand-picked headlines that matter — half the analytical value</p>
+      <ul class="events" id="events"></ul>
+    </div>
+
     <div class="card">
       <h2>Lead–lag scan</h2><p class="sub">which data series tends to move first — reports honestly once 6 months of data align</p>
       <ul class="events" id="stats"></ul>
     </div>
 
     <div class="card">
-      <h2>Event log</h2><p class="sub">hand-picked headlines that matter — half the analytical value</p>
-      <ul class="events" id="events"></ul>
+      <h2>US producer prices &mdash; semis (FRED)</h2><p class="sub">official US price statistics for chips — slow-moving but authoritative context</p>
+      <div class="plot" id="p_fred"></div>
     </div>
   </div>
 
   <div class="stale" id="stale"></div>
+  <div class="heartbeat" id="heartbeat"></div>
   <footer><button class="tbtn" id="layoutreset" title="Restore default card order" style="float:right">reset layout</button>Instrument panel, not investment advice · regime labels are descriptive classifications of data, not forecasts · spec v0.4</footer>
 </div>
 
@@ -358,6 +366,8 @@ function feedBadge(name, last, cadence){
   if(flags && flags.length){
     const recent = flags.slice(-3).map(f => `<span class="fired">${f.date} ${f.detail}</span>`).join(" · ");
     fl.innerHTML = "divergence: " + recent;
+    const sflag = document.getElementById("s_flag");
+    if(sflag && daysOld(flags[flags.length-1].date) < 3) sflag.style.display = "";
   } else fl.textContent = "divergence flags: none — layers agree (or awaiting data)";
 
   // --- Signal board: the spec's top-cycle signature as a live checklist (v0.4.2) ---
@@ -448,16 +458,23 @@ function feedBadge(name, last, cadence){
     } else add("clear", "paper vs physical", "no flags — layers agree" + spread);
 
     // 6 · amplitude ≈ Memory-Inc quarter / (3 × SIA 3mma at quarter end)
+    const shr = (mi || []).filter(r => r.metric === "memory_share_of_semis")
+                          .sort((a,b) => a.quarter.localeCompare(b.quarter));
     const sia = (msf || []).filter(r => r.source === "sia_wsts" && r.metric === "global_semi_sales_usd");
     let amp = null;
+    if(shr.length){
+      const s0 = shr[shr.length-1];
+      amp = {q: s0.quarter, share: +s0.value / 100,
+             meta: (s0.meta || "").split(";")[0] || s0.members, src: "engine gauge"};
+    }
     for(let i = revq.length-1; i >= 0 && !amp; i--){
       const q = revq[i].quarter;
       const endM = q.slice(0,4) + "-" + ({"1":"03","2":"06","3":"09","4":"12"})[q[5]];
       const hit = sia.find(r => r.period === endM);
-      if(hit && +hit.value > 0) amp = {q, share: 1e9 * +revq[i].value / (3 * +hit.value), meta: revq[i].meta};
+      if(hit && +hit.value > 0) amp = {q, share: 1e9 * +revq[i].value / (3 * +hit.value), meta: revq[i].meta, src: "client approx"};
     }
     if(amp) add(amp.share > 0.34 ? "warn" : "clear", "amplitude",
-      `memory ≈ <b>${pct(amp.share)}</b> of world semis (${amp.q}, ${amp.meta}) <span class="dim">· 2018 top ≈ 33% · FY25 28.2% · approx: quarter ≈ 3× end-month SIA 3mma</span>`);
+      `memory ≈ <b>${pct(amp.share)}</b> of world semis (${amp.q}, ${amp.meta}) <span class="dim">· 2018 top ≈ 33% · FY25 28.2% · ${amp.src}: quarter = 3× end-month SIA 3mma</span>`);
     else add("blind", "amplitude", "needs a Memory-Inc quarter whose end-month SIA figure exists");
 
     // 7 · book health (thinning books = event-level per spec)
@@ -533,6 +550,8 @@ function feedBadge(name, last, cadence){
     document.getElementById("mxsub").textContent =
       rows[rows.length-1].cell + " · " + dwell + " day" + (dwell === 1 ? "" : "s") +
       " in this cell (since " + rows[rows.length - dwell].computed_date + ")";
+    const scell = document.getElementById("s_cell");
+    if(scell) scell.textContent = rows[rows.length-1].cell + " · " + dwell + "d";
 
     // v0.4.2: raw daily label under the committed ribbon — hysteresis chatter made visible
     const rawR = (reg || []).filter(r => r.segment === "COMPOSITE" && r.label_raw);
@@ -641,6 +660,8 @@ function feedBadge(name, last, cadence){
       shapes:[{type:"line", x0:"2026-07-05", x1:"2026-07-05", y0:0, y1:1, yref:"paper",
                line:{color:C.muted, width:1, dash:"dot"}}],
       annotations:[
+        {x:"2018-09-01", y:0.94, yref:"paper", xanchor:"left", showarrow:false,
+         text:"2018 cycle top — memory ≈ 33% of world semis", font:{size:10, color:C.muted}},
         {x:mn.date, y:Math.log10(+mn.usd_per_gb),
          text:"cycle floor $" + (+mn.usd_per_gb).toFixed(2) + "/GB",
          showarrow:true, arrowcolor:C.muted, ax:-10, ay:-32, font:{size:10, color:C.ink}},
@@ -648,16 +669,46 @@ function feedBadge(name, last, cadence){
          showarrow:false, font:{size:10, color:C.muted}}]}, CFG);
   } else empty("p_context", "data/static/mccallum.csv missing — the 69-year context renders once it exists.");
 
-  // --- Panel C: equities rebased ---
+  // --- Panel C: equities (v0.4.3: window re-base on chips; stable colors; 2x decay reference) ---
+  const CHIP_HOOK = {};   // pid -> fn(t0Ms) run before a period chip re-frames the window
   if(eq && eq.length){
     const byT = {};
-    eq.forEach(r => (byT[r.ticker] = byT[r.ticker] || []).push(r));
-    const traces = Object.entries(byT).map(([t, rows], i) => {
-      rows.sort((a,b) => a.date.localeCompare(b.date));
-      const base = +rows[0].close;
-      return {x:rows.map(r => r.date), y:rows.map(r => 100 * r.close / base), name:t,
-              mode:"lines", line:{width:2, color:[C.ink,C.teal,C.violet,C.amber,C.red][i % 5]}};
+    eq.forEach(r => { if(r.ticker && r.close !== "") (byT[r.ticker] = byT[r.ticker] || []).push(r); });
+    Object.values(byT).forEach(rows => rows.sort((a,b) => a.date.localeCompare(b.date)));
+    const ECOL = {MU:C.ink, DRAM:C.violet, SKHY:C.teal, RAM:C.amber, MUU:C.red};
+    const RAWEQ = {};
+    const traces = Object.entries(byT).map(([t, rows]) => {
+      RAWEQ[t] = {x: rows.map(r => r.date), c: rows.map(r => +r.close)};
+      return {x: RAWEQ[t].x, y: [], meta: t,
+              name: t + ((t === "RAM" || t === "MUU") ? " (2× daily reset)" : ""),
+              mode: "lines", line: {width: 2, color: ECOL[t] || C.slate},
+              hovertemplate: "%{x} · %{y:.1f}<extra>" + t + "</extra>"};
     });
+    if(RAWEQ.MU){   // the honest decay baseline: what a perfect 2x-daily product on MU would print
+      RAWEQ["2xMU"] = {x: RAWEQ.MU.x, c: RAWEQ.MU.c, synth2x: true};
+      traces.push({x: RAWEQ.MU.x, y: [], meta: "2xMU",
+                   name: "2×MU daily-compounded (reference)",
+                   mode: "lines", line: {width: 1.2, color: C.muted, dash: "dot"},
+                   hovertemplate: "%{x} · %{y:.1f}<extra>2×MU ref</extra>"});
+    }
+    const rebase = t0 => {
+      traces.forEach(tr => {
+        const raw = RAWEQ[tr.meta]; if(!raw) return;
+        let bi = raw.x.findIndex(d => new Date(d + "T00:00Z").getTime() >= t0);
+        if(bi < 0) bi = 0;
+        if(raw.synth2x){
+          const ys = new Array(raw.c.length).fill(null);
+          let v = 100; ys[bi] = 100;
+          for(let i = bi + 1; i < raw.c.length; i++){ v *= 1 + 2 * (raw.c[i] / raw.c[i-1] - 1); ys[i] = v; }
+          tr.y = ys;
+        } else {
+          const base = raw.c[bi];
+          tr.y = raw.c.map(cv => 100 * cv / base);
+        }
+      });
+    };
+    rebase(-Infinity);
+    CHIP_HOOK.p_equity = t0 => { rebase(t0); Plotly.restyle("p_equity", {y: traces.map(tr => tr.y)}); };
     Plotly.newPlot("p_equity", traces, LAYOUT, CFG);
   } else empty("p_equity", NO_DATA);
 
@@ -804,8 +855,21 @@ function feedBadge(name, last, cadence){
               text:pts.map(p => p.qty.toLocaleString()),
               hovertemplate:"%{x} · %{y}d lead · qty %{text}<extra>" + s + "</extra>"};
     }).filter(t => t.x.length);
-    Plotly.newPlot("p_dist", traces, {...LAYOUT,
-      yaxis:{...LAYOUT.yaxis, title:"factory lead, days"}}, CFG);
+    // v0.4.3: distributor-level contagion counter — SKUs with shelf qty > 0, by day
+    const byDate = {};
+    Object.values(byKey).forEach(b => {
+      const d = byDate[b.date] || (byDate[b.date] = {n:0, tot:0});
+      d.tot++; if(b.qty > 0) d.n++;
+    });
+    const ddts = Object.keys(byDate).sort();
+    if(ddts.length) traces.push({x:ddts, y:ddts.map(d => byDate[d].n), yaxis:"y2",
+      name:"SKUs in stock (count)", mode:"lines", line:{width:2, color:C.ink, shape:"hv"},
+      text:ddts.map(d => byDate[d].n + " of " + byDate[d].tot),
+      hovertemplate:"%{x} · %{text} in stock<extra></extra>"});
+    Plotly.newPlot("p_dist", traces, {...LAYOUT, margin:{l:46, r:52, t:8, b:58},
+      yaxis:{...LAYOUT.yaxis, title:"factory lead, days"},
+      yaxis2:{overlaying:"y", side:"right", title:"in stock", rangemode:"tozero",
+              dtick:1, gridcolor:"rgba(0,0,0,0)"}}, CFG);
   } else empty("p_dist", "Activates as dist_obs.csv accumulates (Mouser live since 2026-07-07).");
 
   // --- FRED: official producer prices, rebased ---
@@ -859,6 +923,8 @@ function feedBadge(name, last, cadence){
       const b = document.createElement("button");
       b.className = "zbtn" + (i === 0 ? " active" : ""); b.textContent = label;
       b.onclick = () => {
+        const t0c = days ? tEnd - days * 86400000 : -Infinity;
+        if(CHIP_HOOK[pid]) CHIP_HOOK[pid](t0c);
         const args = days
           ? (() => {
               const t0 = tEnd - days * 86400000, pd = 86400000 * Math.max(1, days * 0.03);
@@ -884,13 +950,46 @@ function feedBadge(name, last, cadence){
     }
   });
 
-  // --- Events ---
+  // --- Events (v0.4.3: density strip + category filter — clustering is itself a signal) ---
   const ul = document.getElementById("events");
   (ev || []).slice().reverse().forEach(e => {
     ul.insertAdjacentHTML("beforeend",
-      `<li><time>${e.date}</time>${e.url ? `<a href="${e.url}">${e.title}</a>` : e.title}</li>`);
+      `<li data-cat="${e.category || ""}"><time>${e.date}</time>${e.url ? `<a href="${e.url}">${e.title}</a>` : e.title}</li>`);
   });
   if(!ev || !ev.length) ul.innerHTML = "<li>Add events to docs/data/events.csv</li>";
+  const evOk = (ev || []).filter(e => /^\d{4}-\d{2}-\d{2}$/.test(e.date || ""));
+  if(evOk.length > 2){
+    const wk = d => { const t = new Date(d + "T00:00Z"); t.setUTCDate(t.getUTCDate() - (t.getUTCDay() + 6) % 7);
+      return t.toISOString().slice(0,10); };
+    const counts = {};
+    evOk.forEach(e => { counts[wk(e.date)] = (counts[wk(e.date)] || 0) + 1; });
+    const wks = Object.keys(counts).sort();
+    const all = [];
+    for(let t = new Date(wks[0] + "T00:00Z"); t <= new Date(wks[wks.length-1] + "T00:00Z");
+        t.setUTCDate(t.getUTCDate() + 7)) all.push(t.toISOString().slice(0,10));
+    const mxc = Math.max(...Object.values(counts));
+    ul.insertAdjacentHTML("beforebegin",
+      '<div class="evdens" title="events per week — clustering is itself a signal">' +
+      all.map(w => `<div style="height:${counts[w] ? Math.round(4 + 16 * counts[w] / mxc) : 2}px;` +
+                   `background:${counts[w] ? alpha(C.amber, .25 + .6 * counts[w] / mxc) : C.line}"` +
+                   ` title="wk of ${w} · ${counts[w] || 0} event${counts[w] === 1 ? "" : "s"}"></div>`).join("") + "</div>");
+    const cats = [...new Set(evOk.map(e => e.category).filter(Boolean))].sort();
+    if(cats.length > 1){
+      const bar = document.createElement("div"); bar.className = "zrow";
+      ["all", ...cats].forEach((c0, i) => {
+        const b = document.createElement("button");
+        b.className = "zbtn" + (i === 0 ? " active" : ""); b.textContent = c0;
+        b.onclick = () => {
+          ul.querySelectorAll("li").forEach(li =>
+            li.style.display = (c0 === "all" || li.dataset.cat === c0) ? "" : "none");
+          bar.querySelectorAll(".zbtn").forEach(x => x.classList.remove("active"));
+          b.classList.add("active");
+        };
+        bar.appendChild(b);
+      });
+      ul.before(bar);
+    }
+  }
 
   // --- Staleness ---
   const maxDate = (rows, col) => rows && rows.length ? rows.map(r => r[col]).sort().pop() : null;
@@ -899,6 +998,27 @@ function feedBadge(name, last, cadence){
   feedBadge("korea", null || maxDate(krows, "period"), 32);
   feedBadge("fundamentals", maxDate((fund||[]), "period_end"), 100);
   feedBadge("volume regime", vrow ? vrow.computed_date : null, 3);
+
+  // v0.4.3: pipeline heartbeat — the collection trust line
+  {
+    const hb = document.getElementById("heartbeat");
+    const pdts = [...new Set((pob || []).map(r => r.date).filter(Boolean))].sort();
+    if(hb && pdts.length){
+      const dl = pdts[pdts.length-1];
+      const cnt = d => (pob || []).filter(r => r.date === d).length;
+      const meds = pdts.slice(-14).map(cnt).sort((a,b) => a - b);
+      const med = meds[Math.floor(meds.length / 2)] || 0;
+      const dn = (dobs || []).filter(r => r.date === dl).length;
+      const segL = (seg || []).filter(r => r.series === "floor" && r.n_obs !== "" && !isNaN(+r.n_obs));
+      const sdl = segL.map(r => r.date).sort().pop();
+      const qb = segL.filter(r => r.date === sdl).reduce((a, r) => a + +r.n_obs, 0);
+      const lag = Math.round(daysOld(dl));
+      hb.textContent = `pipeline: last collection ${dl}` +
+        (lag > 1 ? ` (${lag}d ago — check Actions)` : "") +
+        ` · ${cnt(dl)} price rows (14d median ${med})` +
+        ` · ${dn} distributor rows · ${qb} qualified books`;
+    }
+  }
 })();
 
 // ---------- chrome: theme toggle, sticky telemetry bar, focus view ----------
