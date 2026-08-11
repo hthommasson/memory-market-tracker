@@ -1,7 +1,8 @@
 """Divergence flags (spec §4.3). D1 implemented; D2-D4 gated on their data feeds."""
+import csv
 import os
 import pandas as pd
-from collectors.common import append_rows, log, warn
+from collectors.common import log, warn
 from config.settings import DATA_DIR
 
 EQ = f"{DATA_DIR}/equity_daily.csv"
@@ -30,11 +31,39 @@ def d2(): return None  # TODO: non-overlapping Korea flash increments (needs 2 f
 def d3(): return None  # TODO: MU inventory-days + gross-margin joint trend light (needs 2+ new quarters)
 def d4(): return None  # TODO: chop-dominant trend-quality + flat regime notice (needs 60d equity history live)
 
+def upsert_rows(path, header, rows):
+    """Date-keyed ledger (v0.4.1): exactly one row per (date, flag); latest run wins.
+
+    Replaces collectors.common.append_rows here. The append-only writer produced 2-4
+    identical rows per firing day because both redundant crons (22:47/23:29 UTC), any
+    manual Run-workflow, and post-midnight ghost runs each appended a fresh row. Because
+    this rewrites the whole file keyed on (date, flag), the first run after this patch
+    also collapses the dups already on disk — no manual cleanup needed. Output is sorted
+    so the ledger is deterministic regardless of write history. append_rows is left alone:
+    price_obs/dist_obs legitimately append many rows per day and must not be deduped.
+    """
+    keyed = {}
+    if os.path.exists(path):
+        with open(path, newline="") as f:
+            for r in csv.DictReader(f):
+                keyed[(r.get("date", ""), r.get("flag", ""))] = [r.get(h, "") for h in header]
+    for row in rows:
+        keyed[(str(row[0]), str(row[1]))] = [str(c) for c in row]
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = f"{path}.tmp"
+    with open(tmp, "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(header)
+        for key in sorted(keyed):
+            w.writerow(keyed[key])
+    os.replace(tmp, path)
+    log(f"upserted {len(rows)} row(s) -> {path} ({len(keyed)} total after dedup)")
+
 def main():
     fired = [f for f in (d1(), d2(), d3(), d4()) if f]
     if fired:
         today = pd.Timestamp.now("UTC").date().isoformat()
-        append_rows(OUT, HEADER, [[today, f.split(":")[0], f] for f in fired])
+        upsert_rows(OUT, HEADER, [[today, f.split(":")[0], f] for f in fired])
         for f in fired: log(f"FLAG {f}")
     else:
         log("no divergence flags today")
