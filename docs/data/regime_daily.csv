@@ -40,6 +40,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-12,ddr4_desktop,-0.5536,-0.4425,falling,falling
 2026-08-13,ddr4_desktop,-0.5462,-0.3497,falling,falling
 2026-08-14,ddr4_desktop,-0.5339,-0.2718,falling,falling
+2026-08-15,ddr4_desktop,-0.5166,-0.2046,falling,falling
 2026-07-05,ddr5_desktop,,,warming_up,warming_up
 2026-07-06,ddr5_desktop,,,warming_up,warming_up
 2026-07-07,ddr5_desktop,,,warming_up,warming_up
@@ -117,6 +118,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-12,server_ecc,3.5474,2.1435,rising,rising
 2026-08-13,server_ecc,3.586,2.1777,rising,rising
 2026-08-14,server_ecc,3.5866,2.187,rising,rising
+2026-08-15,server_ecc,3.5494,2.1678,rising,rising
 2026-07-05,sodimm,,,warming_up,warming_up
 2026-07-06,sodimm,,,warming_up,warming_up
 2026-07-07,sodimm,,,warming_up,warming_up
@@ -158,6 +160,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-12,sodimm,0.987,-1.5608,rising,rising
 2026-08-13,sodimm,0.89,-1.6196,rising,rising
 2026-08-14,sodimm,0.778,-1.6802,rising,rising
+2026-08-15,sodimm,0.6509,-1.7387,rising,rising
 2026-07-05,COMPOSITE,,gated:none,warming_up,warming_up
 2026-07-06,COMPOSITE,,gated:none,warming_up,warming_up
 2026-07-07,COMPOSITE,,gated:none,warming_up,warming_up
@@ -199,3 +202,4 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-12,COMPOSITE,1.6687,gated:none,rising,rising
 2026-08-13,COMPOSITE,1.6543,gated:none,rising,rising
 2026-08-14,COMPOSITE,1.6203,gated:none,rising,rising
+2026-08-15,COMPOSITE,1.5667,gated:none,rising,rising
