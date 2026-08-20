@@ -1,7 +1,7 @@
 date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-05,ddr4_desktop,basket,8.1548,4,0.667
 2026-07-05,ddr4_desktop,floor,4.1062,4,
-2026-07-05,ddr5_desktop,basket,16.4216,3,0.375
+2026-07-05,ddr5_desktop,basket,16.4216,3,0.3
 2026-07-05,ddr5_desktop,floor,15.625,3,
 2026-07-05,server_ecc,basket,25.8634,4,0.667
 2026-07-05,server_ecc,floor,24.9844,4,
@@ -9,7 +9,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-05,sodimm,floor,9.9688,4,
 2026-07-06,ddr4_desktop,basket,9.2809,5,0.833
 2026-07-06,ddr4_desktop,floor,4.1062,5,
-2026-07-06,ddr5_desktop,basket,16.4216,3,0.375
+2026-07-06,ddr5_desktop,basket,16.4216,3,0.3
 2026-07-06,ddr5_desktop,floor,15.625,3,
 2026-07-06,server_ecc,basket,26.213,4,0.667
 2026-07-06,server_ecc,floor,25.8634,4,
@@ -17,7 +17,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-06,sodimm,floor,9.9688,4,
 2026-07-07,ddr4_desktop,basket,9.2184,5,0.833
 2026-07-07,ddr4_desktop,floor,4.1062,5,
-2026-07-07,ddr5_desktop,basket,16.4216,3,0.375
+2026-07-07,ddr5_desktop,basket,16.4216,3,0.3
 2026-07-07,ddr5_desktop,floor,15.625,3,
 2026-07-07,server_ecc,basket,26.9941,4,0.667
 2026-07-07,server_ecc,floor,25.8634,4,
@@ -25,7 +25,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-07,sodimm,floor,9.3747,4,
 2026-07-08,ddr4_desktop,basket,9.2184,5,0.833
 2026-07-08,ddr4_desktop,floor,4.1062,5,
-2026-07-08,ddr5_desktop,basket,16.4216,3,0.375
+2026-07-08,ddr5_desktop,basket,16.4216,3,0.3
 2026-07-08,ddr5_desktop,floor,15.625,3,
 2026-07-08,server_ecc,basket,26.9941,4,0.667
 2026-07-08,server_ecc,floor,25.8634,4,
@@ -33,7 +33,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-08,sodimm,floor,9.3747,4,
 2026-07-09,ddr4_desktop,basket,9.2809,5,0.833
 2026-07-09,ddr4_desktop,floor,4.1062,5,
-2026-07-09,ddr5_desktop,basket,16.4216,3,0.375
+2026-07-09,ddr5_desktop,basket,16.4216,3,0.3
 2026-07-09,ddr5_desktop,floor,15.625,3,
 2026-07-09,server_ecc,basket,26.9941,4,0.667
 2026-07-09,server_ecc,floor,25.8634,4,
@@ -41,7 +41,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-09,sodimm,floor,9.6562,4,
 2026-07-10,ddr4_desktop,basket,9.2809,5,0.833
 2026-07-10,ddr4_desktop,floor,4.1062,5,
-2026-07-10,ddr5_desktop,basket,15.6988,3,0.375
+2026-07-10,ddr5_desktop,basket,15.6988,3,0.3
 2026-07-10,ddr5_desktop,floor,15.625,3,
 2026-07-10,server_ecc,basket,26.9941,4,0.667
 2026-07-10,server_ecc,floor,25.8634,4,
@@ -49,7 +49,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-10,sodimm,floor,8.4062,4,
 2026-07-11,ddr4_desktop,basket,9.2809,5,0.833
 2026-07-11,ddr4_desktop,floor,4.1062,5,
-2026-07-11,ddr5_desktop,basket,15.6988,3,0.375
+2026-07-11,ddr5_desktop,basket,15.6988,3,0.3
 2026-07-11,ddr5_desktop,floor,15.625,3,
 2026-07-11,server_ecc,basket,26.9941,4,0.667
 2026-07-11,server_ecc,floor,25.8634,4,
@@ -57,7 +57,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-11,sodimm,floor,10.125,4,
 2026-07-12,ddr4_desktop,basket,9.2809,5,0.833
 2026-07-12,ddr4_desktop,floor,4.1062,5,
-2026-07-12,ddr5_desktop,basket,15.6988,3,0.375
+2026-07-12,ddr5_desktop,basket,15.6988,3,0.3
 2026-07-12,ddr5_desktop,floor,15.625,3,
 2026-07-12,server_ecc,basket,25.8634,3,0.5
 2026-07-12,server_ecc,floor,25.8634,3,
@@ -65,7 +65,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-12,sodimm,floor,9.9688,4,
 2026-07-13,ddr4_desktop,basket,9.2809,5,0.833
 2026-07-13,ddr4_desktop,floor,4.1062,5,
-2026-07-13,ddr5_desktop,basket,15.6988,3,0.375
+2026-07-13,ddr5_desktop,basket,15.6988,3,0.3
 2026-07-13,ddr5_desktop,floor,15.625,3,
 2026-07-13,server_ecc,basket,25.8634,3,0.5
 2026-07-13,server_ecc,floor,25.8634,3,
@@ -73,7 +73,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-13,sodimm,floor,9.9688,4,
 2026-07-14,ddr4_desktop,basket,7.4997,5,0.833
 2026-07-14,ddr4_desktop,floor,4.1062,5,
-2026-07-14,ddr5_desktop,basket,15.6988,3,0.375
+2026-07-14,ddr5_desktop,basket,15.6988,3,0.3
 2026-07-14,ddr5_desktop,floor,15.625,3,
 2026-07-14,server_ecc,basket,25.8634,3,0.5
 2026-07-14,server_ecc,floor,25.8634,3,
@@ -81,7 +81,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-14,sodimm,floor,9.9688,4,
 2026-07-15,ddr4_desktop,basket,7.4997,5,0.833
 2026-07-15,ddr4_desktop,floor,4.1062,5,
-2026-07-15,ddr5_desktop,basket,15.6988,3,0.375
+2026-07-15,ddr5_desktop,basket,15.6988,3,0.3
 2026-07-15,ddr5_desktop,floor,15.625,3,
 2026-07-15,server_ecc,basket,25.8634,3,0.5
 2026-07-15,server_ecc,floor,25.8634,3,
@@ -89,7 +89,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-15,sodimm,floor,9.9688,4,
 2026-07-16,ddr4_desktop,basket,7.4997,5,0.833
 2026-07-16,ddr4_desktop,floor,4.1062,5,
-2026-07-16,ddr5_desktop,basket,15.6988,3,0.375
+2026-07-16,ddr5_desktop,basket,15.6988,3,0.3
 2026-07-16,ddr5_desktop,floor,15.625,3,
 2026-07-16,server_ecc,basket,25.8634,3,0.5
 2026-07-16,server_ecc,floor,25.8634,3,
@@ -97,7 +97,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-16,sodimm,floor,9.9688,4,
 2026-07-17,ddr4_desktop,basket,7.4997,5,0.833
 2026-07-17,ddr4_desktop,floor,4.1062,5,
-2026-07-17,ddr5_desktop,basket,15.6988,3,0.375
+2026-07-17,ddr5_desktop,basket,15.6988,3,0.3
 2026-07-17,ddr5_desktop,floor,15.625,3,
 2026-07-17,server_ecc,basket,25.8634,3,0.5
 2026-07-17,server_ecc,floor,25.8634,3,
@@ -105,7 +105,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-17,sodimm,floor,9.9688,4,
 2026-07-18,ddr4_desktop,basket,7.4997,5,0.833
 2026-07-18,ddr4_desktop,floor,4.1062,5,
-2026-07-18,ddr5_desktop,basket,15.6997,3,0.375
+2026-07-18,ddr5_desktop,basket,15.6997,3,0.3
 2026-07-18,ddr5_desktop,floor,15.625,3,
 2026-07-18,server_ecc,basket,27.2809,3,0.5
 2026-07-18,server_ecc,floor,25.8634,3,
@@ -113,7 +113,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-18,sodimm,floor,9.9688,4,
 2026-07-19,ddr4_desktop,basket,7.7394,4,0.667
 2026-07-19,ddr4_desktop,floor,4.1062,4,
-2026-07-19,ddr5_desktop,basket,15.6997,3,0.375
+2026-07-19,ddr5_desktop,basket,15.6997,3,0.3
 2026-07-19,ddr5_desktop,floor,15.625,3,
 2026-07-19,server_ecc,basket,27.7029,4,0.667
 2026-07-19,server_ecc,floor,25.8634,4,
@@ -121,7 +121,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-19,sodimm,floor,9.9688,4,
 2026-07-20,ddr4_desktop,basket,7.5839,4,0.667
 2026-07-20,ddr4_desktop,floor,4.1062,4,
-2026-07-20,ddr5_desktop,basket,15.6997,3,0.375
+2026-07-20,ddr5_desktop,basket,15.6997,3,0.3
 2026-07-20,ddr5_desktop,floor,15.625,3,
 2026-07-20,server_ecc,basket,27.1873,4,0.667
 2026-07-20,server_ecc,floor,25.8634,4,
@@ -129,7 +129,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-20,sodimm,floor,9.9688,4,
 2026-07-21,ddr4_desktop,basket,7.7394,4,0.667
 2026-07-21,ddr4_desktop,floor,4.1062,4,
-2026-07-21,ddr5_desktop,basket,15.6623,2,0.25
+2026-07-21,ddr5_desktop,basket,15.6623,2,0.2
 2026-07-21,ddr5_desktop,floor,15.625,2,
 2026-07-21,server_ecc,basket,26.0566,4,0.667
 2026-07-21,server_ecc,floor,25.8634,4,
@@ -137,7 +137,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-21,sodimm,floor,10.9375,4,
 2026-07-22,ddr4_desktop,basket,7.6325,4,0.667
 2026-07-22,ddr4_desktop,floor,4.1062,4,
-2026-07-22,ddr5_desktop,basket,15.6623,2,0.25
+2026-07-22,ddr5_desktop,basket,15.6623,2,0.2
 2026-07-22,ddr5_desktop,floor,15.625,2,
 2026-07-22,server_ecc,basket,27.6738,3,0.5
 2026-07-22,server_ecc,floor,27.6738,3,
@@ -145,7 +145,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-22,sodimm,floor,10.9375,4,
 2026-07-23,ddr4_desktop,basket,7.5623,4,0.667
 2026-07-23,ddr4_desktop,floor,4.1062,4,
-2026-07-23,ddr5_desktop,basket,15.6623,2,0.25
+2026-07-23,ddr5_desktop,basket,15.6623,2,0.2
 2026-07-23,ddr5_desktop,floor,15.625,2,
 2026-07-23,server_ecc,basket,27.6738,3,0.5
 2026-07-23,server_ecc,floor,27.6738,3,
@@ -153,7 +153,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-23,sodimm,floor,10.9375,4,
 2026-07-24,ddr4_desktop,basket,7.3436,4,0.667
 2026-07-24,ddr4_desktop,floor,4.1062,4,
-2026-07-24,ddr5_desktop,basket,14.6908,2,0.25
+2026-07-24,ddr5_desktop,basket,14.6908,2,0.2
 2026-07-24,ddr5_desktop,floor,13.7566,2,
 2026-07-24,server_ecc,basket,27.6738,3,0.5
 2026-07-24,server_ecc,floor,27.6738,3,
@@ -161,7 +161,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-24,sodimm,floor,10.9375,4,
 2026-07-25,ddr4_desktop,basket,7.3436,4,0.667
 2026-07-25,ddr4_desktop,floor,4.1062,4,
-2026-07-25,ddr5_desktop,basket,14.622,2,0.25
+2026-07-25,ddr5_desktop,basket,14.622,2,0.2
 2026-07-25,ddr5_desktop,floor,13.6191,2,
 2026-07-25,server_ecc,basket,28.4322,2,0.333
 2026-07-25,server_ecc,floor,27.6738,2,
@@ -169,7 +169,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-25,sodimm,floor,10.9375,4,
 2026-07-26,ddr4_desktop,basket,7.4991,4,0.667
 2026-07-26,ddr4_desktop,floor,4.1062,4,
-2026-07-26,ddr5_desktop,basket,15.6633,2,0.25
+2026-07-26,ddr5_desktop,basket,15.6633,2,0.2
 2026-07-26,ddr5_desktop,floor,15.625,2,
 2026-07-26,server_ecc,basket,28.4322,2,0.333
 2026-07-26,server_ecc,floor,27.6738,2,
@@ -177,7 +177,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-26,sodimm,floor,10.6247,4,
 2026-07-27,ddr4_desktop,basket,7.1872,5,0.833
 2026-07-27,ddr4_desktop,floor,4.1062,5,
-2026-07-27,ddr5_desktop,basket,15.6633,2,0.25
+2026-07-27,ddr5_desktop,basket,15.6633,2,0.2
 2026-07-27,ddr5_desktop,floor,15.625,2,
 2026-07-27,server_ecc,basket,28.4322,2,0.333
 2026-07-27,server_ecc,floor,27.6738,2,
@@ -185,7 +185,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-27,sodimm,floor,10.9375,4,
 2026-07-28,ddr4_desktop,basket,7.2905,4,0.667
 2026-07-28,ddr4_desktop,floor,3.9831,4,
-2026-07-28,ddr5_desktop,basket,15.6633,2,0.25
+2026-07-28,ddr5_desktop,basket,15.6633,2,0.2
 2026-07-28,ddr5_desktop,floor,15.625,2,
 2026-07-28,server_ecc,basket,28.4322,2,0.333
 2026-07-28,server_ecc,floor,27.6738,2,
@@ -193,7 +193,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-28,sodimm,floor,10.9375,4,
 2026-07-29,ddr4_desktop,basket,7.2905,4,0.667
 2026-07-29,ddr4_desktop,floor,3.9831,4,
-2026-07-29,ddr5_desktop,basket,15.7016,3,0.375
+2026-07-29,ddr5_desktop,basket,15.7016,3,0.3
 2026-07-29,ddr5_desktop,floor,15.1859,3,
 2026-07-29,server_ecc,basket,28.4322,2,0.333
 2026-07-29,server_ecc,floor,27.6738,2,
@@ -201,7 +201,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-29,sodimm,floor,10.9375,4,
 2026-07-30,ddr4_desktop,basket,7.2905,4,0.667
 2026-07-30,ddr4_desktop,floor,3.9831,4,
-2026-07-30,ddr5_desktop,basket,19.3434,2,0.25
+2026-07-30,ddr5_desktop,basket,19.3434,2,0.2
 2026-07-30,ddr5_desktop,floor,16.4216,2,
 2026-07-30,server_ecc,basket,28.4322,2,0.333
 2026-07-30,server_ecc,floor,27.6738,2,
@@ -209,7 +209,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-30,sodimm,floor,10.9375,4,
 2026-07-31,ddr4_desktop,basket,7.2905,4,0.667
 2026-07-31,ddr4_desktop,floor,3.9831,4,
-2026-07-31,ddr5_desktop,basket,20.5356,2,0.25
+2026-07-31,ddr5_desktop,basket,20.5356,2,0.2
 2026-07-31,ddr5_desktop,floor,18.8059,2,
 2026-07-31,server_ecc,basket,28.4322,2,0.333
 2026-07-31,server_ecc,floor,27.6738,2,
@@ -217,7 +217,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-07-31,sodimm,floor,10.9062,4,
 2026-08-01,ddr4_desktop,basket,5.7498,4,0.667
 2026-08-01,ddr4_desktop,floor,3.9831,4,
-2026-08-01,ddr5_desktop,basket,18.8059,3,0.375
+2026-08-01,ddr5_desktop,basket,18.8059,3,0.3
 2026-08-01,ddr5_desktop,floor,14.3422,3,
 2026-08-01,server_ecc,basket,32.6386,2,0.333
 2026-08-01,server_ecc,floor,30.9025,2,
@@ -225,7 +225,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-01,sodimm,floor,10.9062,4,
 2026-08-02,ddr4_desktop,basket,5.7498,4,0.667
 2026-08-02,ddr4_desktop,floor,3.9831,4,
-2026-08-02,ddr5_desktop,basket,16.5741,2,0.25
+2026-08-02,ddr5_desktop,basket,16.5741,2,0.2
 2026-08-02,ddr5_desktop,floor,14.3422,2,
 2026-08-02,server_ecc,basket,32.6386,2,0.333
 2026-08-02,server_ecc,floor,30.9025,2,
@@ -233,7 +233,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-02,sodimm,floor,10.9062,4,
 2026-08-03,ddr4_desktop,basket,5.7498,4,0.667
 2026-08-03,ddr4_desktop,floor,3.9831,4,
-2026-08-03,ddr5_desktop,basket,18.8059,1,0.125
+2026-08-03,ddr5_desktop,basket,18.8059,1,0.1
 2026-08-03,ddr5_desktop,floor,18.8059,1,
 2026-08-03,server_ecc,basket,32.6386,2,0.333
 2026-08-03,server_ecc,floor,30.9025,2,
@@ -241,7 +241,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-03,sodimm,floor,10.9375,4,
 2026-08-04,ddr4_desktop,basket,5.7498,4,0.667
 2026-08-04,ddr4_desktop,floor,3.9831,4,
-2026-08-04,ddr5_desktop,basket,16.4216,1,0.125
+2026-08-04,ddr5_desktop,basket,16.4216,1,0.1
 2026-08-04,ddr5_desktop,floor,16.4216,1,
 2026-08-04,server_ecc,basket,32.655,3,0.5
 2026-08-04,server_ecc,floor,30.9025,3,
@@ -249,7 +249,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-04,sodimm,floor,10.9375,4,
 2026-08-05,ddr4_desktop,basket,6.4844,4,0.667
 2026-08-05,ddr4_desktop,floor,3.9831,4,
-2026-08-05,ddr5_desktop,basket,15.0731,2,0.25
+2026-08-05,ddr5_desktop,basket,15.0731,2,0.2
 2026-08-05,ddr5_desktop,floor,13.7247,2,
 2026-08-05,server_ecc,basket,32.655,3,0.5
 2026-08-05,server_ecc,floor,30.9025,3,
@@ -257,7 +257,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-05,sodimm,floor,10.9375,4,
 2026-08-06,ddr4_desktop,basket,6.328,4,0.667
 2026-08-06,ddr4_desktop,floor,3.9831,4,
-2026-08-06,ddr5_desktop,basket,15.3219,2,0.25
+2026-08-06,ddr5_desktop,basket,15.3219,2,0.2
 2026-08-06,ddr5_desktop,floor,14.3422,2,
 2026-08-06,server_ecc,basket,32.655,3,0.5
 2026-08-06,server_ecc,floor,30.9025,3,
@@ -265,7 +265,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-06,sodimm,floor,10.6247,4,
 2026-08-07,ddr4_desktop,basket,6.5625,4,0.667
 2026-08-07,ddr4_desktop,floor,3.9831,4,
-2026-08-07,ddr5_desktop,basket,15.3219,2,0.25
+2026-08-07,ddr5_desktop,basket,15.3219,2,0.2
 2026-08-07,ddr5_desktop,floor,14.3422,2,
 2026-08-07,server_ecc,basket,32.655,3,0.5
 2026-08-07,server_ecc,floor,32.655,3,
@@ -273,7 +273,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-07,sodimm,floor,9.6562,4,
 2026-08-08,ddr4_desktop,basket,6.5625,4,0.667
 2026-08-08,ddr4_desktop,floor,3.9831,4,
-2026-08-08,ddr5_desktop,basket,15.7034,3,0.375
+2026-08-08,ddr5_desktop,basket,15.7034,3,0.3
 2026-08-08,ddr5_desktop,floor,14.3422,3,
 2026-08-08,server_ecc,basket,33.5148,2,0.333
 2026-08-08,server_ecc,floor,32.655,2,
@@ -281,7 +281,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-08,sodimm,floor,10.9375,4,
 2026-08-09,ddr4_desktop,basket,6.6405,4,0.667
 2026-08-09,ddr4_desktop,floor,3.9831,4,
-2026-08-09,ddr5_desktop,basket,15.7034,3,0.375
+2026-08-09,ddr5_desktop,basket,15.7034,3,0.3
 2026-08-09,ddr5_desktop,floor,14.3422,3,
 2026-08-09,server_ecc,basket,33.5148,2,0.333
 2026-08-09,server_ecc,floor,32.655,2,
@@ -289,7 +289,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-09,sodimm,floor,10.9375,4,
 2026-08-10,ddr4_desktop,basket,6.6405,4,0.667
 2026-08-10,ddr4_desktop,floor,3.9831,4,
-2026-08-10,ddr5_desktop,basket,18.7036,2,0.25
+2026-08-10,ddr5_desktop,basket,18.7036,2,0.2
 2026-08-10,ddr5_desktop,floor,15.7034,2,
 2026-08-10,server_ecc,basket,33.5148,2,0.333
 2026-08-10,server_ecc,floor,32.655,2,
@@ -297,7 +297,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-10,sodimm,floor,10.9375,4,
 2026-08-11,ddr4_desktop,basket,6.6405,4,0.667
 2026-08-11,ddr4_desktop,floor,3.9831,4,
-2026-08-11,ddr5_desktop,basket,18.7036,2,0.25
+2026-08-11,ddr5_desktop,basket,18.7036,2,0.2
 2026-08-11,ddr5_desktop,floor,15.7034,2,
 2026-08-11,server_ecc,basket,33.5148,2,0.333
 2026-08-11,server_ecc,floor,32.655,2,
@@ -305,7 +305,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-11,sodimm,floor,10.9375,4,
 2026-08-12,ddr4_desktop,basket,6.6405,4,0.667
 2026-08-12,ddr4_desktop,floor,3.9831,4,
-2026-08-12,ddr5_desktop,basket,16.3406,1,0.125
+2026-08-12,ddr5_desktop,basket,16.3406,1,0.1
 2026-08-12,ddr5_desktop,floor,16.3406,1,
 2026-08-12,server_ecc,basket,33.5148,2,0.333
 2026-08-12,server_ecc,floor,32.655,2,
@@ -313,7 +313,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-12,sodimm,floor,10.9375,4,
 2026-08-13,ddr4_desktop,basket,6.7811,4,0.667
 2026-08-13,ddr4_desktop,floor,3.9831,4,
-2026-08-13,ddr5_desktop,basket,15.705,1,0.125
+2026-08-13,ddr5_desktop,basket,15.705,1,0.1
 2026-08-13,ddr5_desktop,floor,15.705,1,
 2026-08-13,server_ecc,basket,33.5148,2,0.333
 2026-08-13,server_ecc,floor,32.655,2,
@@ -321,7 +321,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-13,sodimm,floor,10.9375,4,
 2026-08-14,ddr4_desktop,basket,6.7811,4,0.667
 2026-08-14,ddr4_desktop,floor,3.9831,4,
-2026-08-14,ddr5_desktop,basket,15.705,1,0.125
+2026-08-14,ddr5_desktop,basket,15.705,1,0.1
 2026-08-14,ddr5_desktop,floor,15.705,1,
 2026-08-14,server_ecc,basket,33.5148,2,0.333
 2026-08-14,server_ecc,floor,32.655,2,
@@ -329,7 +329,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-14,sodimm,floor,10.9375,4,
 2026-08-15,ddr4_desktop,basket,7.8122,5,0.833
 2026-08-15,ddr4_desktop,floor,3.9831,5,
-2026-08-15,ddr5_desktop,basket,15.7041,1,0.125
+2026-08-15,ddr5_desktop,basket,15.7041,1,0.1
 2026-08-15,ddr5_desktop,floor,15.7041,1,
 2026-08-15,server_ecc,basket,32.655,2,0.333
 2026-08-15,server_ecc,floor,32.655,2,
@@ -337,7 +337,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-15,sodimm,floor,10.9372,4,
 2026-08-16,ddr4_desktop,basket,7.8122,5,0.833
 2026-08-16,ddr4_desktop,floor,3.9831,5,
-2026-08-16,ddr5_desktop,basket,16.0934,1,0.125
+2026-08-16,ddr5_desktop,basket,16.0934,1,0.1
 2026-08-16,ddr5_desktop,floor,16.0934,1,
 2026-08-16,server_ecc,basket,32.655,2,0.333
 2026-08-16,server_ecc,floor,32.655,2,
@@ -345,7 +345,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-16,sodimm,floor,10.9375,4,
 2026-08-17,ddr4_desktop,basket,6.7967,4,0.667
 2026-08-17,ddr4_desktop,floor,3.9831,4,
-2026-08-17,ddr5_desktop,basket,16.0934,1,0.125
+2026-08-17,ddr5_desktop,basket,16.0934,1,0.1
 2026-08-17,ddr5_desktop,floor,16.0934,1,
 2026-08-17,server_ecc,basket,32.655,3,0.5
 2026-08-17,server_ecc,floor,32.655,3,
@@ -353,7 +353,7 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-17,sodimm,floor,11.2188,4,
 2026-08-18,ddr4_desktop,basket,6.7967,4,0.667
 2026-08-18,ddr4_desktop,floor,3.9831,4,
-2026-08-18,ddr5_desktop,basket,14.5544,2,0.25
+2026-08-18,ddr5_desktop,basket,14.5544,2,0.2
 2026-08-18,ddr5_desktop,floor,13.4047,2,
 2026-08-18,server_ecc,basket,32.655,3,0.5
 2026-08-18,server_ecc,floor,32.655,3,
@@ -361,9 +361,17 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-08-18,sodimm,floor,11.115,4,
 2026-08-19,ddr4_desktop,basket,6.7967,4,0.667
 2026-08-19,ddr4_desktop,floor,3.9831,4,
-2026-08-19,ddr5_desktop,basket,15.7041,1,0.125
+2026-08-19,ddr5_desktop,basket,15.7041,1,0.1
 2026-08-19,ddr5_desktop,floor,15.7041,1,
 2026-08-19,server_ecc,basket,32.655,3,0.5
 2026-08-19,server_ecc,floor,32.655,3,
 2026-08-19,sodimm,basket,14.483,4,0.8
 2026-08-19,sodimm,floor,11.115,4,
+2026-08-20,ddr4_desktop,basket,6.7967,4,0.667
+2026-08-20,ddr4_desktop,floor,3.9831,4,
+2026-08-20,ddr5_desktop,basket,16.0916,1,0.1
+2026-08-20,ddr5_desktop,floor,16.0916,1,
+2026-08-20,server_ecc,basket,34.445,3,0.5
+2026-08-20,server_ecc,floor,32.655,3,
+2026-08-20,sodimm,basket,14.483,4,0.8
+2026-08-20,sodimm,floor,11.24,4,

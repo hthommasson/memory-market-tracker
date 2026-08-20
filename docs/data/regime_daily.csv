@@ -8,8 +8,8 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-11,ddr4_desktop,,,warming_up,warming_up
 2026-07-12,ddr4_desktop,,,warming_up,warming_up
 2026-07-13,ddr4_desktop,,,warming_up,warming_up
-2026-07-14,ddr4_desktop,0.0,,flat,flat
-2026-07-15,ddr4_desktop,-0.0,,flat,flat
+2026-07-14,ddr4_desktop,-0.0,,flat,flat
+2026-07-15,ddr4_desktop,0.0,,flat,flat
 2026-07-16,ddr4_desktop,0.0,,flat,flat
 2026-07-17,ddr4_desktop,0.0,,flat,flat
 2026-07-18,ddr4_desktop,-0.0,,flat,flat
@@ -20,7 +20,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-23,ddr4_desktop,-0.0,,flat,flat
 2026-07-24,ddr4_desktop,0.0,,flat,flat
 2026-07-25,ddr4_desktop,0.0,,flat,flat
-2026-07-26,ddr4_desktop,-0.0,,flat,flat
+2026-07-26,ddr4_desktop,0.0,,flat,flat
 2026-07-27,ddr4_desktop,-0.0,,flat,flat
 2026-07-28,ddr4_desktop,-0.1111,,flat,flat
 2026-07-29,ddr4_desktop,-0.1966,-0.1966,flat,flat
@@ -45,6 +45,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-17,ddr4_desktop,-0.4671,-0.0895,falling,falling
 2026-08-18,ddr4_desktop,-0.435,-0.0371,flat,falling
 2026-08-19,ddr4_desktop,-0.3979,0.0371,flat,falling
+2026-08-20,ddr4_desktop,-0.3559,0.1112,flat,falling
 2026-07-05,ddr5_desktop,,,warming_up,warming_up
 2026-07-06,ddr5_desktop,,,warming_up,warming_up
 2026-07-07,ddr5_desktop,,,warming_up,warming_up
@@ -58,10 +59,10 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-07-15,ddr5_desktop,0.0,,flat,flat
 2026-07-16,ddr5_desktop,0.0,,flat,flat
 2026-07-17,ddr5_desktop,0.0,,flat,flat
-2026-07-18,ddr5_desktop,0.0,,flat,flat
+2026-07-18,ddr5_desktop,-0.0,,flat,flat
 2026-07-19,ddr5_desktop,0.0,,flat,flat
 2026-07-20,ddr5_desktop,-0.0,,flat,flat
-2026-07-21,ddr5_desktop,0.0,,flat,flat
+2026-07-21,ddr5_desktop,-0.0,,flat,flat
 2026-07-22,ddr5_desktop,0.0,,flat,flat
 2026-07-23,ddr5_desktop,-0.0,,flat,flat
 2026-07-24,ddr5_desktop,-0.6641,,falling,flat
@@ -128,6 +129,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-17,server_ecc,3.3614,1.4979,rising,rising
 2026-08-18,server_ecc,3.2106,1.1893,rising,rising
 2026-08-19,server_ecc,3.022,0.8595,rising,rising
+2026-08-20,server_ecc,2.7955,0.4393,rising,rising
 2026-07-05,sodimm,,,warming_up,warming_up
 2026-07-06,sodimm,,,warming_up,warming_up
 2026-07-07,sodimm,,,warming_up,warming_up
@@ -174,6 +176,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-17,sodimm,0.4113,-1.8311,flat,rising
 2026-08-18,sodimm,0.2729,-1.9013,flat,rising
 2026-08-19,sodimm,0.1167,-2.1213,flat,rising
+2026-08-20,sodimm,0.2027,-2.0843,flat,flat
 2026-07-05,COMPOSITE,,gated:ddr5_desktop,warming_up,warming_up
 2026-07-06,COMPOSITE,,gated:ddr5_desktop,warming_up,warming_up
 2026-07-07,COMPOSITE,,gated:ddr5_desktop,warming_up,warming_up
@@ -220,3 +223,4 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-17,COMPOSITE,1.4209,gated:ddr5_desktop,rising,rising
 2026-08-18,COMPOSITE,1.32,gated:ddr5_desktop,rising,rising
 2026-08-19,COMPOSITE,1.1986,gated:ddr5_desktop,rising,rising
+2026-08-20,COMPOSITE,1.1433,gated:ddr5_desktop,rising,rising
