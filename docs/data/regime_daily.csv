@@ -47,6 +47,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-19,ddr4_desktop,-0.3979,0.0371,flat,falling
 2026-08-20,ddr4_desktop,-0.3559,0.1112,flat,falling
 2026-08-21,ddr4_desktop,-0.3089,0.1854,flat,falling
+2026-08-22,ddr4_desktop,-0.257,0.2595,flat,flat
 2026-07-05,ddr5_desktop,,,warming_up,warming_up
 2026-07-06,ddr5_desktop,,,warming_up,warming_up
 2026-07-07,ddr5_desktop,,,warming_up,warming_up
@@ -85,6 +86,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-11,ddr5_desktop,-0.7353,0.4593,falling,falling
 2026-08-18,ddr5_desktop,-0.9839,0.0004,falling,falling
 2026-08-21,ddr5_desktop,-0.7773,0.0361,falling,falling
+2026-08-22,ddr5_desktop,-0.5751,0.0988,falling,falling
 2026-07-05,server_ecc,,,warming_up,warming_up
 2026-07-06,server_ecc,,,warming_up,warming_up
 2026-07-07,server_ecc,,,warming_up,warming_up
@@ -133,6 +135,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-19,server_ecc,3.022,0.8595,rising,rising
 2026-08-20,server_ecc,2.7955,0.4393,rising,rising
 2026-08-21,server_ecc,2.7014,0.1804,rising,rising
+2026-08-22,server_ecc,2.5804,-0.2063,rising,rising
 2026-07-05,sodimm,,,warming_up,warming_up
 2026-07-06,sodimm,,,warming_up,warming_up
 2026-07-07,sodimm,,,warming_up,warming_up
@@ -181,6 +184,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-19,sodimm,0.1167,-2.1213,flat,rising
 2026-08-20,sodimm,0.2027,-2.0843,flat,flat
 2026-08-21,sodimm,0.2578,-1.8399,flat,flat
+2026-08-22,sodimm,0.3104,-1.3527,flat,flat
 2026-07-05,COMPOSITE,,gated:ddr5_desktop,warming_up,warming_up
 2026-07-06,COMPOSITE,,gated:ddr5_desktop,warming_up,warming_up
 2026-07-07,COMPOSITE,,gated:ddr5_desktop,warming_up,warming_up
@@ -229,3 +233,4 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-19,COMPOSITE,1.1986,gated:ddr5_desktop,rising,rising
 2026-08-20,COMPOSITE,1.1433,gated:ddr5_desktop,rising,rising
 2026-08-21,COMPOSITE,1.1343,gated:ddr5_desktop,rising,rising
+2026-08-22,COMPOSITE,1.1144,gated:ddr5_desktop,rising,rising
