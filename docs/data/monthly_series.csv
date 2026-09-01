@@ -421,3 +421,4 @@ period,source,metric,value,value_wda,meta
 2026-08-P10,derived,kr_inc_p10_usd,21290000000.0,,
 2026-07,nanya_ir,nanya_2408_monthly_revenue_twd,43868000000,,yoy=+719.6%|mom=+49.3%|9th_consec_record
 2026-07,moea,tw_export_orders_electronics_usd,41320000000,,yoy=+71.7%|record_total_97.9b|18th_consec_yoy_gain
+2026-08,fred,fx_krwusd_monthly_avg,1404.97,,fred:DEXKOUS
