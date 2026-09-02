@@ -57,6 +57,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-30,ddr4_desktop,0.5703,1.1042,flat,flat
 2026-08-31,ddr4_desktop,0.6377,1.1542,rising,flat
 2026-09-01,ddr4_desktop,0.6971,1.1914,rising,flat
+2026-09-02,ddr4_desktop,0.7486,1.2157,rising,flat
 2026-07-05,ddr5_desktop,,,warming_up,warming_up
 2026-07-06,ddr5_desktop,,,warming_up,warming_up
 2026-07-07,ddr5_desktop,,,warming_up,warming_up
@@ -105,6 +106,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-30,ddr5_desktop,-0.8874,-0.2481,falling,falling
 2026-08-31,ddr5_desktop,-0.9659,-0.197,falling,falling
 2026-09-01,ddr5_desktop,-1.0237,-0.1392,falling,falling
+2026-09-02,ddr5_desktop,-1.082,-0.0959,falling,falling
 2026-07-05,server_ecc,,,warming_up,warming_up
 2026-07-06,server_ecc,,,warming_up,warming_up
 2026-07-07,server_ecc,,,warming_up,warming_up
@@ -163,6 +165,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-30,server_ecc,0.981,-2.6056,rising,rising
 2026-08-31,server_ecc,0.645,-2.9044,rising,rising
 2026-09-01,server_ecc,0.5599,-2.9145,flat,rising
+2026-09-02,server_ecc,0.4658,-2.8956,flat,rising
 2026-07-05,sodimm,,,warming_up,warming_up
 2026-07-06,sodimm,,,warming_up,warming_up
 2026-07-07,sodimm,,,warming_up,warming_up
@@ -221,6 +224,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-30,sodimm,2.2562,1.4781,rising,flat
 2026-08-31,sodimm,2.6402,1.9894,rising,rising
 2026-09-01,sodimm,2.9868,2.478,rising,rising
+2026-09-02,sodimm,3.2958,2.8844,rising,rising
 2026-07-05,COMPOSITE,,gated:ddr5_desktop,warming_up,warming_up
 2026-07-06,COMPOSITE,,gated:ddr5_desktop,warming_up,warming_up
 2026-07-07,COMPOSITE,,gated:ddr5_desktop,warming_up,warming_up
@@ -279,3 +283,4 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-08-30,COMPOSITE,1.3034,gated:ddr5_desktop,rising,rising
 2026-08-31,COMPOSITE,1.3082,gated:ddr5_desktop,rising,rising
 2026-09-01,COMPOSITE,1.4032,gated:ddr5_desktop,rising,rising
+2026-09-02,COMPOSITE,1.4798,gated:ddr5_desktop,rising,rising
