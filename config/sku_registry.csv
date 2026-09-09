@@ -1,12 +1,12 @@
 sku_id,segment,brand,mpn,capacity_gb,kit_config,gen,speed,cas,condition,price_lo,price_hi,first_seen,retired_on,basket_version,status
 d5_corsair_6000c36,ddr5_desktop,Corsair,CMK32GX5M2B6000C36,32,2x16,ddr5,6000,36,new,250,900,2026-07-04,2026-07-05,1,retired_zero_raw
 d5_gskill_rs5_6000c32,ddr5_desktop,G.Skill,F5-6000J3238F16GX2-RS5K,32,2x16,ddr5,6000,32,new,250,900,2026-07-04,,1,ack_dark
-d5_kingston_fury_6000c36,ddr5_desktop,Kingston,KF560C36BBEK2-32,32,2x16,ddr5,6000,36,new,250,900,2026-07-04,,1,candidate
+d5_kingston_fury_6000c36,ddr5_desktop,Kingston,KF560C36BBEK2-32,32,2x16,ddr5,6000,36,new,250,900,2026-07-04,,1,ack_dark
 d5_team_delta_6000,ddr5_desktop,TeamGroup,FF3D532G6000HC38ADC01,32,2x16,ddr5,6000,38,new,250,900,2026-07-04,,1,candidate
-d5_gskill_tz5_6000c40,ddr5_desktop,G.Skill,F5-6000J4040F16GX2-TZ5K,32,2x16,ddr5,6000,40,new,250,900,2026-07-05,2026-07-05,1,retired_zero_raw
+d5_gskill_tz5_6000c30,ddr5_desktop,G.Skill,F5-6000J3038F16GX2-TZ5K,32,2x16,ddr5,6000,30,new,250,900,2026-08-20,2026-09-09,1,retired_zero_raw
 d5_corsair_5200c40,ddr5_desktop,Corsair,CMK32GX5M2B5200C40,32,2x16,ddr5,5200,40,new,250,900,2026-07-05,2026-08-20,1,retired_dead_listing
 d5_kingston_5200_kit,ddr5_desktop,Kingston,KF552C40BBK2-32,32,2x16,ddr5,5200,40,new,250,900,2026-07-05,,1,candidate
-d4_corsair_lpx_3200c16,ddr4_desktop,Corsair,CMK32GX4M2E3200C16,32,2x16,ddr4,3200,16,new,110,600,2026-07-04,,1,candidate
+d4_corsair_lpx_b3200,ddr4_desktop,Corsair,CMK32GX4M2B3200C16,32,2x16,ddr4,3200,16,new,110,600,2026-07-05,,1,ack_dark
 d4_gskill_rv_3600c16,ddr4_desktop,G.Skill,F4-3600C16D-32GVKC,32,2x16,ddr4,3600,16,new,110,600,2026-07-04,,1,candidate
 d4_kingston_fury_3200c16,ddr4_desktop,Kingston,KF432C16BBK2/32,32,2x16,ddr4,3200,16,new,110,600,2026-07-04,,1,candidate
 d4_team_vulcan_3200,ddr4_desktop,TeamGroup,TLZGD432G3200HC16CDC01,32,2x16,ddr4,3200,16,new,110,600,2026-07-04,2026-07-05,1,retired_zero_raw
