@@ -12,9 +12,9 @@ jobs:
       - name: open reminder
         env: { GH_TOKEN: "${{ github.token }}" }
         run: |
-          DAY=$(date -u +%-d); MON=$(date -u +%Y-%m)
+          DAY=$(date -u +%-d); MON=$(date -u +%Y-%m); PREV=$(date -u -d yesterday +%Y-%m)
           case "$DAY" in
-            1)  T="Enter MOTIE monthly exports ($MON)"; B="templates/korea_entry_template.csv -> docs/data/monthly_series.csv (semis + HBM, record yoy)";;
+            1)  T="Enter MOTIE monthly exports ($PREV)"; B="templates/korea_entry_template.csv -> docs/data/monthly_series.csv (semis + HBM, record yoy)";;
             10) T="Enter Nanya monthly revenue ($MON)"; B="templates/nanya_revenue_template.csv (MOPS, TWSE 2408)";;
             11) T="Enter Korea 1-10 flash ($MON)"; B="templates/korea_entry_template.csv (record working days + per-wd adjusted yoy)";;
             20) T="Enter Taiwan export orders ($MON)"; B="templates/taiwan_orders_template.csv (MOEA electronics)";;
