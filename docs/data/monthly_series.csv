@@ -541,3 +541,4 @@ period,source,metric,value,value_wda,meta
 2026-07,census,us_imports_memory_airshare:5880,0.9906,,
 2026-07,census,us_imports_memory_airshare:5XXX,0.9993,,
 2026-07,census,us_imports_memory_airshare:-,0.9993,,
+2026-08-P20,kcs,kr_exports_total_usd,55210000000,61.5,headline_yoy=+56.0%|working_days=14v14.5|value_wda=per_wd_adj_yoy_pct|record_for_period|semis_26.03b_+198.8%_record
