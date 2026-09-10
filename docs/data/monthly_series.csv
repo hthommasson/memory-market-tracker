@@ -547,3 +547,13 @@ period,source,metric,value,value_wda,meta
 2026-08,motie,kr_exports_semis_usd,46650000000,,yoy=+209.0%|record|3rd_consec_month_above_40b|share_47.5%|mom_up_vs_jul_41.0
 2026-08-P20,derived,kr_inc_p11_20_usd,33920000000.0,,
 2026-08,derived,kr_inc_p21_end_usd,43040000000.0,,compare_same_window_only|per_wd_flash=3.944bn
+2026-04,motie,dram_ddr5_16gb_fixed_usd,35.0,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-05,motie,dram_ddr5_16gb_fixed_usd,37.5,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-06,motie,dram_ddr5_16gb_fixed_usd,40.0,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-07,motie,dram_ddr5_16gb_fixed_usd,45.0,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-08,motie,dram_ddr5_16gb_fixed_usd,46.5,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-04,motie,nand_128gb_fixed_usd,24.2,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-05,motie,nand_128gb_fixed_usd,26.5,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-06,motie,nand_128gb_fixed_usd,28.8,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-07,motie,nand_128gb_fixed_usd,30.1,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-08,motie,nand_128gb_fixed_usd,30.5,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
