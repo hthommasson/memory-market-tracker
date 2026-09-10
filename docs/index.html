@@ -198,6 +198,10 @@
       <div class="plot" id="p_korea"></div>
     </div>
     <div class="card">
+      <h2>Contract price &mdash; DRAMeXchange fixed, via MOTIE</h2><p class="sub">what suppliers actually get paid &middot; lines = $ per chip (DDR5 16Gb, NAND 128Gb) &middot; bars = DDR5 month-over-month % &middot; the cycle-top tell is price still rising but rising more slowly &middot; <span id="ct_state"></span></p>
+      <div class="plot" id="p_contract"></div>
+    </div>
+    <div class="card">
       <h2>Fundamentals &mdash; gross margin by filer</h2><p class="sub">profit margin per company &middot; bold black = all of them combined &middot; dotted = hard-drive makers, shown for contrast</p>
       <div class="plot" id="p_fund"></div>
     </div>
@@ -269,7 +273,7 @@ function feedBadge(name, last, cadence){
 }
 
 (async () => {
-  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats, mc, mi, dobs, msf, pob] = await Promise.all([
+  const [reg, seg, refs, eq, kor, fund, ev, flags, vol, cmx, stats, mc, mi, dobs, msf, pob, ctr] = await Promise.all([
     csv("data/regime_daily.csv"), csv("data/segment_daily.csv"),
     csv("data/static/reference_points.csv"), csv("data/equity_daily.csv"),
     csv("data/monthly_series.csv"), csv("data/filings_facts.csv"),
@@ -278,7 +282,7 @@ function feedBadge(name, last, cadence){
     csv("data/stats_lagged_corr.csv"), csv("data/static/mccallum.csv"),
     csv("data/memory_inc.csv"),
     csv("data/dist_obs.csv"), csv("data/monthly_series.csv"),
-    csv("data/price_obs.csv")]);
+    csv("data/price_obs.csv"), csv("data/contract_regime.csv")]);
 
   // --- Regime strip + composite badge ---
   const dimm = document.getElementById("dimm");
@@ -666,7 +670,6 @@ function feedBadge(name, last, cadence){
     });
     document.getElementById("p_context").before(zrow);
     const defz = [...zrow.children].find(x => x.textContent === "1y");
-    if(defz) defz.click();
     Plotly.newPlot("p_context", traces, {...LAYOUT,
       margin:{l:52,r:10,t:26,b:58},
       yaxis:{...LAYOUT.yaxis, type:"log", title:"$/GB (log)", exponentformat:"power"},
@@ -681,7 +684,8 @@ function feedBadge(name, last, cadence){
          text:"cycle floor $" + (+mn.usd_per_gb).toFixed(2) + "/GB",
          showarrow:true, arrowcolor:C.muted, ax:-10, ay:-32, font:{size:10, color:C.ink}},
         {x:"2026-07-05", y:1, yref:"paper", yanchor:"bottom", text:"tracker live",
-         showarrow:false, font:{size:10, color:C.muted}}]}, CFG);
+         showarrow:false, font:{size:10, color:C.muted}}]}, CFG)
+      .then(() => { if(defz) defz.click(); });   // default 1y AFTER the plot exists (was before: relayout on an unplotted div)
   } else empty("p_context", "data/static/mccallum.csv missing — the 69-year context renders once it exists.");
 
   // --- Panel C: equities (v0.4.3: window re-base on chips; stable colors; 2x decay reference) ---
@@ -777,6 +781,40 @@ function feedBadge(name, last, cadence){
       xaxis:{...LAYOUT.xaxis, type:"category", categoryorder:"category ascending"},
       yaxis:{...LAYOUT.yaxis, title:"US$ bn"}}, CFG);
   } else empty("p_korea", "Seeded from templates — add flash reads on the ~11th and ~21st.");
+
+  // --- Panel D2: contract price (DRAMeXchange fixed, from MOTIE release footnote) ---
+  const CSER = [["dram_ddr5_16gb_fixed_usd", "DDR5 16Gb", C.teal],
+                ["nand_128gb_fixed_usd", "NAND 128Gb", C.amber]];
+  const crows = (kor || []).filter(r => CSER.some(k => k[0] === r.metric) && !String(r.period).includes("-P"))
+                            .sort((a, b) => String(a.period).localeCompare(String(b.period)));
+  if(crows.length){
+    const traces = CSER.map(([m, label, color]) => {
+      const rows = crows.filter(r => r.metric === m);
+      return {x:rows.map(r => r.period), y:rows.map(r => +r.value), name:label,
+              mode:"lines+markers", line:{width:2, color}, marker:{size:6},
+              hovertemplate:"%{x} · $%{y:.1f}<extra>" + label + "</extra>"};
+    }).filter(t => t.x.length);
+    const d5 = crows.filter(r => r.metric === "dram_ddr5_16gb_fixed_usd");
+    const momX = [], momY = [];
+    d5.forEach((r, i) => { if(i){ momX.push(r.period); momY.push(100 * (+r.value / +d5[i-1].value - 1)); } });
+    if(momX.length) traces.push({x:momX, y:momY, type:"bar", yaxis:"y2", name:"DDR5 MoM %",
+      marker:{color:momY.map(v => alpha(v >= 0 ? C.teal : C.red, .28))},
+      hovertemplate:"%{x} · %{y:+.1f}% MoM<extra>DDR5 16Gb</extra>"});
+    const momMax = Math.max(...momY.map(Math.abs), 1) * 2.4;
+    Plotly.newPlot("p_contract", traces, {...LAYOUT, margin:{l:46, r:52, t:8, b:58},
+      xaxis:{...LAYOUT.xaxis, type:"category", categoryorder:"category ascending"},
+      yaxis:{...LAYOUT.yaxis, title:"US$ per chip", rangemode:"tozero"},
+      yaxis2:{overlaying:"y", side:"right", title:"MoM %", range:[-momMax, momMax],
+              gridcolor:"rgba(0,0,0,0)", zeroline:false}}, CFG);
+    const ct = (ctr || []).filter(r => r.series === "ddr5_16gb").sort((a, b) => a.month.localeCompare(b.month)).pop();
+    const ctEl = document.getElementById("ct_state");
+    if(ct && ctEl){
+      const col = ct.momentum === "decelerating" ? C.amber : ct.momentum === "accelerating" ? C.teal : C.slate;
+      ctEl.innerHTML = `DDR5 ${ct.month}: $${ct.price_usd} · ${(+ct.mom_pct).toFixed(1)}% MoM (prior ${(+ct.mom_prev_pct).toFixed(1)}%) · `
+        + `<b style="color:${col}">${ct.state} / ${ct.momentum}</b>`
+        + (ct.retail_to_contract ? ` · retail floor ÷ contract $/GB = <b>${(+ct.retail_to_contract).toFixed(2)}</b> (module below chip cost while &lt;1)` : "");
+    } else if(ctEl) ctEl.textContent = "state line appears after the next daily run (engine.contract)";
+  } else empty("p_contract", "Add MOTIE's monthly fixed-price footnote (DDR5 16Gb, NAND 128Gb) to monthly_series.csv.");
 
   // --- Fundamentals: per-filer gross margin + Memory Inc. aggregate overlay ---
   const qDate = q => q.slice(0,4) + {"1":"-03-31","2":"-06-30","3":"-09-30","4":"-12-31"}[q[5]];
