@@ -54,6 +54,7 @@ jobs:
         run: |
           python -m engine.volume
           python -m engine.composite
+          python -m engine.contract
       - name: divergence flags
         continue-on-error: true
         run: python -m engine.divergence
