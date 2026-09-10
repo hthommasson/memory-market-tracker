@@ -545,3 +545,5 @@ period,source,metric,value,value_wda,meta
 2026-08-P20,kcs_flash,kr_exports_semis_usd,26030000000,,yoy=+198.8%|record|share_47.2%|share_up_22.5pp|prev_record_25.5b_jun_p20
 2026-08,motie,kr_exports_total_usd,98250000000,,yoy=+68.7%|3rd_highest_ever|3rd_consec_month_above_90b|per_wd_yoy=+72.5%|daily_avg_4.47bn|mom_dip_vs_jul_98.9
 2026-08,motie,kr_exports_semis_usd,46650000000,,yoy=+209.0%|record|3rd_consec_month_above_40b|share_47.5%|mom_up_vs_jul_41.0
+2026-08-P20,derived,kr_inc_p11_20_usd,33920000000.0,,
+2026-08,derived,kr_inc_p21_end_usd,43040000000.0,,compare_same_window_only|per_wd_flash=3.944bn
