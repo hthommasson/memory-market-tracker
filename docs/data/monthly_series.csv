@@ -557,3 +557,6 @@ period,source,metric,value,value_wda,meta
 2026-06,motie,nand_128gb_fixed_usd,28.8,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
 2026-07,motie,nand_128gb_fixed_usd,30.1,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
 2026-08,motie,nand_128gb_fixed_usd,30.5,,contract_fixed|dramexchange|src=motie_2026-08_release_footnote
+2026-08,fred,us_ppi_semiconductor_mfg,28.472,,fred:PCU334413334413
+2026-08,fred,us_ppi_other_semi_devices,49.274,,fred:PCU334413334413A
+2026-08,fred,us_ppi_semi_electronic_components,75.548,,fred:PCU33443344
