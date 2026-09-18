@@ -560,3 +560,6 @@ period,source,metric,value,value_wda,meta
 2026-08,fred,us_ppi_semiconductor_mfg,28.472,,fred:PCU334413334413
 2026-08,fred,us_ppi_other_semi_devices,49.274,,fred:PCU334413334413A
 2026-08,fred,us_ppi_semi_electronic_components,75.548,,fred:PCU33443344
+2026-09-P10,kcs_flash,kr_exports_total_usd,34970000000,82.6,headline_yoy=+82.6%|working_days=8.5v8.5|per_wd_yoy=+82.6%|daily_avg_4.11bn|record_sep_1_10|prev_record_any_p10_30.0b_jul_2026
+2026-09-P10,kcs_flash,kr_exports_semis_usd,16480000000,,yoy=+270.1%|record|share_47.1%|share_up_23.9pp
+2026-08,nanya_ir,nanya_2408_monthly_revenue_twd,44690000000,,yoy=+560.85%|mom=+1.88%|10th_consec_record|2nd_month_above_400b|ytd_2201.94b_+638.19%|mom_plateau_after_jul_+49.3%
