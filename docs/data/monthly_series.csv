@@ -565,3 +565,4 @@ period,source,metric,value,value_wda,meta
 2026-08,nanya_ir,nanya_2408_monthly_revenue_twd,44690000000,,yoy=+560.85%|mom=+1.88%|10th_consec_record|2nd_month_above_400b|ytd_2201.94b_+638.19%|mom_plateau_after_jul_+49.3%
 2026-08,fred,us_ip_semiconductors,190.0987,,fred:IPG3344S
 2026-09-P10,derived,kr_inc_p10_usd,34970000000.0,,
+2026-09,fred,fx_krwusd_monthly_avg,1359.57,,fred:DEXKOUS
