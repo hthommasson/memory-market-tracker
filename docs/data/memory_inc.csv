@@ -142,6 +142,8 @@ quarter,metric,value,members,meta
 2026Q2,capex_pct_revenue,14.5,MU|SNDK|SKHYNIX,supply response; 3/3 members
 2026Q2,gross_margin_pct,83.86,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
 2026Q2,inventory_days,125.5,MU|SNDK|SKHYNIX,ex-Samsung by necessity; 3/3 members
+2026Q3,revenue_usd_bn,54.23,MU,1/4 members
+2026Q3,member_revenue_usd_bn,54.23,MU,
 2018Q1,breadth_improving,1,MU,of 1 reporting: GM up AND inv days down q/q
 2018Q2,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
 2018Q3,breadth_improving,1,MU,of 1 reporting: GM up AND inv days down q/q
@@ -176,3 +178,4 @@ quarter,metric,value,members,meta
 2025Q4,breadth_improving,0,-,of 3 reporting: GM up AND inv days down q/q
 2026Q1,breadth_improving,1,MU,of 3 reporting: GM up AND inv days down q/q
 2026Q2,breadth_improving,2,MU|SKHYNIX,of 3 reporting: GM up AND inv days down q/q
+2026Q3,breadth_improving,0,-,of 1 reporting: GM up AND inv days down q/q
