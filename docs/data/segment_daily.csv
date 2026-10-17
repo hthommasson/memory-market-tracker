@@ -739,3 +739,9 @@ date,segment,series,usd_per_gb,n_obs,in_stock_rate
 2026-10-16,ddr5_desktop,floor,15.4206,2,
 2026-10-16,sodimm,basket,14.0312,1,0.2
 2026-10-16,sodimm,floor,14.0312,1,
+2026-10-17,ddr4_desktop,basket,7.6248,4,0.667
+2026-10-17,ddr4_desktop,floor,4.1822,4,
+2026-10-17,ddr5_desktop,basket,15.5681,1,0.1
+2026-10-17,ddr5_desktop,floor,15.5681,1,
+2026-10-17,sodimm,basket,14.0312,1,0.2
+2026-10-17,sodimm,floor,14.0312,1,

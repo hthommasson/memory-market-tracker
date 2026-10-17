@@ -102,6 +102,7 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-10-14,ddr4_desktop,-0.0,0.0,flat,flat
 2026-10-15,ddr4_desktop,-0.0,0.0,flat,flat
 2026-10-16,ddr4_desktop,-0.0,0.0,flat,flat
+2026-10-17,ddr4_desktop,-0.0,0.0,flat,flat
 2026-07-05,ddr5_desktop,,,warming_up,warming_up
 2026-07-06,ddr5_desktop,,,warming_up,warming_up
 2026-07-07,ddr5_desktop,,,warming_up,warming_up
@@ -460,3 +461,4 @@ date,segment,m30_annualized,a30,label_raw,label_committed
 2026-10-14,COMPOSITE,-0.682,gated:ddr5_desktop,falling,falling
 2026-10-15,COMPOSITE,-0.0,gated:ddr5_desktop,flat,falling
 2026-10-16,COMPOSITE,-0.0,gated:ddr5_desktop,flat,falling
+2026-10-17,COMPOSITE,-0.0,gated:ddr5_desktop,flat,falling
